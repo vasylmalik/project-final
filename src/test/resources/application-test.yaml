@@ -1,0 +1,5 @@
+spring.cache.type: none
+spring:
+  sql:
+    init:
+      mode: always

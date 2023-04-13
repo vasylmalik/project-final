@@ -1,0 +1,11 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<th:block th:replace="~{layout/main::page(title='Application Error',appMain=~{::appMain})}">
+    <appMain>
+        <div class="text-center">
+            <br>
+            <h3 class="my-5">[[${type.status}]]</h3>
+            <h1 class="my-3">[[${type.title}]]</h1>
+            <h4 th:utext="${msg}"></h4>
+        </div>
+    </appMain>
+</th:block>

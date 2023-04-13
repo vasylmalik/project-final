@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<!--/*@thymesVar id="authUser" type="com.javarush.jira.login.AuthUser"*/-->
+
+<div th:fragment="sidebar">
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-left sidebar-nav">
+        <button class="navbar-toggler ms-3 ms-md-4" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <a href="/" class="navbar-brand me-auto">
+            <img src="/static/images/logo/jr.svg" alt="JavaRush" class="d-inline-block d-none d-lg-block align-text-top ms-3 ms-lg-4 mt-0 mt-lg-2">
+            <img src="/static/images/logo/jr-text.svg" alt="JavaRush" class="d-inline-block d-lg-none align-text-top ms-3 ms-lg-4 mt-0 mt-lg-2">
+            <hr class="text-white d-none d-lg-block" style="width: 232px">
+        </a>
+        <div th:if="${authUser} == null">
+            <a href="/view/login" type="button" class="d-lg-none btn btn-orange px-2 px-md-4 me-3 me-md-4 mx-2 mt-2">
+                <span class="d-md-none">Login/Reg</span>
+                <span class="d-none d-md-block">Login/Register</span>
+            </a>
+        </div>
+        <div th:if="${authUser} != null">
+            <a href="/ui/profile" type="button" class="d-lg-none btn btn-orange px-2 px-md-4 me-3 me-md-4 mx-2 mt-2">
+                <i class="fa-solid fa-address-card"></i>
+                Profile
+            </a>
+        </div>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mb-2 mb-lg-0">
+                <div th:if="${authUser != null && authUser.isAdmin()}">
+                    <li class="nav-item menu-item mt-3 mt-lg-0 mb-0 mb-lg-3" id="users">
+                        <a class="nav-link sidebar-nav-link" href="/view/admin/users"><span class="ms-4"><i class="fa-regular fa-folder-open fa-fw me-2"></i>Users</span></a>
+                    </li>
+                </div>
+                <div th:if="${authUser != null && authUser.isAdmin()}">
+                    <li class="nav-item menu-item mt-3 mt-lg-0 mb-0 mb-lg-3" id="references">
+                        <a class="nav-link sidebar-nav-link" href="/ui/admin/references"><span class="ms-4"><i class="fa-regular fa-folder-open fa-fw me-2"></i>References</span></a>
+                    </li>
+                </div>
+                <li class="nav-item menu-item mt-3 mt-lg-0 mb-0 mb-lg-3" id="test1">
+                    <a class="nav-link sidebar-nav-link" href="#test1"><span class="ms-4"><i class="fa-regular fa-folder-open fa-fw me-2"></i>Link_1</span></a>
+                </li>
+                <li class="nav-item menu-item mb-0 mb-lg-3" id="test2">
+                    <a class="nav-link sidebar-nav-link" href="#test2"><span class="ms-4"><i class="fa-solid fa-list-check fa-fw me-2"></i>Link_2</span></a>
+                </li>
+                <li class="nav-item menu-item mb-0 mb-lg-3" id="test3">
+                    <a class="nav-link sidebar-nav-link" href="#test3"><span class="ms-4"><i class="fa-solid fa-bug fa-fw me-2"></i>Link_3</span></a>
+                </li>
+                <li class="nav-item menu-item mb-0 mb-lg-3" id="test4">
+                    <a class="nav-link sidebar-nav-link" href="#test4"><span class="ms-4"><i class="fa-solid fa-book-skull fa-fw me-2"></i>Link_4</span></a>
+                </li>
+                <li class="nav-item menu-item" id="test5">
+                    <a class="nav-link sidebar-nav-link" href="#test5"><span class="ms-4"><i class="fa-solid fa-comments fa-fw me-2"></i>Link_5</span></a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
+</html>
