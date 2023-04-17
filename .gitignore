@@ -40,5 +40,7 @@ out
 target
 logs
 *.patch
+env.txt
+
 
 
