@@ -23,7 +23,4 @@ public class ProfileRestController extends AbstractProfileController {
     public void update(@Valid @RequestBody ProfileTo profileTo, @AuthenticationPrincipal AuthUser authUser) {
         super.update(profileTo, authUser.id());
     }
-
-
 }
-
