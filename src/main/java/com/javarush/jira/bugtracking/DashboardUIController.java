@@ -36,4 +36,10 @@ public class DashboardUIController {
         taskService.addTagsToTask(taskId, tags);
         return "redirect:/";
     }
+
+    @PostMapping("/tasks/{id}/users/{userId}")
+    public String addUserToTask(@PathVariable("id") Long taskId, @PathVariable("userId") Long userId) {
+        taskService.addUserToTask(taskId, userId);
+        return "redirect:/";
+    }
 }
