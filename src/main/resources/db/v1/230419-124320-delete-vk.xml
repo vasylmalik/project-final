@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--suppress HttpUrlsUsage -->
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <changeSet id="230419-124320-1" author="kossatyy">
+        <delete tableName="reference">
+            <where>code = 'vk'</where>
+        </delete>
+    </changeSet>
+    <changeSet id="230419-124320-2" author="kossatyy">
+        <delete tableName="contact">
+            <where>code = 'vk'</where>
+        </delete>
+    </changeSet>
+
+</databaseChangeLog>

@@ -30,7 +30,7 @@ spring:
     url: jdbc:postgresql://localhost:5432/jira
 
   liquibase:
-    changeLog: "classpath:db/changelog.sql"
+    changeLog: "classpath:db/liquibase-changelog.xml"
 
   # Jackson Fields Serialization
   jackson:
