@@ -12,7 +12,7 @@ spring:
     show-sql: true
     open-in-view: false
 
-# validate db by model
+    # validate db by model
     hibernate:
       ddl-auto: validate
 
@@ -25,8 +25,8 @@ spring:
         jdbc.batch_size: 20
   datasource:
     url: jdbc:postgresql://localhost:5432/jira
-    username: jira
-    password: JiraRush
+    username: ${UUSERNAME}
+    password: ${PPASSWORD}
 
   liquibase:
     changeLog: "classpath:db/changelog.sql"
@@ -49,29 +49,26 @@ spring:
       client:
         registration:
           github:
-            client-id: 3d0d8738e65881fff266
-            client-secret: 0f97031ce6178b7dfb67a6af587f37e222a16120
-            scope:
-              - email
+            client-id: ${OAUTH2_GITHUB_CLIENT_ID}
+            client-secret: ${OAUTH2_GITHUB_CLIENT_SECRET}
+            scope: ${OAUTH2_GITHUB_SCOPE}
           google:
-            client-id: 329113642700-f8if6pu68j2repq3ef6umd5jgiliup60.apps.googleusercontent.com
-            client-secret: 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
-            scope:
-              - email
-              - profile
+            client-id: ${OAUTH2_GOOGLE_CLIENT_ID}
+            client-secret: ${OAUTH_GOOGLE_CLIENT_SECRET}
+            scope: ${OAUTH2_GOOGLE_SCOPE}
           gitlab:
-            client-id: b8520a3266089063c0d8261cce36971defa513f5ffd9f9b7a3d16728fc83a494
-            client-secret: e72c65320cf9d6495984a37b0f9cc03ec46be0bb6f071feaebbfe75168117004
-            client-name: GitLab
-            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
-            authorization-grant-type: authorization_code
-            scope: read_user
+            client-id: ${OAUTH2_GITLAB_CLIENT_ID}
+            client-secret: ${OAUTH2_GITLAB_CLIENT_SECRET}
+            client-name: ${OAUTH2_GITLAB_CLIENT_NAME}
+            redirect-uri: ${OAUTH2_GITLAB_REDIRECT_URI}
+            authorization-grant-type: ${OAUTH2_GITLAB_AUTHORIZATION_GRANT_TYPE}
+            scope: ${OAUTH2_GITLAB_SCOPE}
         provider:
           gitlab:
-            authorization-uri: https://gitlab.com/oauth/authorize
-            token-uri: https://gitlab.com/oauth/token
-            user-info-uri: https://gitlab.com/api/v4/user
-            user-name-attribute: email
+            authorization-uri: ${OAUTH2_PROVIDER_GITLAB_AUTHORIZATION_URI}
+            token-uri: ${OAUTH2_PROVIDER_GITLAB_TOKEN_URI}
+            user-info-uri: ${OAUTH2_PROVIDER_GITLAB_USER_INFO_URI}
+            user-name-attribute: ${OAUTH2_PROVIDER_GITLAB_USER_NAME_ATTRIBUTE}
 
   sql:
     init:
@@ -84,9 +81,9 @@ spring:
           starttls:
             enable: true
           auth: true
-    host: smtp.gmail.com
-    username: jira4jr@gmail.com
-    password: zdfzsrqvgimldzyj
+    host: ${MAIL_SMTP}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
     port: 587
   thymeleaf.check-template-location: false
 
@@ -98,7 +95,7 @@ logging:
     org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver: DEBUG
 
 server:
-#  https://springdoc.org/index.html#how-can-i-deploy-springdoc-openapi-ui-behind-a-reverse-proxy
+  #  https://springdoc.org/index.html#how-can-i-deploy-springdoc-openapi-ui-behind-a-reverse-proxy
   forward-headers-strategy: framework
   servlet:
     encoding:
