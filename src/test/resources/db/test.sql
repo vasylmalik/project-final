@@ -1,3 +1,4 @@
+/*
 DELETE FROM profile;
 DELETE FROM user_role;
 DELETE FROM user_belong;
@@ -6,6 +7,7 @@ DELETE FROM task;
 DELETE FROM sprint;
 DELETE FROM project;
 ALTER SEQUENCE users_id_seq RESTART WITH 1;
+*/
 
 insert into users (EMAIL, PASSWORD, FIRST_NAME, LAST_NAME, DISPLAY_NAME)
 values ('user@gmail.com', '{noop}password', 'userFirstName', 'userLastName', 'userDisplayName'),

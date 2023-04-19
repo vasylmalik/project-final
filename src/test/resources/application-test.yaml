@@ -1,5 +1,44 @@
-spring.cache.type: none
 spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    username: sa
+    url: jdbc:h2:mem:jira
+    password: sa
+
+  jpa:
+    # validate db by model
+    hibernate:
+      ddl-auto: create
+
+  #datasource:
+  #  url: jdbc:postgresql://localhost:5432/jira
+  #  username: ${UUSERNAME}
+  #  password: ${PPASSWORD}
+
+  #liquibase:
+  #  changeLog: "classpath:db/changelog.sql"
+
+
+
+  liquibase:
+    changeLog: "classpath:db/test.sql"
+    enabled: true
+
+
   sql:
     init:
       mode: always
+
+  mail:
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
+          auth: true
+    host: smtp.gmail.com
+    username: jira4jr@gmail.com
+    password: zdfzsrqvgimldzyj
+    port: 587
+
+
