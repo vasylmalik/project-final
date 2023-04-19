@@ -8,8 +8,10 @@ app:
     max-pool-size: 100
 
 spring:
-  profiles:
-    include: sensitive
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
   jpa:
     show-sql: true
     open-in-view: false
@@ -47,13 +49,20 @@ spring:
       client:
         registration:
           github:
+            client-id: ${GITHUB_CLIENT_ID}
+            client-secret: ${GITHUB_CLIENT_SECRET}
             scope:
               - email
           google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
             scope:
               - email
               - profile
           gitlab:
+            client-id: ${GITLAB_CLIENT_ID}
+            client-secret: ${GITLAB_CLIENT_SECRET}
+            client-name: ${GITLAB_CLIENT_NAME}
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
             authorization-grant-type: authorization_code
             scope: read_user
@@ -76,6 +85,8 @@ spring:
             enable: true
           auth: true
     host: smtp.gmail.com
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
     port: 587
   thymeleaf.check-template-location: false
 
