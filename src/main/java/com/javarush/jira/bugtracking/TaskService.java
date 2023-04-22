@@ -9,6 +9,8 @@ import com.javarush.jira.bugtracking.to.ObjectType;
 import com.javarush.jira.bugtracking.to.TaskTo;
 import com.javarush.jira.login.User;
 import com.javarush.jira.login.internal.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -47,5 +49,10 @@ public class TaskService extends BugtrackingService<Task, TaskTo, TaskRepository
         userBelongTask.setUserTypeCode("admin"); // where is this reference uses?
 
         userBelongRepository.save(userBelongTask);
+    }
+
+    public Page<TaskTo> getAllWhereSprintIsNull(int page, int size) { // TODO 12.add backlog
+        return repository.findBySprintIsNull(PageRequest.of(page - 1, size))
+                .map(mapper::toTo);
     }
 }

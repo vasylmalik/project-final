@@ -50,6 +50,16 @@
                         </a>
                     </li>
                 </div>
+                <div th:if="${authUser != null}"> <!--TODO 12.add backlog-->
+                    <li class="nav-item menu-item mt-3 mt-lg-0 mb-0 mb-lg-3" id="backlog">
+                        <a class="nav-link sidebar-nav-link" href="/tasks/backlog">
+                        <span class="ms-4">
+                            <i class="fa-regular fa-folder-open fa-fw me-2"></i>
+                            <span th:text="Backlog"></span>
+                        </span>
+                        </a>
+                    </li>
+                </div>
                 <li class="nav-item menu-item mt-3 mt-lg-0 mb-0 mb-lg-3" id="test1">
                     <a class="nav-link sidebar-nav-link" href="#test1">
                         <span class="ms-4">

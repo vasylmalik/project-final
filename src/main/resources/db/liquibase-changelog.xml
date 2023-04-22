@@ -8,5 +8,6 @@
 
     <include file="v1/230419-124000-init.sql" relativeToChangelogFile="true"/>
     <include file="v1/230419-124320-delete-vk.xml" relativeToChangelogFile="true"/>
+    <include file="v1/230422-164700-add-backlog-tasks.xml" relativeToChangelogFile="true"/> <!--TODO 12.add backlog-->
 
 </databaseChangeLog>
