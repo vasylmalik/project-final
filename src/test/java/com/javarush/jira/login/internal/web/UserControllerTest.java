@@ -5,10 +5,14 @@ import com.javarush.jira.login.User;
 import com.javarush.jira.login.UserTo;
 import com.javarush.jira.login.internal.UserMapper;
 import com.javarush.jira.login.internal.UserRepository;
+import org.junit.FixMethodOrder;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Propagation;
@@ -25,6 +29,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class UserControllerTest extends AbstractControllerTest {
 
     @Autowired
@@ -33,6 +39,9 @@ class UserControllerTest extends AbstractControllerTest {
     UserMapper mapper;
 
     @Test
+    //@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+    //@DirtiesContext()
+
     @WithUserDetails(value = USER_MAIL)
     void get() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL))
