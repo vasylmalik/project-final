@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/001_init_schema.sql
+  - include:
+      file: db/changelog/002_late_data.sql
+  - include:
+      file: db/changelog/003_add_dashboard.sql

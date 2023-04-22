@@ -10,15 +10,17 @@ app:
 spring:
   datasource:
     url: ${DB_URL}
+    driver-class-name: org.postgresql.Driver
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
   jpa:
+#    database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
     open-in-view: false
 
 # validate db by model
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
 
     properties:
       #  http://docs.jboss.org/hibernate/orm/5.3/userguide/html_single/Hibernate_User_Guide.html#configurations
@@ -29,7 +31,8 @@ spring:
         jdbc.batch_size: 20
 
   liquibase:
-    changeLog: "classpath:db/changelog.sql"
+    changeLog: "classpath:db/changelog/master-changelog.yaml"
+    enabled: true
 
   # Jackson Fields Serialization
   jackson:
