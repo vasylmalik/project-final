@@ -42,5 +42,8 @@ logs
 *.patch
 .env
 
+db.mv.db
+db.trace.db
+
 
 

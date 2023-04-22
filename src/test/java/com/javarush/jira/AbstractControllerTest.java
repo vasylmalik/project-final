@@ -12,7 +12,11 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 
 //https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-testing-spring-boot-applications
 @SpringBootTest
-@Sql(scripts = "classpath:db/test.sql", config = @SqlConfig(encoding = "UTF-8"))
+@Sql(scripts = {
+        "classpath:db/001_init_schema.sql",
+        "classpath:db/002_late_data.sql",
+        "classpath:db/003_add_dashboard.sql"},
+        config = @SqlConfig(encoding = "UTF-8"))
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 //https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-testing-spring-boot-applications-testing-with-mock-environment
