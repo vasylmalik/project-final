@@ -17,16 +17,19 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import static com.javarush.jira.bugtracking.DashboardTestData.USER_MAIL;
+import static com.javarush.jira.bugtracking.TaskTestData.*;
+import static com.javarush.jira.common.util.Util.getFormattedDuration;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class DashboardUIControllerTest extends AbstractControllerTest {
+class TaskUIControllerTest extends AbstractControllerTest {
 
     @Autowired
     private TaskRepository taskRepository;
@@ -112,5 +115,35 @@ class DashboardUIControllerTest extends AbstractControllerTest {
                     throw new AssertionError("UserBelong not found");
                 }
         );
+    }
+
+    @Test // TODO: 8. Add phase summary
+    @WithUserDetails(value = USER_MAIL)
+    void getSummary_valid() throws Exception {
+        LocalDateTime inProgress = LocalDateTime.of(2023, Month.APRIL, 9, 23, 5, 5);
+        LocalDateTime inTest = LocalDateTime.of(2023, Month.APRIL, 11, 15, 25, 0);
+        LocalDateTime done = LocalDateTime.of(2023, Month.APRIL, 14, 9, 20, 35);
+
+        String expectedProgress = getFormattedDuration(inProgress, inTest);
+        String expectedTest = getFormattedDuration(inTest, done);
+
+        perform(MockMvcRequestBuilders.get(SUMMARY_URL))
+                .andExpect(status().isOk())
+                .andExpect(result -> {
+                    String contentAsString = result.getResponse().getContentAsString();
+                    assertThat(contentAsString, Matchers.containsString(expectedProgress));
+                    assertThat(contentAsString, Matchers.containsString(expectedTest));
+                });
+    }
+
+    @Test // TODO: 8. Add phase summary
+    @WithUserDetails(value = USER_MAIL)
+    void getSummary_empty() throws Exception {
+        perform(MockMvcRequestBuilders.get(EMPTY_SUMMARY_URL))
+                .andExpect(status().isOk())
+                .andExpect(result -> {
+                    String contentAsString = result.getResponse().getContentAsString();
+                    assertThat(contentAsString, Matchers.containsString(NO_SUMMARY));
+                });
     }
 }

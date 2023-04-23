@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @RequestMapping
 public class DashboardUIController {
 
-    private TaskService taskService;
+    private final TaskService taskService;
 
     @GetMapping("/") // index page
     public String getAll(Model model) {
@@ -29,33 +29,5 @@ public class DashboardUIController {
                 .collect(Collectors.groupingBy(TaskTo::getSprint));
         model.addAttribute("taskMap", taskMap);
         return "index";
-    }
-
-    @PostMapping("/tasks/{id}/tags") // TODO: 6. Add feature new tags
-    public String addTagToTask(@PathVariable("id") Long taskId, @RequestBody String[] tagsFrom) {
-        Set<String> tags = Set.of(tagsFrom);
-        taskService.addTagsToTask(taskId, tags);
-        return "redirect:/";
-    }
-
-    @PostMapping("/tasks/{id}/users/{userId}") // TODO: 7. Add subscribe feature
-    public String addUserToTask(@PathVariable("id") Long taskId, @PathVariable("userId") Long userId) {
-        taskService.addUserToTask(taskId, userId);
-        return "redirect:/";
-    }
-
-    @GetMapping("/tasks/backlog") // TODO: 12.add backlog
-    public String getBacklog(Model model,
-                             @RequestParam(defaultValue = "1") int page,
-                             @RequestParam(defaultValue = "3") int size) {
-        Page<TaskTo> taskPage = taskService.getAllWhereSprintIsNull(page, size);
-
-        model.addAttribute("tasks", taskPage.getContent());
-        model.addAttribute("currentPage", taskPage.getNumber() + 1);
-        model.addAttribute("totalItems", taskPage.getTotalElements());
-        model.addAttribute("totalPages", taskPage.getTotalPages());
-        model.addAttribute("pageSize", size);
-
-        return "backlog";
     }
 }

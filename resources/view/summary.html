@@ -1,0 +1,33 @@
+<!DOCTYPE html> <!--TODO: 8.add phase summary-->
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<th:block th:replace="~{layout/main::page(title='JiraRush: mini bugtracking system',appMain=~{::appMain})}">
+    <appMain>
+        <div class="jumbotron pt-4">
+            <div class="container">
+                <h3 class="text-center" th:text="'Task ' + ${taskId}"></h3>
+                <div th:if="${taskSummary}">
+                    <table class="table table-striped" id="datatable">
+                        <thead>
+                        <tr>
+                            <th th:text="#{summary.phase}"></th>
+                            <th th:text="#{summary.duration}"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="entry, iStat : ${taskSummary}"
+                            th:alt-title="${iStat.even}? 'even' : 'odd'"
+                            th:with="phase=${entry.key}, duration=${entry.value}">
+                            <td th:text="${phase}" />
+                            <td th:text="${duration}" />
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div th:unless="${taskSummary}">
+                    <p th:text="#{summary.no-info}"></p>
+                </div>
+            </div>
+        </div>
+    </appMain>
+</th:block>

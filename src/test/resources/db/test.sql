@@ -1,3 +1,4 @@
+DELETE FROM activity;
 DELETE FROM profile;
 DELETE FROM user_role;
 DELETE FROM user_belong;
@@ -34,6 +35,7 @@ values ('task', 'Task', 2),
        ('ready', 'Ready', 3),
        ('in progress', 'In progress', 3),
        ('done', 'Done', 3),
+       ('in test', 'In test', 3),
 -- SPRINT_STATUS
        ('planning', 'Planning', 4),
        ('implementation', 'Implementation', 4),
@@ -97,3 +99,9 @@ INSERT INTO user_belong (id, object_id, object_type, user_id, user_type_code, st
 INSERT INTO user_belong (id, object_id, object_type, user_id, user_type_code, startpoint, endpoint) VALUES (25, 24, 2, 2, 'admin', null, null);
 INSERT INTO user_belong (id, object_id, object_type, user_id, user_type_code, startpoint, endpoint) VALUES (26, 25, 2, 2, 'admin', null, null);
 
+INSERT INTO activity (id, author_id, task_id, updated, comment, title, description, estimate, type_code, status_code, priority_code) VALUES (10, 2, 22, '2023-04-09 23:05:05.000000', 'test comment', 'Task-1', 'short test task', null, 'task', 'in progress', 'high');
+INSERT INTO activity (id, author_id, task_id, updated, comment, title, description, estimate, type_code, status_code, priority_code) VALUES (11, 2, 22, '2023-04-11 15:35:00.000000', 'test comment', 'Task-1', 'short test task', null, 'task', 'in test', 'high');
+INSERT INTO activity (id, author_id, task_id, updated, comment, title, description, estimate, type_code, status_code, priority_code) VALUES (12, 2, 22, '2023-04-11 15:25:00.000000', 'lower time', 'Task-1', 'short test task', null, 'task', 'in test', 'high');
+INSERT INTO activity (id, author_id, task_id, updated, comment, title, description, estimate, type_code, status_code, priority_code) VALUES (13, 2, 22, '2023-04-14 09:10:35.000000', 'new comment', 'Task-1', 'short test task', null, 'task', null,'high');
+INSERT INTO activity (id, author_id, task_id, updated, comment, title, description, estimate, type_code, status_code, priority_code) VALUES (14, 2, 22, '2023-04-14 09:20:35.000000', 'test comment', 'Task-1', 'short test task', null, 'task', 'done','high');
+INSERT INTO activity (id, author_id, task_id, updated, comment, title, description, estimate, type_code, status_code, priority_code) VALUES (15, 2, 22, null, 'test comment', 'Task-1', 'short test task', null, 'task', 'done','high');
