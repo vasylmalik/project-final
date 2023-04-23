@@ -9,11 +9,13 @@ import com.javarush.jira.bugtracking.to.ObjectType;
 import com.javarush.jira.bugtracking.to.TaskTo;
 import com.javarush.jira.login.User;
 import com.javarush.jira.login.internal.UserRepository;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -32,13 +34,13 @@ public class TaskService extends BugtrackingService<Task, TaskTo, TaskRepository
         return mapper.toToList(repository.getAll());
     }
 
-    public void addTagsToTask(Long taskId, Set<String> tags) {
+    public void addTagsToTask(Long taskId, Set<String> tags) { // TODO: 6. Add feature new tags
         Task task = repository.getExisted(taskId);
         task.getTags().addAll(tags);
         repository.save(task);
     }
 
-    public void addUserToTask(Long taskId, Long userId) {
+    public void addUserToTask(Long taskId, Long userId) { // TODO: 7. Add subscribe feature
         Task task = repository.getExisted(taskId);
         User user = userRepository.getExisted(userId);
 
@@ -48,10 +50,13 @@ public class TaskService extends BugtrackingService<Task, TaskTo, TaskRepository
         userBelongTask.setUserId(user.getId());
         userBelongTask.setUserTypeCode("admin"); // where is this reference uses?
 
-        userBelongRepository.save(userBelongTask);
+        Optional<UserBelong> belong = userBelongRepository.findOne(Example.of(userBelongTask));
+        if (belong.isEmpty()) {
+            userBelongRepository.save(userBelongTask);
+        }
     }
 
-    public Page<TaskTo> getAllWhereSprintIsNull(int page, int size) { // TODO 12.add backlog
+    public Page<TaskTo> getAllWhereSprintIsNull(int page, int size) { // TODO: 12.add backlog
         return repository.findBySprintIsNull(PageRequest.of(page - 1, size))
                 .map(mapper::toTo);
     }
