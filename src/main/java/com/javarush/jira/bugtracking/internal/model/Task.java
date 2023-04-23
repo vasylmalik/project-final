@@ -63,13 +63,6 @@ public class Task extends TitleEntity {
             joinColumns = @JoinColumn(name = "task_id"),
             uniqueConstraints = @UniqueConstraint(columnNames = {"task_id", "tag"}, name = "uk_task_tag"))
 
- /*   @Id
-    private long id;
-    @OneToOne(mappedBy = "task", cascade = CascadeType.ALL, optional = false, fetch = FetchType.LAZY)
-
-*/
-
-
     @Column(name = "tag")
     @ElementCollection(fetch = FetchType.EAGER)
     @JoinColumn()
