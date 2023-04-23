@@ -8,7 +8,7 @@
     <appMain>
         <div class="jumbotron pt-4">
             <div class="container">
-                <h3 class="text-center">Users</h3>
+                <h3 class="text-center" th:text="#{users.title}"></h3>
                 <button th:onclick="add()" class="btn btn-primary" th:text="#{users.button.add}"></button>
                 <table class="table table-striped" id="datatable">
                     <thead>

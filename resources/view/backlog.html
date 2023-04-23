@@ -9,7 +9,7 @@
                     <div class="row d-flex w-25">
                         <div class="col-md-3 input-group mt-2">
                             <div class="input-group-prepend">
-                                <label class="input-group-text" for="pageSize">Tasks per page:</label>
+                                <label class="input-group-text" for="pageSize" th:text="#{backlog.page-size} + ':'"></label>
                             </div>
                             <select form="customSize" name="size" th:value="${pageSize}" onchange="changePageSize()" class="form-select"
                                     id="pageSize">
@@ -20,15 +20,15 @@
                 </form>
             </div>
             <div class="container">
-                <h3 class="text-center">Backlog</h3>
+                <h3 class="text-center" th:text="#{backlog.title}"></h3>
                 <table class="table table-striped" id="datatable">
                     <thead>
                     <tr>
-                        <th th:text="Title"></th>
-                        <th th:text="Desciption"></th>
-                        <th th:text="Type"></th>
-                        <th th:text="Status"></th>
-                        <th th:text="Project"></th>
+                        <th th:text="#{backlog.table.title}"></th>
+                        <th th:text="#{backlog.table.description}"></th>
+                        <th th:text="#{backlog.table.type}"></th>
+                        <th th:text="#{backlog.table.status}"></th>
+                        <th th:text="#{backlog.table.project}"></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -44,7 +44,7 @@
                 </table>
             </div>
             <div th:unless="${tasks.size() > 0}">
-                <span>No tasks found!</span>
+                <span th:text="#{app.error.tasks.not-found}"></span>
             </div>
             <nav aria-label="Pagination" th:if="${totalPages > 0}">
                 <ul class="pagination justify-content-center">
