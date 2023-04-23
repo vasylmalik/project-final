@@ -31,20 +31,20 @@ public class DashboardUIController {
         return "index";
     }
 
-    @PostMapping("/tasks/{id}/tags")
+    @PostMapping("/tasks/{id}/tags") // TODO: 6. Add feature new tags
     public String addTagToTask(@PathVariable("id") Long taskId, @RequestBody String[] tagsFrom) {
         Set<String> tags = Set.of(tagsFrom);
         taskService.addTagsToTask(taskId, tags);
         return "redirect:/";
     }
 
-    @PostMapping("/tasks/{id}/users/{userId}")
+    @PostMapping("/tasks/{id}/users/{userId}") // TODO: 7. Add subscribe feature
     public String addUserToTask(@PathVariable("id") Long taskId, @PathVariable("userId") Long userId) {
         taskService.addUserToTask(taskId, userId);
         return "redirect:/";
     }
 
-    @GetMapping("/tasks/backlog")
+    @GetMapping("/tasks/backlog") // TODO: 12.add backlog
     public String getBacklog(Model model,
                              @RequestParam(defaultValue = "1") int page,
                              @RequestParam(defaultValue = "3") int size) {
