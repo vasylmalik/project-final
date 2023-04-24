@@ -67,7 +67,7 @@ spring:
             authorization-grant-type: authorization_code
             scope: read_user
         provider:
-          gitlab:
+           gitlab:
             authorization-uri: https://gitlab.com/oauth/authorize
             token-uri: https://gitlab.com/oauth/token
             user-info-uri: https://gitlab.com/api/v4/user
