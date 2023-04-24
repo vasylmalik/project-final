@@ -1,0 +1,11 @@
+spring.cache.type: none
+spring:
+  sql:
+    init:
+      mode: always
+
+  #url for connect: jdbc:h2:tcp://localhost:9092/mem:db
+  datasource:
+    url: jdbc:h2:mem:db;NON_KEYWORDS=VALUE
+    username: dev
+    password: dev

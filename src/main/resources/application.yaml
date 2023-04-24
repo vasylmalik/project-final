@@ -10,17 +10,15 @@ app:
 spring:
   datasource:
     url: ${DB_URL}
-    driver-class-name: org.postgresql.Driver
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
   jpa:
-#    database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
     open-in-view: false
 
 # validate db by model
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
 
     properties:
       #  http://docs.jboss.org/hibernate/orm/5.3/userguide/html_single/Hibernate_User_Guide.html#configurations
