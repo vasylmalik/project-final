@@ -7,6 +7,7 @@ import com.javarush.jira.bugtracking.to.TaskTo;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class TaskService extends BugtrackingService<Task, TaskTo, TaskRepository> {
@@ -16,5 +17,13 @@ public class TaskService extends BugtrackingService<Task, TaskTo, TaskRepository
 
     public List<TaskTo> getAll() {
         return mapper.toToList(repository.getAll());
+    }
+
+    public void addTag(long taskId, String tag) {
+        Task task = repository.getExisted(taskId);
+        Set<String> tags = task.getTags();
+        tags.add(tag);
+        task.setTags(tags);
+        repository.save(task);
     }
 }
