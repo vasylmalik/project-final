@@ -44,13 +44,13 @@ public class TaskService extends BugtrackingService<Task, TaskTo, TaskRepository
         return mapper.toToList(repository.getAll());
     }
 
-    public void addTagsToTask(Long taskId, Set<String> tags) { // TODO: 6. Add feature new tags
+    public void addTagsToTask(Long taskId, Set<String> tags) { //TODO: 6. Add feature new tags
         Task task = repository.getExisted(taskId);
         task.getTags().addAll(tags);
         repository.save(task);
     }
 
-    public void addUserToTask(Long taskId, Long userId) { // TODO: 7. Add subscribe feature
+    public void addUserToTask(Long taskId, Long userId) { //TODO: 7. Add subscribe feature
         Task task = repository.getExisted(taskId);
         User user = userRepository.getExisted(userId);
 
@@ -66,12 +66,12 @@ public class TaskService extends BugtrackingService<Task, TaskTo, TaskRepository
         }
     }
 
-    public Page<TaskTo> getAllWhereSprintIsNull(int page, int size) { // TODO: 12.add backlog
+    public Page<TaskTo> getAllWhereSprintIsNull(int page, int size) { //TODO: 12.add backlog
         return repository.findBySprintIsNull(PageRequest.of(page - 1, size))
                 .map(mapper::toTo);
     }
 
-    public Map<String, String> getTaskSummary(Long taskId) { // TODO: 8.add task summary
+    public Map<String, String> getTaskSummary(Long taskId) { //TODO: 8.add task summary
         Task task = repository.getExisted(taskId);
         Map<String, Optional<LocalDateTime>> collect = activityRepository.findByTaskAndUpdatedNotNullAndStatusCodeNotNull(task).stream()
                 .collect(Collectors.groupingBy(Activity::getStatusCode)).entrySet().stream()

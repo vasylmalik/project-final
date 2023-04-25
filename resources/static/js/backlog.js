@@ -1,3 +1,3 @@
-function changePageSize() { // TODO 12.add backlog
+function changePageSize() { // TODO: 12.add backlog
     $("#customSize").submit();
 }

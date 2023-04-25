@@ -8,10 +8,11 @@ app:
     max-pool-size: 100
 
 spring:
-  messages: # TODO 11.add localization
+  messages: #TODO: 11.add localization
     basename: language/messages
     encoding: UTF-8
 
+  #TODO: 3. replace secrets, add env vars
   config:
     import: secrets.yaml
 

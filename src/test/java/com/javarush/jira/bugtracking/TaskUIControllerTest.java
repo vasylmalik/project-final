@@ -43,7 +43,7 @@ class TaskUIControllerTest extends AbstractControllerTest {
     @Transactional
     @Test
     @WithUserDetails(value = USER_MAIL)
-    void addTagToTask() throws Exception { // TODO: 6. Add feature new tags
+    void addTagToTask() throws Exception { //TODO: 6. Add feature new tags
 
         Optional<Task> optionalTask = taskRepository.getAll().stream()
                 .findAny();
@@ -74,7 +74,7 @@ class TaskUIControllerTest extends AbstractControllerTest {
         assertThat(updatedTask.getTags(), Matchers.containsInAnyOrder(tag1, tag2));
     }
 
-    @Transactional // TODO: 7. Add subscribe feature
+    @Transactional //TODO: 7. Add subscribe feature
     @Test
     @WithUserDetails(value = USER_MAIL)
     void addUserToTask() throws Exception {
@@ -117,7 +117,7 @@ class TaskUIControllerTest extends AbstractControllerTest {
         );
     }
 
-    @Test // TODO: 8. Add phase summary
+    @Test //TODO: 8. Add phase summary
     @WithUserDetails(value = USER_MAIL)
     void getSummary_valid() throws Exception {
         LocalDateTime inProgress = LocalDateTime.of(2023, Month.APRIL, 9, 23, 5, 5);
@@ -136,7 +136,7 @@ class TaskUIControllerTest extends AbstractControllerTest {
                 });
     }
 
-    @Test // TODO: 8. Add phase summary
+    @Test //TODO: 8. Add phase summary
     @WithUserDetails(value = USER_MAIL)
     void getSummary_empty() throws Exception {
         perform(MockMvcRequestBuilders.get(EMPTY_SUMMARY_URL))

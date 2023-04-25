@@ -43,7 +43,7 @@ public class ThymeleafConfig {
     }
 
     @Bean
-    public LocaleResolver localeResolver() { //TODO 11.add localization
+    public LocaleResolver localeResolver() { //TODO: 11.add localization
         SessionLocaleResolver slr = new SessionLocaleResolver();
         slr.setDefaultLocale(Locale.US);
         return slr;

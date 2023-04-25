@@ -7,7 +7,8 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.lifecycle.Startables;
 import org.testcontainers.utility.DockerImageName;
 
-// https://maciejwalkowiak.com/blog/testcontainers-spring-boot-setup/
+//TODO: 4. add testcontainers
+//https://maciejwalkowiak.com/blog/testcontainers-spring-boot-setup/
 public class TestcontainersInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(DockerImageName.parse("postgres:15.1"));

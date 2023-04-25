@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?> <!--TODO 8.add phase summary-->
+<?xml version="1.0" encoding="UTF-8"?> <!--TODO: 8.add phase summary-->
 <!--suppress HttpUrlsUsage -->
 <databaseChangeLog
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"

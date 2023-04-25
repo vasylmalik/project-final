@@ -17,20 +17,20 @@ public class TaskUIController {
 
     private final TaskService taskService;
 
-    @PostMapping("/{id}/tags") // TODO: 6. Add feature new tags
+    @PostMapping("/{id}/tags") //TODO: 6. Add feature new tags
     public String addTagToTask(@PathVariable("id") Long taskId, @RequestBody String[] tagsFrom) {
         Set<String> tags = Set.of(tagsFrom);
         taskService.addTagsToTask(taskId, tags);
         return "redirect:/";
     }
 
-    @PostMapping("/{id}/users/{userId}") // TODO: 7. Add subscribe feature
+    @PostMapping("/{id}/users/{userId}") //TODO: 7. Add subscribe feature
     public String addUserToTask(@PathVariable("id") Long taskId, @PathVariable("userId") Long userId) {
         taskService.addUserToTask(taskId, userId);
         return "redirect:/";
     }
 
-    @GetMapping("/backlog") // TODO: 12.add backlog
+    @GetMapping("/backlog") //TODO: 12.add backlog
     public String getBacklog(Model model,
                              @RequestParam(defaultValue = "1") int page,
                              @RequestParam(defaultValue = "3") int size) {
@@ -45,7 +45,7 @@ public class TaskUIController {
         return "backlog";
     }
 
-    @GetMapping("/{id}/summary") // TODO: 8.add task summary (task 10 with activity)
+    @GetMapping("/{id}/summary") //TODO: 8.add task summary (task 10 with activity)
     public String getSummary(Model model, @PathVariable("id") Long taskId) {
         Map<String, String> taskSummary = taskService.getTaskSummary(taskId);
         model.addAttribute("taskId", taskId);
