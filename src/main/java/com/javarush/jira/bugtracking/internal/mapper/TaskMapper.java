@@ -13,6 +13,7 @@ import java.util.List;
 public interface TaskMapper extends BaseMapper<Task, TaskTo> {
 
     @Mapping(target = "enabled", expression = "java(task.isEnabled())")
+    @Mapping(target = "activities", ignore = true)
     @Override
     TaskTo toTo(Task task);
 
