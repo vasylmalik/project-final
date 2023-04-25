@@ -34,7 +34,7 @@
                     <li class="nav-item menu-item mt-3 mt-lg-0 mb-0 mb-lg-3" id="users">
                         <a class="nav-link sidebar-nav-link" href="/view/admin/users">
                             <span class="ms-4">
-                                <i class="fa-regular fa-folder-open fa-fw me-2"></i>
+                                <i class="fa-regular fa-user fa-fw me-2"></i>
                                 <span th:text="#{sidebar.users}"></span>
                             </span>
                         </a>
@@ -44,7 +44,7 @@
                     <li class="nav-item menu-item mt-3 mt-lg-0 mb-0 mb-lg-3" id="references">
                         <a class="nav-link sidebar-nav-link" href="/ui/admin/references">
                             <span class="ms-4">
-                                <i class="fa-regular fa-folder-open fa-fw me-2"></i>
+                                <i class="fa-solid fa-recycle fa-fw me-2"></i>
                                 <span th:text="#{sidebar.references}"></span>
                             </span>
                         </a>
@@ -54,8 +54,18 @@
                     <li class="nav-item menu-item mt-3 mt-lg-0 mb-0 mb-lg-3" id="backlog">
                         <a class="nav-link sidebar-nav-link" href="/tasks/backlog">
                         <span class="ms-4">
-                            <i class="fa-regular fa-folder-open fa-fw me-2"></i>
+                            <i class="fa-regular  fa-list-alt fa-fw me-2"></i>
                             <span th:text="#{sidebar.backlog}"></span>
+                        </span>
+                        </a>
+                    </li>
+                </div>
+                <div th:if="${authUser != null}"> <!--TODO 8.add summary-->
+                    <li class="nav-item menu-item mt-3 mt-lg-0 mb-0 mb-lg-3" id="summary">
+                        <a class="nav-link sidebar-nav-link" href="/tasks/10/summary">
+                        <span class="ms-4">
+                            <i class="fa-regular fa-eye fa-fw me-2"></i>
+                            <span th:text="#{sidebar.summary}"></span>
                         </span>
                         </a>
                     </li>

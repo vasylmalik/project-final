@@ -9,12 +9,16 @@
                 <div class="collapse navbar-collapse mt-2 mb-2">
                     <ul class="navbar-nav m-auto">
                         <form class="d-flex" role="search">
-                            <input class="form-control" type="search" placeholder="Search" aria-label="Search" id="header-search">
+                            <input class="form-control" type="search" th:placeholder="#{header.search.placeholder}" aria-label="Search" id="header-search">
                         </form>
                         <li class="nav-item menu-item me-3 ms-4">
                             <a href="/doc" type="button" class="btn btn-yellow" target="_blank" th:text="#{header.swagger}"></a> <!--TODO 11.add localization-->
                         </li>
                     </ul>
+                    <div>
+                        <a href="?lang=en" type="button" class="btn btn-outline-info" th:text="eng"></a>
+                        <a href="?lang=ru" type="button" class="btn btn-outline-info me-5" th:text="рус"></a>
+                    </div>
                     <div th:if="${authUser} == null">
                         <a href="/view/login" type="button" class="btn btn-orange" th:text="#{header.login}"></a>
                     </div>
