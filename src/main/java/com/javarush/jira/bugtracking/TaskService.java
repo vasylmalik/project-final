@@ -24,6 +24,6 @@ public class TaskService extends BugtrackingService<Task, TaskTo, TaskRepository
         Set<String> tags = task.getTags();
         tags.add(tag);
         task.setTags(tags);
-        repository.save(task);
+        repository.saveAndFlush(task);
     }
 }

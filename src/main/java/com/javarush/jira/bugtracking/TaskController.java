@@ -3,12 +3,11 @@ package com.javarush.jira.bugtracking;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = TaskController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = TaskController.REST_URL)
 @AllArgsConstructor
 @Slf4j
 public class TaskController {
