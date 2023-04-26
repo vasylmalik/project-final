@@ -63,7 +63,7 @@ public class MailService {
             message.setText(content, true);
             message.setSubject(Util.getTitle(content));  // TODO calculate title for group emailing only once
             message.setTo(new InternetAddress(toEmail, toName, "UTF-8"));
-            if (!appConfig.isTest()) {
+            if (!appConfig.isTest() && !appConfig.isDev()) {
                 javaMailSender.send(mimeMessage);
             }
         } catch (Exception e) {

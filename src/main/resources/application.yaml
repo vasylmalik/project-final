@@ -9,7 +9,7 @@ app:
 
 spring:
   datasource:
-    url: ${DB_URL}
+    url: jdbc:postgresql://localhost:5432/jira
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
   jpa:
@@ -63,7 +63,7 @@ spring:
           gitlab:
             client-id: ${GITLAB_CLIENT_ID}
             client-secret: ${GITLAB_CLIENT_SECRET}
-            client-name: ${GITLAB_CLIENT_NAME}
+            client-name: GitLab
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
             authorization-grant-type: authorization_code
             scope: read_user
