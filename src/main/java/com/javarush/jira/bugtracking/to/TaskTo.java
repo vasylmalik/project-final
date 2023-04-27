@@ -27,7 +27,7 @@ public class TaskTo extends NodeTo<TaskTo> {
     @NoHtml
     String description;
 
-    @NotNull
+//    @NotNull //TODO: 12.add backlog
     SprintTo sprint;
 
     @NotNull

@@ -5,7 +5,7 @@
     <meta name="title" content="404 Not found"/>
     <meta name="Description" content="404 Not found"/>
 
-    <title>Application Error</title>
+    <title th:text="#{app.error.title}"></title>
     <link rel="apple-touch-icon" sizes="180x180" href="/static/images/icon/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/static/images/icon/favicon-32x32.png">
     <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css"/>
@@ -19,8 +19,6 @@
 </head>
 <body>
 <div class="app">
-
-
     <div>
         <header class="fixed-top d-none d-md-block header-nav">
             <nav class="navbar navbar-expand-lg navbar-dark" id="header">
@@ -28,15 +26,20 @@
                     <div class="collapse navbar-collapse mt-2 mb-2">
                         <ul class="navbar-nav m-auto">
                             <form class="d-flex" role="search">
-                                <input class="form-control" type="search" placeholder="Search" aria-label="Search" id="header-search">
+                                <input class="form-control" type="search" placeholder="Search" aria-label="Search"
+                                       id="header-search">
                             </form>
                             <li class="nav-item menu-item me-3 ms-4">
-                                <a href="/doc" type="button" class="btn btn-yellow" target="_blank">Swagger API</a>
+                                <a href="/doc" type="button" class="btn btn-yellow" target="_blank"
+                                   th:text="#{header.swagger}"></a> <!--TODO: 11.add localization-->
                             </li>
                         </ul>
-
                         <div>
-                            <a href="/ui/profile" type="button" class="btn btn-orange"><i class="fa-solid fa-address-card"></i> Profile</a>
+                            <a href="/ui/profile" type="button" class="btn btn-orange">
+                                <i class="fa-solid fa-address-card">
+                                    <span th:text="#{header.profile}"></span>
+                                </i>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -45,38 +48,50 @@
     </div>
 
     <div>
-        <nav class="navbar navbar-expand-lg navbar-dark fixed-left sidebar-nav">
-            <button class="navbar-toggler ms-3 ms-md-4" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <a href="/" class="navbar-brand me-auto">
-                <img src="/static/images/logo/jr.svg" alt="JavaRush" class="d-inline-block d-none d-lg-block align-text-top ms-3 ms-lg-4 mt-0 mt-lg-2">
-                <img src="/static/images/logo/jr-text.svg" alt="JavaRush" class="d-inline-block d-lg-none align-text-top ms-3 ms-lg-4 mt-0 mt-lg-2">
-                <hr class="text-white d-none d-lg-block" style="width: 232px">
-            </a>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mb-2 mb-lg-0">
-
-
-                    <li class="nav-item menu-item mt-3 mt-lg-0 mb-0 mb-lg-3" id="test1">
-                        <a class="nav-link sidebar-nav-link" href="#test1"><span class="ms-4"><i class="fa-regular fa-folder-open fa-fw me-2"></i>Link_1</span></a>
-                    </li>
-                    <li class="nav-item menu-item mb-0 mb-lg-3" id="test2">
-                        <a class="nav-link sidebar-nav-link" href="#test2"><span class="ms-4"><i class="fa-solid fa-list-check fa-fw me-2"></i>Link_2</span></a>
-                    </li>
-                    <li class="nav-item menu-item mb-0 mb-lg-3" id="test3">
-                        <a class="nav-link sidebar-nav-link" href="#test3"><span class="ms-4"><i class="fa-solid fa-bug fa-fw me-2"></i>Link_3</span></a>
-                    </li>
-                    <li class="nav-item menu-item mb-0 mb-lg-3" id="test4">
-                        <a class="nav-link sidebar-nav-link" href="#test4"><span class="ms-4"><i class="fa-solid fa-book-skull fa-fw me-2"></i>Link_4</span></a>
-                    </li>
-                    <li class="nav-item menu-item" id="test5">
-                        <a class="nav-link sidebar-nav-link" href="#test5"><span class="ms-4"><i class="fa-solid fa-comments fa-fw me-2"></i>Link_5</span></a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
+        <nav class=" navbar navbar-expand-lg navbar-dark fixed-left sidebar-nav">
+                                    <button class="navbar-toggler ms-3 ms-md-4" type="button" data-bs-toggle="collapse"
+                                            data-bs-target="#navbarSupportedContent"
+                                            aria-controls="navbarSupportedContent" aria-expanded="false"
+                                            aria-label="Toggle navigation">
+                                        <span class="navbar-toggler-icon"></span>
+                                    </button>
+                                    <a href="/" class="navbar-brand me-auto">
+                                        <img src="/static/images/logo/jr.svg" alt="JavaRush"
+                                             class="d-inline-block d-none d-lg-block align-text-top ms-3 ms-lg-4 mt-0 mt-lg-2">
+                                        <img src="/static/images/logo/jr-text.svg" alt="JavaRush"
+                                             class="d-inline-block d-lg-none align-text-top ms-3 ms-lg-4 mt-0 mt-lg-2">
+                                        <hr class="text-white d-none d-lg-block" style="width: 232px">
+                                    </a>
+                                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                                        <ul class="navbar-nav mb-2 mb-lg-0">
+                                            <li class="nav-item menu-item mt-3 mt-lg-0 mb-0 mb-lg-3" id="test1">
+                                                <a class="nav-link sidebar-nav-link" href="#test1"><span class="ms-4"><i
+                                                        class="fa-regular fa-folder-open fa-fw me-2"></i><span
+                                                        th:text="#{sidebar.test.link-1}"></span></span></a>
+                                            </li>
+                                            <li class="nav-item menu-item mb-0 mb-lg-3" id="test2">
+                                                <a class="nav-link sidebar-nav-link" href="#test2"><span class="ms-4"><i
+                                                        class="fa-solid fa-list-check fa-fw me-2"></i><span
+                                                        th:text="#{sidebar.test.link-2}"></span></span></a>
+                                            </li>
+                                            <li class="nav-item menu-item mb-0 mb-lg-3" id="test3">
+                                                <a class="nav-link sidebar-nav-link" href="#test3"><span class="ms-4"><i
+                                                        class="fa-solid fa-bug fa-fw me-2"></i><span
+                                                        th:text="#{sidebar.test.link-3}"></span></span></a>
+                                            </li>
+                                            <li class="nav-item menu-item mb-0 mb-lg-3" id="test4">
+                                                <a class="nav-link sidebar-nav-link" href="#test4"><span class="ms-4"><i
+                                                        class="fa-solid fa-book-skull fa-fw me-2"></i><span
+                                                        th:text="#{sidebar.test.link-4}"></span></span></a>
+                                            </li>
+                                            <li class="nav-item menu-item" id="test5">
+                                                <a class="nav-link sidebar-nav-link" href="#test5"><span class="ms-4"><i
+                                                        class="fa-solid fa-comments fa-fw me-2"></i><span
+                                                        th:text="#{sidebar.test.link-5}"></span></span></a>
+                                            </li>
+                                        </ul>
+                                    </div>
+            </nav>
     </div>
 
     <main class="app-main py-5 px-md-5 min-vh-100">
@@ -84,8 +99,8 @@
             <appMain>
                 <div class="text-center">
                     <br>
-                    <h3 class="my-5">404 NOT_FOUND</h3>
-                    <h1 class="my-3">No page here</h1>
+                    <h3 class="my-5" th:text="#{app.error.code}"></h3>
+                    <h1 class="my-3" th:text="#{app.error.message}"></h1>
                 </div>
             </appMain>
         </div>
@@ -97,73 +112,65 @@
                 <div class="container text-center text-md-start">
                     <div class="row ms-0 ms-md-5">
                         <div class="col-md-4 col-xl-2 mb-4 mt-4">
-                            <h6 class="fw-bold mt-2 mt-md-0 mb-4">
-                                LEARN
-                            </h6>
+                            <h6 class="fw-bold mt-2 mt-md-0 mb-4" th:text="#{footer.learn}"></h6>
                             <p>
-                                <a href="#" class="footer-href">Programming Courses</a>
+                                <a href="#" class="footer-href" th:text="#{footer.learn.courses.programming}"></a>
                             </p>
                             <p>
-                                <a href="#" class="footer-href">Java Course</a>
+                                <a href="#" class="footer-href" th:text="#{footer.learn.courses.java}"></a>
                             </p>
                             <p>
-                                <a href="#" class="footer-href">Help with Tasks</a>
+                                <a href="#" class="footer-href" th:text="#{footer.learn.help}"></a>
                             </p>
                             <p>
-                                <a href="#" class="footer-href">Pricing</a>
+                                <a href="#" class="footer-href" th:text="#{footer.learn.pricing}"></a>
                             </p>
                             <p>
-                                <a href="#" class="footer-href">Game Projects</a>
+                                <a href="#" class="footer-href" th:text="#{footer.learn.projects.game}"></a>
                             </p>
                         </div>
                         <div class="col-md-4 col-xl-2 mb-4 mt-0 mt-md-4">
-                            <h6 class="fw-bold mb-4">
-                                COMMUNITY
-                            </h6>
+                            <h6 class="fw-bold mb-4" th:text="#{footer.community}"></h6>
                             <p>
-                                <a href="#" class="footer-href">Users</a>
+                                <a href="#" class="footer-href" th:text="#{footer.community.users}"></a>
                             </p>
                             <p>
-                                <a href="#" class="footer-href">Articles</a>
+                                <a href="#" class="footer-href" th:text="#{footer.community.articles}"></a>
                             </p>
                             <p>
-                                <a href="#" class="footer-href">Forum</a>
+                                <a href="#" class="footer-href" th:text="#{footer.community.forum}"></a>
                             </p>
                             <p>
-                                <a href="#" class="footer-href">Chat</a>
+                                <a href="#" class="footer-href" th:text="#{footer.community.chat}"></a>
                             </p>
                             <p>
-                                <a href="#" class="footer-href">Success Stories</a>
+                                <a href="#" class="footer-href" th:text="#{footer.community.success}"></a>
                             </p>
                         </div>
                         <div class="col-md-4 col-xl-2 mb-4 mt-0 mt-md-4">
-                            <h6 class="fw-bold mb-4">COMPANY</h6>
+                            <h6 class="fw-bold mb-4" th:text="#{footer.company}"></h6>
                             <p>
-                                <a href="#" class="footer-href">About us</a>
-                            <p>
-                            <p>
-                                <a href="#" class="footer-href">Contacts</a>
+                                <a href="#" class="footer-href" th:text="#{footer.company.about}"></a>
                             <p>
                             <p>
-                                <a href="#" class="footer-href">Reviews</a>
+                                <a href="#" class="footer-href" th:text="#{footer.company.contacts}"></a>
                             <p>
                             <p>
-                                <a href="#" class="footer-href">FAQ</a>
+                                <a href="#" class="footer-href" th:text="#{footer.company.reviews}"></a>
                             <p>
                             <p>
-                                <a href="#" class="footer-href">Support</a>
+                                <a href="#" class="footer-href" th:text="#{footer.company.faq}"></a>
+                            <p>
+                            <p>
+                                <a href="#" class="footer-href" th:text="#{footer.company.support}"></a>
                             <p>
                         </div>
 
                         <div class="col-xl-5 mb-4 mt-0 mt-md-4">
                             <img src="/static/images/logo/jr.svg" alt="JavaRush" class="mb-3">
-                            <p>
-                                JavaRush is an online course for learning Java programming from scratch.
-                                This course is a perfect way to master Java for beginners.
-                                It contains 1200+ of tasks with instant verification and an essential scope of Java
-                                fundamentals theory.
+                            <p th:text="#{footer.text}">
                             </p>
-                            <h6>FOLLOW US</h6>
+                            <h6 th:text="#{footer.follow}"></h6>
                             <div>
                                 <a href="#" type="button" class="btn btn-sm btn-outline-light me-2">
                                     <i class="fab fa-facebook-f pe-1"></i>
@@ -189,7 +196,7 @@
                 </div>
             </section>
             <div class="text-center pb-4">
-                Programmers Are Made, Not Born © 2023 JavaRush
+                <p th:text="#{footer.citation}"></p>
             </div>
         </footer>
     </div>

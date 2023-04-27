@@ -1,0 +1,8 @@
+<!DOCTYPE html> <!--TODO: 12.add backlog-->
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<a th:fragment="paging(pageNum, label, tooltip)" class="page-link"
+   th:href="@{'/tasks/backlog?' + 'page=' + ${pageNum} + '&size=' + ${pageSize}}"
+   th:title="${tooltip}" rel="tooltip">
+    [[${label}]]
+</a>

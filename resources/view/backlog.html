@@ -1,0 +1,77 @@
+<!DOCTYPE html> <!--TODO: 12.add backlog-->
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<th:block th:replace="~{layout/main::page(title='JiraRush: mini bugtracking system',appMain=~{::appMain})}">
+    <appMain>
+        <div class="jumbotron pt-4">
+            <div>
+                <form th:action="@{/tasks/backlog}" id="customSize">
+                    <div class="row d-flex w-25">
+                        <div class="col-md-3 input-group mt-2">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="pageSize" th:text="#{backlog.page-size} + ':'"></label>
+                            </div>
+                            <select form="customSize" name="size" th:value="${pageSize}" onchange="changePageSize()" class="form-select"
+                                    id="pageSize">
+                                <option th:each="s : ${ {3, 6, 9} }" th:value="${s}" th:text="${s}" th:selected="${s == pageSize}"></option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="container">
+                <h3 class="text-center" th:text="#{backlog.title}"></h3>
+                <table class="table table-striped" id="datatable">
+                    <thead>
+                    <tr>
+                        <th th:text="#{backlog.table.title}"></th>
+                        <th th:text="#{backlog.table.description}"></th>
+                        <th th:text="#{backlog.table.type}"></th>
+                        <th th:text="#{backlog.table.status}"></th>
+                        <th th:text="#{backlog.table.project}"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="task, iStat : ${tasks}"
+                        th:alt-title="${iStat.even}? 'even' : 'odd'">
+                        <td th:text="${task.title}" />
+                        <td th:text="${task.description}" />
+                        <td th:text="${task.typeCode}" />
+                        <td th:text="${task.statusCode}" />
+                        <td th:text="${task.project.title}" />
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div th:unless="${tasks.size() > 0}">
+                <span th:text="#{app.error.tasks.not-found}"></span>
+            </div>
+            <nav aria-label="Pagination" th:if="${totalPages > 0}">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
+                        <a th:replace="layout/paging :: paging(1, '<<', 'First Page')"></a>
+                    </li>
+                    <li class="page-item font-weight-bold" th:classappend="${currentPage == 1} ? 'disabled'">
+                        <a th:replace="layout/paging :: paging(${currentPage - 1}, '<', 'Previous Page')"></a>
+                    </li>
+                    <li class="page-item disabled" th:if="${currentPage - 2 > 1}">
+                        <a class="page-link" href="#">...</a>
+                    </li>
+                    <li class="page-item" th:classappend="${page == currentPage} ? 'active'"
+                        th:each="page : ${#numbers.sequence(currentPage > 2 ? currentPage - 2 : 1, currentPage + 2 < totalPages ? currentPage + 2 : totalPages)}">
+                        <a th:replace="layout/paging :: paging(${page}, ${page}, 'Page ' + ${page})"></a>
+                    </li>
+                    <li class="page-item disabled" th:if="${currentPage + 2 < totalPages}">
+                        <a class="page-link" href="#">...</a>
+                    </li>
+                    <li class="page-item font-weight-bold" th:classappend="${currentPage == totalPages} ? 'disabled'">
+                        <a th:replace="layout/paging :: paging(${currentPage + 1},'>', 'Next Page')"></a>
+                    </li>
+                    <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
+                        <a th:replace="layout/paging :: paging(${totalPages}, '>>', 'Last Page')"></a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </appMain>
+</th:block>

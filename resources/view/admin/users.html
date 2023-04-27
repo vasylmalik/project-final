@@ -8,18 +8,18 @@
     <appMain>
         <div class="jumbotron pt-4">
             <div class="container">
-                <h3 class="text-center">Users</h3>
-                <button th:onclick="add()" class="btn btn-primary">Add</button>
+                <h3 class="text-center" th:text="#{users.title}"></h3>
+                <button th:onclick="add()" class="btn btn-primary" th:text="#{users.button.add}"></button>
                 <table class="table table-striped" id="datatable">
                     <thead>
                     <tr>
-                        <th>First name</th>
-                        <th>Last name</th>
-                        <th>Display name</th>
-                        <th>Email</th>
-                        <th>Roles</th>
-                        <th>Registered</th>
-                        <th>Active</th>
+                        <th th:text="#{users.table.first-name}"></th> <!--TODO 11.add localization-->
+                        <th th:text="#{users.table.last-name}"></th>
+                        <th th:text="#{users.table.display-name}"></th>
+                        <th th:text="#{users.table.email}"></th>
+                        <th th:text="#{users.table.roles}"></th>
+                        <th th:text="#{users.table.registered}"></th>
+                        <th th:text="#{users.table.active}"></th>
                         <th></th>
                         <th></th>
                     </tr>
@@ -40,44 +40,44 @@
                             <input type="hidden" id="id" name="id">
 
                             <div class="form-group">
-                                <label for="firstName" class="col-form-label">First name</label>
+                                <label for="firstName" class="col-form-label" th:text="#{users.create.first-name}"></label>
                                 <input type="text" class="form-control" id="firstName" name="firstName"
-                                       placeholder="First name">
+                                       th:placeholder="#{users.create.placeholder.first-name}">
                             </div>
 
                             <div class="form-group">
-                                <label for="lastName" class="col-form-label">Last name</label>
+                                <label for="lastName" class="col-form-label" th:text="#{users.create.last-name}"></label>
                                 <input type="text" class="form-control" id="lastName" name="lastName"
-                                       placeholder="Last name">
+                                       th:placeholder="#{users.create.placeholder.last-name}">
                             </div>
 
                             <div class="form-group">
-                                <label for="displayName" class="col-form-label">Display name</label>
+                                <label for="displayName" class="col-form-label" th:text="#{users.create.display-name}"></label>
                                 <input type="text" class="form-control" id="displayName" name="displayName"
-                                       placeholder="Display name">
+                                       th:placeholder="#{users.create.placeholder.display-name}">
                             </div>
 
                             <div class="form-group">
-                                <label for="email" class="col-form-label">Email</label>
+                                <label for="email" class="col-form-label" th:text="#{users.create.email}"></label>
                                 <input type="email" class="form-control" id="email" name="email"
-                                       placeholder="Email">
+                                       th:placeholder="#{users.create.placeholder.email}">
                             </div>
 
                             <div class="form-group">
-                                <label for="password" class="col-form-label">Password</label>
+                                <label for="password" class="col-form-label" th:text="#{users.create.password}"></label>
                                 <input type="password" class="form-control" id="password" name="password"
-                                       placeholder="Password">
+                                       th:placeholder="#{users.create.placeholder.password}">
                             </div>
                         </form>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="closeNoty()">
                             <span class="fa fa-close"></span>
-                            Cancel
+                            <span th:text="#{users.button.cancel}"></span>
                         </button>
                         <button type="button" class="btn btn-primary" onclick="save()">
                             <span class="fa fa-check"></span>
-                            Save
+                            <span th:text="#{users.button.save}"></span>
                         </button>
                     </div>
                 </div>

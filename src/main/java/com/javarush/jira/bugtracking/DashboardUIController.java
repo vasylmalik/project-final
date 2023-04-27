@@ -4,13 +4,14 @@ import com.javarush.jira.bugtracking.to.SprintTo;
 import com.javarush.jira.bugtracking.to.TaskTo;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
 @RequestMapping
 public class DashboardUIController {
 
-    private TaskService taskService;
+    private final TaskService taskService;
 
     @GetMapping("/") // index page
     public String getAll(Model model) {

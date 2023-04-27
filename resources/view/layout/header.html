@@ -9,19 +9,29 @@
                 <div class="collapse navbar-collapse mt-2 mb-2">
                     <ul class="navbar-nav m-auto">
                         <form class="d-flex" role="search">
-                            <input class="form-control" type="search" placeholder="Search" aria-label="Search" id="header-search">
+                            <input class="form-control" type="search" th:placeholder="#{header.search.placeholder}" aria-label="Search" id="header-search">
                         </form>
                         <li class="nav-item menu-item me-3 ms-4">
-                            <a href="/doc" type="button" class="btn btn-yellow" target="_blank">Swagger API</a>
+                            <a href="/doc" type="button" class="btn btn-yellow" target="_blank" th:text="#{header.swagger}"></a> <!--TODO: 11.add localization-->
                         </li>
                     </ul>
+                    <div>
+                        <a href="?lang=en" type="button" class="btn btn-outline-info" th:text="eng"></a>
+                        <a href="?lang=ru" type="button" class="btn btn-outline-info me-5" th:text="рус"></a>
+                    </div>
                     <div th:if="${authUser} == null">
-                        <a href="/view/login" type="button" class="btn btn-orange">Login/Register</a>
+                        <a href="/view/login" type="button" class="btn btn-orange" th:text="#{header.login}"></a>
                     </div>
                     <th:block th:if="${authUser} != null">
-                        <a href="/ui/profile" type="button" class="btn btn-orange"><i class="fa-solid fa-address-card"></i> Profile</a>
+                        <a href="/ui/profile" type="button" class="btn btn-orange">
+                            <i class="fa-solid fa-address-card"></i>
+                            <span th:text="#{header.profile}"></span>
+                        </a>
                         <form action="/ui/logout" method="post" class="mx-2">
-                            <button class="btn btn-yellow btn-orange" type="submit"><i class="fa-solid fa-sign-out"></i> Logout</button>
+                            <button class="btn btn-yellow btn-orange" type="submit">
+                                <i class="fa-solid fa-sign-out"></i>
+                                <span th:text="#{header.logout}"></span>
+                            </button>
                         </form>
                     </th:block>
                 </div>

@@ -6496,9 +6496,6 @@ readers do not read off random characters that represent icons */
 .fa-rocketchat:before {
   content: "\f3e8"; }
 
-.fa-vk:before {
-  content: "\f189"; }
-
 .fa-untappd:before {
   content: "\f405"; }
 
@@ -7510,9 +7507,6 @@ readers do not read off random characters that represent icons */
 .fa-kickstarter-k:before {
   content: "\f3bc"; }
 
-.fa-yandex:before {
-  content: "\f413"; }
-
 .fa-readme:before {
   content: "\f4d5"; }
 
@@ -7680,9 +7674,6 @@ readers do not read off random characters that represent icons */
 
 .fa-sketch:before {
   content: "\f7c6"; }
-
-.fa-yandex-international:before {
-  content: "\f414"; }
 
 .fa-cc-amex:before {
   content: "\f1f3"; }

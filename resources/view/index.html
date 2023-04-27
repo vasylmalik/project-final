@@ -5,16 +5,16 @@
 
 <th:block th:replace="~{layout/main::page(title='JiraRush: mini bugtracking system',appMain=~{::appMain})}">
     <appMain>
-        <h1>Dashboard</h1>
+        <h1 th:text="#{app.dashboard}"></h1>
         <div class="container text-center">
             <div class="row " th:each="entry: ${taskMap}">
                 <div class="card">
                     <div class="card-body" th:with="sprint=${entry.key}, tasks=${entry.value}">
-                        <h5 class="card-title" th:text="|Sprint: ${sprint.title}|"></h5>
+                        <h5 class="card-title" th:text="|#{app.dashboard.sprint}: ${sprint.title}|"></h5>
                         <h6 class="card-subtitle mb-2 text-muted" style="text-align: left; "
-                            th:text="|Status: ${sprint.statusCode}|"></h6>
+                            th:text="|#{app.dashboard.status}: ${sprint.statusCode}|"></h6> <!--TODO: 11.add localization-->
                         <h6 class="card-subtitle mb-2 text-muted" style="text-align: left; "
-                            th:text="|Due date: ${#temporals.format(sprint.endpoint,'dd.MM.yyyy')}|"></h6>
+                            th:text="|#{app.dashboard.due-date}: ${#temporals.format(sprint.endpoint,'dd.MM.yyyy')}|"></h6>
                         <div class="row">
                             <div class="col" th:each="task: ${tasks}">
                                 <div class="card">

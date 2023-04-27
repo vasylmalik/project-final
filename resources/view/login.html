@@ -7,26 +7,25 @@
             <div class="col-12 col-md-8 col-xl-5">
                 <div class="card shadow-2-strong" style="border-radius: 1rem;">
                     <div class="card-body p-3 p-md-5 text-center">
-                        <h3 class="mb-3">Sign in</h3>
+                        <h3 class="mb-3" th:text="#{login.sign.in}"></h3>
                         <div th:if="${param.error}">
-                            <p class="alert alert-danger col-12 p-2 text-center">
-                                Bad credentials
+                            <p class="alert alert-danger col-12 p-2 text-center" th:text="#{login.error}">
                             </p>
                         </div>
                         <form action="/view/login" method="post">
                             <div class="form-outline mb-4">
-                                <input type="text" name="username" class="form-control" required placeholder="E-mail"/>
+                                <input type="text" name="username" class="form-control" required th:placeholder="#{login.placeholder.email}"/>
                             </div>
                             <div class="form-outline mb-4">
                                 <input type="password" name="password" class="form-control" required
-                                       placeholder="Password"/>
+                                       th:placeholder="#{login.placeholder.password}"/>
                             </div>
                             <div class="row">
                                 <div class="col-7 col-md-6 my-auto">
-                                    <a href="/view/unauth/forgot-password">Forgot your password?</a>
+                                    <a href="/view/unauth/forgot-password" th:text="#{login.password.forgot}"></a>
                                 </div>
                                 <div class="col-5 col-md-6 d-grid gap-2">
-                                    <button class="btn btn-success btn-lg" type="submit">Sign in</button>
+                                    <button class="btn btn-success btn-lg" type="submit" th:text="#{login.sign.in}"></button>
                                 </div>
                             </div>
                         </form>
@@ -35,26 +34,16 @@
                                 <hr>
                             </div>
                             <div class="col-2">
-                                OR
+                                <p th:text="#{login.or}"></p>
                             </div>
                             <div class="col-5">
                                 <hr>
                             </div>
                         </div>
-                        <p class="mt-3 mb-4">
-                            Sign in with social networks
-                        </p>
+                        <p class="mt-3 mb-4" th:text="#{login.sign.socials}"></p> <!--TODO: 11.add localization-->
                         <a href="/oauth2/authorization/google" type="button"
                            class="btn btn-secondary btn-lg me-2">
                             <i class="fa-brands fa-google"></i>
-                        </a>
-                        <a href="/oauth2/authorization/vk" type="button" class="btn btn-primary btn-lg me-2"
-                           style="padding-left: 17px; padding-right: 17px;">
-                            <i class="fa-brands fa-vk"></i>
-                        </a>
-                        <a href="/oauth2/authorization/yandex" type="button" class="btn btn-danger btn-lg me-2"
-                           style="padding-left: 21px; padding-right: 21px;">
-                            <i class="fa-brands fa-yandex"></i>
                         </a>
                         <a href="/oauth2/authorization/github" type="button" class="btn btn-dark btn-lg me-2">
                             <i class="fa-brands fa-github"></i>
@@ -63,7 +52,8 @@
                             <i class="fa-brands fa-gitlab"></i>
                         </a>
                         <p class="mt-3 mb-2 mb-md-0" style="font-size:0.8em">
-                            New here? <a href="/ui/register">Create account</a>
+                            <span th:text="#{login.new}"></span>
+                            <a href="/ui/register" th:text="#{login.account.create}"></a>
                         </p>
                     </div>
                 </div>

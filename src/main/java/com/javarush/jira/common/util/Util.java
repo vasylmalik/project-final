@@ -10,10 +10,13 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.CollectionUtils;
 
 import java.text.MessageFormat;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @UtilityClass
 public class Util {
@@ -55,5 +58,19 @@ public class Util {
             }
         }
         return roots;
+    }
+
+    public static String getFormattedDuration(LocalDateTime start, LocalDateTime end) { // TODO: 8.add task summary
+        Duration duration = Duration.between(start, end);
+        long millis = duration.toMillis();
+
+        return String.format("%02d day(s) %02d hour(s) %02d minute(s) %02d second(s)",
+                TimeUnit.MILLISECONDS.toDays(millis),
+                TimeUnit.MILLISECONDS.toHours(millis) -
+                        TimeUnit.DAYS.toHours(TimeUnit.MILLISECONDS.toDays(millis)),
+                TimeUnit.MILLISECONDS.toMinutes(millis) -
+                        TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
+                TimeUnit.MILLISECONDS.toSeconds(millis) -
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
     }
 }

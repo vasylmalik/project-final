@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--suppress HttpUrlsUsage -->
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <include file="v1/230419-124000-init.sql" relativeToChangelogFile="true"/>
+    <include file="v1/230419-124320-delete-vk.xml" relativeToChangelogFile="true"/>
+    <include file="v1/230422-164700-add-backlog-tasks.xml" relativeToChangelogFile="true"/> <!--TODO: 12.add backlog-->
+    <include file="v1/230423-171500-add-test-phase.xml" relativeToChangelogFile="true"/> <!--TODO: 8.add phase summary-->
+    <include file="v1/230423-215300-add-activities.xml" relativeToChangelogFile="true"/> <!--TODO: 8.add phase summary-->
+
+</databaseChangeLog>

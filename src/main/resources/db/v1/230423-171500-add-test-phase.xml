@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?> <!--TODO: 8.add phase summary-->
+<!--suppress HttpUrlsUsage -->
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <changeSet id="230423-171500-1" author="kossatyy">
+        <insert tableName="reference">
+            <column name="code">in test</column>
+            <column name="title">In test</column>
+            <column name="ref_type">3</column>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

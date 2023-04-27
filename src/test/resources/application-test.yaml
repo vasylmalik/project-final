@@ -3,3 +3,7 @@ spring:
   sql:
     init:
       mode: always
+
+  mail:
+    username: test@gmail.com
+    password: test

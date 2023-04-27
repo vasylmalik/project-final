@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?> <!--TODO 12.add backlog-->
+<!--suppress HttpUrlsUsage -->
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <changeSet id="230422-164700-1" author="kossatyy">
+        <insert tableName="task">
+            <column name="title">My-Task-1</column>
+            <column name="description">descr1</column>
+            <column name="type_code">task</column>
+            <column name="status_code">backlog</column>
+            <column name="priority_code">high</column>
+            <column name="project_id">1</column>
+        </insert>
+        <insert tableName="task">
+            <column name="title">My-Task-2</column>
+            <column name="description">descr2</column>
+            <column name="type_code">task</column>
+            <column name="status_code">backlog</column>
+            <column name="priority_code">normal</column>
+            <column name="project_id">1</column>
+        </insert>
+        <insert tableName="task">
+            <column name="title">My-Task-3</column>
+            <column name="description">descr3</column>
+            <column name="type_code">task</column>
+            <column name="status_code">backlog</column>
+            <column name="priority_code">high</column>
+            <column name="project_id">1</column>
+        </insert>
+        <insert tableName="task">
+            <column name="title">My-Task-4</column>
+            <column name="description">descr4</column>
+            <column name="type_code">task</column>
+            <column name="status_code">backlog</column>
+            <column name="priority_code">low</column>
+            <column name="project_id">1</column>
+        </insert>
+        <insert tableName="task">
+            <column name="title">My-Task-5</column>
+            <column name="description">descr5</column>
+            <column name="type_code">task</column>
+            <column name="status_code">backlog</column>
+            <column name="priority_code">normal</column>
+            <column name="project_id">1</column>
+        </insert>
+        <insert tableName="task">
+            <column name="title">My-Task-6</column>
+            <column name="description">descr6</column>
+            <column name="type_code">task</column>
+            <column name="status_code">backlog</column>
+            <column name="priority_code">high</column>
+            <column name="project_id">1</column>
+        </insert>
+        <insert tableName="task">
+            <column name="title">My-Task-7</column>
+            <column name="description">descr7</column>
+            <column name="type_code">task</column>
+            <column name="status_code">backlog</column>
+            <column name="priority_code">low</column>
+            <column name="project_id">1</column>
+        </insert>
+        <insert tableName="task">
+            <column name="title">My-Task-8</column>
+            <column name="description">descr8</column>
+            <column name="type_code">task</column>
+            <column name="status_code">backlog</column>
+            <column name="priority_code">normal</column>
+            <column name="project_id">1</column>
+        </insert>
+        <insert tableName="task">
+            <column name="title">My-Task-9</column>
+            <column name="description">descr9</column>
+            <column name="type_code">task</column>
+            <column name="status_code">backlog</column>
+            <column name="priority_code">high</column>
+            <column name="project_id">1</column>
+        </insert>
+        <insert tableName="task">
+            <column name="title">My-Task-10</column>
+            <column name="description">descr10</column>
+            <column name="type_code">task</column>
+            <column name="status_code">backlog</column>
+            <column name="priority_code">low</column>
+            <column name="project_id">1</column>
+        </insert>
+    </changeSet>
+</databaseChangeLog>
