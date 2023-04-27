@@ -26,7 +26,3 @@ public abstract class AbstractControllerTest {
     }
 }
 
-/*
-select sysdate - sysdate -20
-from dual
-* */

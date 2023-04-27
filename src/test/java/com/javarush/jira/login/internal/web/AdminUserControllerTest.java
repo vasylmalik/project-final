@@ -4,7 +4,10 @@ import com.javarush.jira.AbstractControllerTest;
 import com.javarush.jira.login.Role;
 import com.javarush.jira.login.User;
 import com.javarush.jira.login.internal.UserRepository;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
@@ -26,6 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class AdminUserControllerTest extends AbstractControllerTest {
 
@@ -36,6 +40,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
+    @Order(1)
     void get() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL_SLASH + ADMIN_ID))
                 .andExpect(status().isOk())
@@ -47,6 +52,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
+    @Order(2)
     void getNotFound() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL_SLASH + NOT_FOUND))
                 .andDo(print())
@@ -55,6 +61,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
+    @Order(3)
     void getByEmail() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL_SLASH + "by-email?email=" + admin.getEmail()))
                 .andExpect(status().isOk())
@@ -62,8 +69,10 @@ class AdminUserControllerTest extends AbstractControllerTest {
                 .andExpect(USER_MATCHER.contentJson(admin));
     }
 
+
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
+    @Order(100)
     void delete() throws Exception {
         perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + USER_ID))
                 .andDo(print())
@@ -73,6 +82,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
+    @Order(101)
     void deleteNotFound() throws Exception {
         perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + NOT_FOUND))
                 .andDo(print())
@@ -81,6 +91,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
+    @Order(4)
     void enableNotFound() throws Exception {
         perform(MockMvcRequestBuilders.patch(REST_URL_SLASH + NOT_FOUND)
                 .param("enabled", "false")
@@ -90,6 +101,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @Order(5)
     void getUnauthorized() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL))
                 .andExpect(status().isUnauthorized());
@@ -97,6 +109,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = USER_MAIL)
+    @Order(6)
     void getForbidden() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL))
                 .andExpect(status().isForbidden());
@@ -104,6 +117,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
+    @Order(7)
     void update() throws Exception {
         User updated = getUpdated();
         updated.setId(null);
@@ -118,6 +132,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
+    @Order(0)
     void createWithLocation() throws Exception {
         User newUser = getNew();
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
@@ -134,6 +149,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
+    @Order(0)
     void getAll() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL))
                 .andExpect(status().isOk())
@@ -143,6 +159,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
+    @Order(10)
     void enable() throws Exception {
         perform(MockMvcRequestBuilders.patch(REST_URL_SLASH + USER_ID)
                 .param("enabled", "false")
@@ -155,6 +172,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
+    @Order(11)
     void createInvalid() throws Exception {
         User invalid = new User(null, "", null, "Aa", "", "", Role.DEV, Role.ADMIN);
         perform(MockMvcRequestBuilders.post(REST_URL)
@@ -166,6 +184,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
+    @Order(12)
     void updateInvalid() throws Exception {
         User invalid = new User(user);
         invalid.setFirstName("");
@@ -178,6 +197,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
+    @Order(13)
     void updateHtmlUnsafe() throws Exception {
         User updated = new User(user);
         updated.setFirstName("<script>alert(123)</script>");
@@ -191,6 +211,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
     @Test
     @Transactional(propagation = Propagation.NEVER)
     @WithUserDetails(value = ADMIN_MAIL)
+    @Order(14)
     void updateDuplicate() throws Exception {
         User updated = new User(admin);
         updated.setEmail(USER_MAIL);
@@ -205,6 +226,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
     @Test
     @Transactional(propagation = Propagation.NEVER)
     @WithUserDetails(value = ADMIN_MAIL)
+    @Order(15)
     void createDuplicateEmail() throws Exception {
         User expected = new User(null, USER_MAIL, "newPass", "duplicateFirstName", "duplicateLastName",
                 "duplicateDisplayName", Role.DEV);
@@ -218,6 +240,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
+    @Order(16)
     void changePassword() throws Exception {
         perform(MockMvcRequestBuilders.post(REST_URL_SLASH + USER_ID + "/change_password")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
@@ -232,6 +255,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
+    @Order(17)
     void changePasswordInvalid() throws Exception {
         perform(MockMvcRequestBuilders.post(REST_URL_SLASH + USER_ID + "/change_password")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)

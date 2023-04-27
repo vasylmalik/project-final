@@ -1,9 +1,6 @@
 package com.javarush.jira.profile.web;
 
 import com.javarush.jira.AbstractControllerTest;
-import com.javarush.jira.login.User;
-import com.javarush.jira.login.UserTo;
-import com.javarush.jira.login.internal.web.UserController;
 import com.javarush.jira.profile.ProfileTo;
 import com.javarush.jira.profile.internal.ProfileMapper;
 import com.javarush.jira.profile.internal.ProfileRepository;
