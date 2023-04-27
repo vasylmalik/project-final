@@ -151,6 +151,17 @@
 	</dependencies>
 
 	<build>
+<!--		<resources>-->
+<!--			<resource>-->
+<!--				<directory>.</directory>-->
+<!--				<includes>-->
+<!--					<include>resources/**/*.*</include>-->
+<!--				</includes>-->
+<!--			</resource>-->
+<!--			<resource>-->
+<!--				<directory>src/main/resources</directory>-->
+<!--			</resource>-->
+<!--		</resources>-->
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -176,6 +187,12 @@
 					<argLine>-Dfile.encoding=UTF-8</argLine>
 				</configuration>
 			</plugin>
+<!--			<plugin>-->
+<!--				<artifactId>maven-resources-plugin</artifactId>-->
+<!--				<configuration>-->
+<!--					<outputDirectory>/resources</outputDirectory>-->
+<!--				</configuration>-->
+<!--			</plugin>-->
 		</plugins>
 	</build>
 </project>

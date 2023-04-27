@@ -29,15 +29,16 @@ public class UserBelongService {
         //check if the current user has already assignment to this task.
         Optional<UserBelong> userBelongWithAssignment = userBelongList.stream().filter(e -> e.getUserId().equals(userId)).findFirst();
 
-        if (userBelongWithAssignment.isEmpty()) {
-            UserBelong subscriber = new UserBelong(taskId,
-                    userBelongList.get(0).getObjectType(),
-                    userId,
-                    Role.SUBSCRIBER.name());
-
-            repository.saveAndFlush(subscriber);
-        } else {
+        if (userBelongWithAssignment.isPresent()) {
             log.debug("Could`t find task without assignment with id={}", taskId);
+            return;
         }
+
+        UserBelong subscriber = new UserBelong(taskId,
+                userBelongList.get(0).getObjectType(),
+                userId,
+                Role.SUBSCRIBER.name());
+
+        repository.saveAndFlush(subscriber);
     }
 }
