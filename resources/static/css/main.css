@@ -153,10 +153,18 @@ tr[data-user-enabled="false"] {
     color: white;
 }
 
+.btn-orange.login_btn {
+    width: 200px;
+}
+
 .btn-yellow {
-    background-color: var(--yellow);
+    background-color: var(--yellow) !important;
     color: black !important;
     font-weight: normal !important;
+}
+
+#languages {
+    width: 160px;
 }
 
 .btn-yellow:hover {

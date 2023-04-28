@@ -16,6 +16,10 @@ spring:
     show-sql: true
     open-in-view: false
 
+  messages:
+    basename: locale/messages
+    encoding: UTF-8
+
 # validate db by model
     hibernate:
       ddl-auto: validate

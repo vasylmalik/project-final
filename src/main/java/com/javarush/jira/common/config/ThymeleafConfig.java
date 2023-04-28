@@ -3,10 +3,13 @@ package com.javarush.jira.common.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.FileTemplateResolver;
 
+import java.util.Locale;
 import java.util.Set;
 
 @Configuration
@@ -14,6 +17,13 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class ThymeleafConfig {
     private final AppProperties appProperties;
+
+    @Bean
+    public LocaleResolver localeResolver() {
+        SessionLocaleResolver sessionLocaleResolver = new SessionLocaleResolver();
+        sessionLocaleResolver.setDefaultLocale(Locale.US);
+        return sessionLocaleResolver;
+    }
 
     @Bean
     // Attention: with TemplateEngine clear cache doesn't work
