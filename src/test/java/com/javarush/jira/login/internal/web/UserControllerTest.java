@@ -33,7 +33,6 @@ class UserControllerTest extends AbstractControllerTest {
     UserMapper mapper;
 
     @Test
-//    @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
     @WithUserDetails(value = USER_MAIL)
     void get() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL))
