@@ -9,15 +9,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Transactional(readOnly = true)
+@Transactional(readOnly = false)
 public interface TaskRepository extends BaseRepository<Task> {
     @Query("SELECT t FROM Task t LEFT JOIN FETCH t.project LEFT JOIN FETCH t.sprint LEFT JOIN FETCH t.activities")
     List<Task> getAll();
 
-   @Modifying
-    @Query(value="INSERT INTO task_tag (task_id,tag) VALUES (:taskId, :tag)",nativeQuery = true)
-    void saveTag(@Param("taskId") Long taskId,@Param("tag") String tag);
+    @Modifying
+    @Query(value = "INSERT INTO task_tag (task_id,tag) VALUES (:taskId, :tag)", nativeQuery = true)
+    void saveTag(@Param("taskId") Long taskId, @Param("tag") String tag);
 
-   Task getTaskById(Long id);
+    Task getTaskById(Long id);
 
 }
