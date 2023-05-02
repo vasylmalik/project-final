@@ -3,23 +3,23 @@ package com.javarush.jira.profile.web;
 import com.javarush.jira.AbstractControllerTest;
 import com.javarush.jira.profile.ContactTo;
 import com.javarush.jira.profile.ProfileTo;
+import com.javarush.jira.profile.internal.Contact;
 import com.javarush.jira.profile.internal.ProfileMapper;
 import com.javarush.jira.profile.internal.ProfileRepository;
-import com.javarush.jira.ref.RefType;
-import com.javarush.jira.ref.ReferenceController;
-import org.junit.jupiter.api.Disabled;
+import org.apache.commons.collections4.CollectionUtils;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.javarush.jira.common.util.JsonUtil.writeValue;
 import static com.javarush.jira.login.internal.web.UserTestData.ADMIN_MAIL;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.hamcrest.Matchers.*;
@@ -29,10 +29,12 @@ class ProfileRestControllerTest extends AbstractControllerTest {
     private static final String REST_URL = ProfileRestController.REST_URL ;
     private final int EXPECTED_ID_FOR_ADMIN=2;
 
-    private final ProfileTo TEST_PROFILE_FOR_UPDATING = new ProfileTo(2L,null, Set.of(new ContactTo("email","adminNew@gmail.com")));
+    private final ProfileTo TEST_PROFILE_FOR_UPDATING = new ProfileTo(2L,null, Set.of(new ContactTo("phone","8888")));
 
     @Autowired
     private ProfileRepository profileRepository;
+    @Autowired
+    private ProfileMapper profileMapper;
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
@@ -51,16 +53,27 @@ class ProfileRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isUnauthorized())
                 .andDo(print())   ;
     }
-    // Test doesn't pass with "IllegalArgumentException":"Value with key email not found at request /api/profile"
-    // repository was planned to be used to compare old and new content...
+
     @Test
-    @Disabled
     @WithUserDetails(value = ADMIN_MAIL)
     void update() throws Exception{
                    perform(MockMvcRequestBuilders.put(REST_URL)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(writeValue(TEST_PROFILE_FOR_UPDATING)))
-                    .andExpect(status().isOk());
+                    .andExpect(status().is2xxSuccessful());
+        Set<String> actual= profileRepository.getExisted(EXPECTED_ID_FOR_ADMIN).getContacts().stream()
+                .map(x->x.getValue())
+                .collect(Collectors.toSet());;
+        Set<String> expected = TEST_PROFILE_FOR_UPDATING.getContacts()
+                .stream()
+                .map(profileMapper::toContact)
+                .map(x->x.getValue())
+                .collect(Collectors.toSet());
+        //for some reason while making Conctact from ContactTo we lose the id-value
+        //i suppose it is the problem of ProfileMapper...
+        //that's why i compared contact's values, not cotacts itself
+
+        Assertions.assertEquals(expected,actual);
 
     }
 
