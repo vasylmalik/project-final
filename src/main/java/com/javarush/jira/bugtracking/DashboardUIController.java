@@ -32,7 +32,7 @@ public class DashboardUIController {
         return "index";
     }
 
-    @GetMapping("/lang")
+    @GetMapping("/ui/lang")
     public String changeLanguage(@RequestParam String language, HttpServletRequest request) {
         return "redirect:" + request.getHeader("Referer");
     }
