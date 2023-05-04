@@ -3,3 +3,10 @@ spring:
   sql:
     init:
       mode: always
+
+  datasource:
+    url: jdbc:h2:mem:jira;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;NON_KEYWORDS=VALUE;
+    username: jira
+    password: JiraRush
+  hibernate:
+    ddl-auto: validate
