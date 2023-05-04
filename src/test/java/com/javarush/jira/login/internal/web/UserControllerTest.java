@@ -5,10 +5,16 @@ import com.javarush.jira.login.User;
 import com.javarush.jira.login.UserTo;
 import com.javarush.jira.login.internal.UserMapper;
 import com.javarush.jira.login.internal.UserRepository;
+import org.junit.FixMethodOrder;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Propagation;
@@ -25,6 +31,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class UserControllerTest extends AbstractControllerTest {
 
     @Autowired
@@ -33,6 +42,7 @@ class UserControllerTest extends AbstractControllerTest {
     UserMapper mapper;
 
     @Test
+    @Order(1)
     @WithUserDetails(value = USER_MAIL)
     void get() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL))
@@ -43,6 +53,7 @@ class UserControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @Order(3)
     @WithUserDetails(value = ADMIN_MAIL)
     void getAdmin() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL))
@@ -53,12 +64,14 @@ class UserControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @Order(5)
     void getUnauthorized() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
+    @Order(7)
     void createWithLocation() throws Exception {
         UserTo newTo = mapper.toTo(getNew());
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
@@ -75,6 +88,7 @@ class UserControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @Order(9)
     void createInvalid() throws Exception {
         UserTo invalid = new UserTo(null, "", null, "Aa", "", "");
         perform(MockMvcRequestBuilders.post(REST_URL)
@@ -86,6 +100,7 @@ class UserControllerTest extends AbstractControllerTest {
 
     @Test
     @Transactional(propagation = Propagation.NEVER)
+    @Order(11)
     void createDuplicateEmail() throws Exception {
         UserTo expected = new UserTo(null, USER_MAIL, "newPass", "duplicateFirstName", "duplicateLastName", "duplicateDisplayName");
         perform(MockMvcRequestBuilders.post(REST_URL)
@@ -98,6 +113,7 @@ class UserControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = USER_MAIL)
+    @Order(13)
     void update() throws Exception {
         User dbUserBefore = repository.getExistedByEmail(USER_MAIL);
         UserTo updatedTo = mapper.toTo(getUpdated());
@@ -118,6 +134,7 @@ class UserControllerTest extends AbstractControllerTest {
     @Test
     @Transactional(propagation = Propagation.NEVER)
     @WithUserDetails(value = USER_MAIL)
+    @Order(15)
     void updateDuplicate() throws Exception {
         UserTo updatedTo = mapper.toTo(getUpdated());
         updatedTo.setEmail(ADMIN_MAIL);
@@ -131,6 +148,7 @@ class UserControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = USER_MAIL)
+    @Order(17)
     void updateInvalid() throws Exception {
         UserTo invalid = mapper.toTo(getUpdated());
         invalid.setFirstName("");
@@ -143,6 +161,7 @@ class UserControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = USER_MAIL)
+    @Order(100)
     void delete() throws Exception {
         perform(MockMvcRequestBuilders.delete(REST_URL))
                 .andDo(print())
@@ -151,6 +170,7 @@ class UserControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @Order(101)
     void deleteUnauthorized() throws Exception {
         perform(MockMvcRequestBuilders.delete(REST_URL))
                 .andExpect(status().isUnauthorized());
@@ -158,6 +178,7 @@ class UserControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = USER_MAIL)
+    @Order(19)
     void changePassword() throws Exception {
         String changedPassword = "changedPassword";
         perform(MockMvcRequestBuilders.post(REST_URL + "/change_password")
@@ -172,6 +193,7 @@ class UserControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = USER_MAIL)
+    @Order(21)
     void changePasswordInvalid() throws Exception {
         perform(MockMvcRequestBuilders.post(REST_URL + "/change_password")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
@@ -182,6 +204,7 @@ class UserControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @Order(23)
     void changePasswordUnauthorized() throws Exception {
         perform(MockMvcRequestBuilders.delete(REST_URL + "/change_password"))
                 .andExpect(status().isUnauthorized());

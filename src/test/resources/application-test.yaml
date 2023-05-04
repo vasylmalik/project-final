@@ -1,5 +1,71 @@
-spring.cache.type: none
+server:
+  port: 8081
 spring:
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+
+    hibernate:
+      ddl-auto: validate
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-ui-test
+
+  datasource:
+    url: jdbc:h2:mem:testdb-test
+    #;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  liquibase:
+    enabled: true
+    changeLog: "classpath:db/test.sql"
+
+  mail:
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
+          auth: true
+    host: smtp.gmail.com
+    username: jira4jr@gmail.com
+    password: zdfzsrqvgimldzyj
+    port: 587
+
   sql:
     init:
       mode: always
+
+
+  # datasource:
+ #   url: jdbc:postgresql://197.197.0.8:5432/bulatdb
+ #   username: n371007
+ #   password: bulatus
+
+ # liquibase:
+ #   changeLog: "classpath:db/changelog.sql"
+
+
+
+
+
+
+  #sql:
+  #  init:
+  #    mode: always
+
+
+
+
+  # test:
+
+  #   database:
+ #     replace: none
+
+

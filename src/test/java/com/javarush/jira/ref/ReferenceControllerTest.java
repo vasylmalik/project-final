@@ -3,12 +3,14 @@ package com.javarush.jira.ref;
 import com.javarush.jira.AbstractControllerTest;
 import com.javarush.jira.ref.internal.Reference;
 import com.javarush.jira.ref.internal.ReferenceRepository;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+
+
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.lang.NonNull;
 import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -21,6 +23,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ReferenceControllerTest extends AbstractControllerTest {
     private static final String REST_URL = ReferenceController.REST_URL + "/";
 
@@ -35,6 +39,7 @@ public class ReferenceControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @Order(1)
     @WithUserDetails(value = ADMIN_MAIL)
     void getByType() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL + RefType.TASK))
@@ -44,6 +49,8 @@ public class ReferenceControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @Order(2)
+    //@Disabled
     @WithUserDetails(value = ADMIN_MAIL)
     void getByTypeByCode() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL + RefType.TASK + "/" + TASK_CODE))
@@ -54,6 +61,9 @@ public class ReferenceControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    //@Disabled
+    @Order(100)
+
     @WithUserDetails(value = ADMIN_MAIL)
     void delete() throws Exception {
         perform(MockMvcRequestBuilders.delete(REST_URL + RefType.TASK + "/" + TASK_CODE))
@@ -64,12 +74,15 @@ public class ReferenceControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @Order(4)
     void getUnAuth() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL + RefType.TASK))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
+    @Order(5)
+   // @Disabled
     @WithUserDetails(value = ADMIN_MAIL)
     void update() throws Exception {
         perform(MockMvcRequestBuilders.put(REST_URL + RefType.TASK + "/" + TASK_CODE)
@@ -81,6 +94,7 @@ public class ReferenceControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @Order(6)
     @WithUserDetails(value = ADMIN_MAIL)
     void create() throws Exception {
         Reference newRef = getNew();
@@ -94,6 +108,7 @@ public class ReferenceControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @Order(7)
     @WithUserDetails(value = ADMIN_MAIL)
     void createNoBody() throws Exception {
         perform(MockMvcRequestBuilders.post(ReferenceController.REST_URL)
@@ -104,6 +119,9 @@ public class ReferenceControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
+
+    //@Disabled
+    @Order(8)
     void enable() throws Exception {
         perform(MockMvcRequestBuilders.patch(REST_URL + RefType.TASK + "/" + TASK_CODE)
                 .param("enabled", "false")

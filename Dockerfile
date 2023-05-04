@@ -1,0 +1,46 @@
+FROM openjdk:17.0.2-jdk-slim-buster
+ARG JAR_FILE=target/*.jar
+
+ENV DATABASE_USERNAME=n371007
+ENV DATABASE_PASSWORD=bulatus
+ENV DATABASE_NAME=bulatdb
+ENV DATABASE_SERVER=197.197.0.8
+
+ENV DATABASE_USERNAME_HOME=jira
+ENV DATABASE_PASSWORD_HOME=JiraRush
+ENV DATABASE_NAME_HOME=jira
+ENV DATABASE_SERVER_HOME=172.17.0.3
+#ENV DATABASE_SERVER_HOME=localhost
+
+ENV OAUTH2_GITHUB_CLIENT_ID=3d0d8738e65881fff266
+ENV OAUTH2_GITHUB_CLIENT_SECRET=0f97031ce6178b7dfb67a6af587f37e222a16120
+ENV OAUTH2_GITHUB_SCOPE=email
+
+ENV OAUTH2_GOOGLE_CLIENT_ID=329113642700-f8if6pu68j2repq3ef6umd5jgiliup60.apps.googleusercontent.com
+ENV OAUTH_GOOGLE_CLIENT_SECRET=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
+ENV OAUTH2_GOOGLE_SCOPE=email,profile
+
+ENV OAUTH2_GITLAB_CLIENT_ID=b8520a3266089063c0d8261cce36971defa513f5ffd9f9b7a3d16728fc83a494
+ENV OAUTH2_GITLAB_CLIENT_SECRET=e72c65320cf9d6495984a37b0f9cc03ec46be0bb6f071feaebbfe75168117004
+ENV OAUTH2_GITLAB_CLIENT_NAME=GitLab
+ENV OAUTH2_GITLAB_REDIRECT_URI="{baseUrl}/login/oauth2/code/{registrationId}"
+ENV OAUTH2_GITLAB_AUTHORIZATION_GRANT_TYPE=authorization_code
+ENV OAUTH2_GITLAB_SCOPE=read_user
+
+ENV OAUTH2_PROVIDER_GITLAB_AUTHORIZATION_URI=https://gitlab.com/oauth/authorize
+ENV OAUTH2_PROVIDER_GITLAB_TOKEN_URI=https://gitlab.com/oauth/token
+ENV OAUTH2_PROVIDER_GITLAB_USER_INFO_URI=https://gitlab.com/api/v4/user
+ENV OAUTH2_PROVIDER_GITLAB_USER_NAME_ATTRIBUTE=email
+
+ENV MAIL_USERNAME=jira4jr@gmail.com
+ENV MAIL_PASSWORD=zdfzsrqvgimldzyj
+ENV MAIL_SMTP=smtp.gmail.com
+
+COPY ${JAR_FILE} jira-1.0.jar
+#ENTRYPOINT ["java","-jar","/jira-1.0.jar"]
+ENTRYPOINT ["java", "-Dspring.profiles.active=prod" ,"-jar","/jira-1.0.jar"]
+
+#docker build -t project-final .
+#docker run -p 8080:8080 -t project-final
+#Циклическое перенаправление на странице
+#docker container inspect container_name_or_ID
