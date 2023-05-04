@@ -69,12 +69,11 @@ class ProfileRestControllerTest extends AbstractControllerTest {
                 .map(profileMapper::toContact)
                 .map(x->x.getValue())
                 .collect(Collectors.toSet());
-        //for some reason while making Conctact from ContactTo we lose the id-value
+        //for some reason while making Contact from ContactTo we lose the id-value
         //i suppose it is the problem of ProfileMapper...
         //that's why i compared contact's values, not cotacts itself
 
-        Assertions.assertEquals(expected,actual);
-
+        assertTrue(CollectionUtils.isEqualCollection(expected,actual));
     }
 
 
