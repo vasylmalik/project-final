@@ -8,6 +8,8 @@ app:
     max-pool-size: 100
 
 spring:
+  config:
+    import: file:./passwords.env[.properties]
   jpa:
     show-sql: true
     open-in-view: false
