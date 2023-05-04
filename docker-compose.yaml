@@ -1,0 +1,19 @@
+version: '3.1'
+
+volumes:
+  pg_project:
+
+services:
+  pg_db:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=JiraRush
+      - POSTGRES_USER=jira
+      - POSTGRES_DB=jira
+    volumes:
+      - pg_project:/var/lib/postgresql2/data
+    ports:
+      - ${POSTGRES_PORT:-54321}:5432
+#docker-compose up -d.
+#docker-compose stop.
