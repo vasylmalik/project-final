@@ -44,7 +44,7 @@ public class MailCase extends BaseEntity {
     @CreationTimestamp
     @Column(name = "date_time", nullable = false, updatable = false)
     @NotNull
-    private LocalDateTime dateTime;
+    private LocalDateTime dateTime = LocalDateTime.now();
 
     public MailCase(String email, String name, String template, String result) {
         this.email = email;
