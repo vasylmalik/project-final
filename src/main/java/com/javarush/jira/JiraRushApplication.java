@@ -10,7 +10,6 @@ import org.springframework.context.annotation.PropertySource;
 @SpringBootApplication
 @EnableConfigurationProperties(AppProperties.class)
 @EnableCaching
-@PropertySource("classpath:application.yaml")
 public class JiraRushApplication {
 
     public static void main(String[] args) {
