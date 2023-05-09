@@ -48,4 +48,7 @@
   5. table - jira
   ```
 
+[//]: # (-p 5432:5432 --name postgres-db -e POSTGRES_PASSWORD=JiraRush -e POSTGRES_USER=jira -e POSTGRES_DB=jira -e PGDATA=/var/lib/postgresql/data/pgdata)
+
+[//]: # (-v .//pgdata://var//lib//postgresql//data -d postgres)
 
