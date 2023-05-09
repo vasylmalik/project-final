@@ -22,4 +22,4 @@
 - https://habr.com/ru/articles/259055/
 
 Список выполненных задач:
-...
+TASK-0001 Delete Yandex and VK from authorization
