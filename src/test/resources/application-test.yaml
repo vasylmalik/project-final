@@ -3,3 +3,34 @@ spring:
   sql:
     init:
       mode: always
+  hibernate:
+    ddl-auto: update
+    dialect: org.hibernate.dialect.H2Dialect
+
+    properties:
+      #  http://docs.jboss.org/hibernate/orm/5.3/userguide/html_single/Hibernate_User_Guide.html#configurations
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 20
+        # https://stackoverflow.com/questions/21257819/what-is-the-difference-between-hibernate-jdbc-fetch-size-and-hibernate-jdbc-batc
+        jdbc.batch_size: 20
+
+  datasource:
+    url: jdbc:h2:mem:jira2;NON_KEYWORDS=KEY,VALUE;MODE=PostgreSQL
+    driverClassName: org.h2.Driver
+    user: sa
+    password: sa
+
+#  liquibase:
+#    changeLog: "classpath:db/test.sql"
+
+  liquibase:
+
+    change-log: "classpath:db/test.sql"
+
+#  liquibase:
+#    url: jdbc:postgresql://localhost/jira;NON_KEYWORDS=KEY,VALUE
+#    driverClassName: org.postgresql.Driver
+#    user: jira
+#    password: JiraRush
+#    changeLog: "classpath:db/changelog.sql"
