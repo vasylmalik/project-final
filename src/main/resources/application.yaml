@@ -1,13 +1,9 @@
-#  https://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
+
+# https://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
 app:
   host-url: http://localhost:8080
-  test-mail: jira4jr@gmail.com
-  templates-update-cache: 5s
-  mail-sending-props:
-    core-pool-size: 8
-    max-pool-size: 100
-
 spring:
+  #https://stackoverflow.com/questions/58549361/using-dotenv-files-with-spring-boot
   config:
     import: optional:file:.env[.properties]
   jpa:
@@ -17,9 +13,11 @@ spring:
     hibernate:
       ddl-auto: validate
     properties:
+      #  http://docs.jboss.org/hibernate/orm/5.3/userguide/html_single/Hibernate_User_Guide.html#configurations
       hibernate:
         format_sql: true
         default_batch_fetch_size: 20
+        # https://stackoverflow.com/questions/21257819/what-is-the-difference-between-hibernate-jdbc-fetch-size-and-hibernate-jdbc-batc
         jdbc.batch_size: 20
   datasource:
     url: ${DATASOURCE_URL}
@@ -28,37 +26,59 @@ spring:
 
   liquibase:
     changeLog: "classpath:db/changelog.sql"
-
-  client:
-    registration:
-      github:
-        client-id: ${GITHUB_CLIENT_ID}
-        client-secret: ${GITHUB_CLIENT_SECRET}
-        scope:
-          - email
-      google:
-        client-id: ${GOOGLE_CLIENT_ID}
-        client-secret: ${GOOGLE_CLIENT_SECRET}
-        scope:
-          - email
-          - profile
-      gitlab:
-        client-id: ${GITLAB_CLIENT_ID}
-        client-secret: ${GITLAB_CLIENT_SECRET}
-        client-name: ${GITLAB_CLIENT_NAME}
-        redirect-uri: ${GITLAB_REDIRECT_URI}
-        authorization-grant-type: authorization_code
-        scope: read_user
-    provider:
-
-
-  starttls:
-    enable: true
-  auth: true
-  host: ${MAIL_HOST}
-  username: ${MAIL_USERNAME}
-  password: ${MAIL_PASSWORD}
-  port: ${MAIL_PORT}
+  # Jackson Fields Serialization
+  jackson:
+    visibility:
+      field: any
+      getter: none
+      setter: none
+      is-getter: none
+  # https://docs.spring.io/spring-boot/docs/current/reference/html/appendix-application-properties.html#common-application-properties-cache
+  cache:
+    cache-names: users
+    caffeine.spec: maximumSize=10000,expireAfterAccess=5m
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            client-id: ${GITHUB_CLIENT_ID}
+            client-secret: ${GITHUB_CLIENT_SECRET}
+            scope:
+              - email
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope:
+              - email
+              - profile
+          gitlab:
+            client-id: ${GITLAB_CLIENT_ID}
+            client-secret: ${GITLAB_CLIENT_SECRET}
+            client-name: ${GITLAB_CLIENT_NAME}
+            redirect-uri: ${GITLAB_REDIRECT_URI}
+            authorization-grant-type: authorization_code
+            scope: read_user
+        provider:
+          gitlab:
+            authorization-uri: https://gitlab.com/oauth/authorize
+            token-uri: https://gitlab.com/oauth/token
+            user-info-uri: https://gitlab.com/api/v4/user
+            user-name-attribute: email
+  sql:
+    init:
+      mode: always
+  mail:
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
+          auth: true
+    host: ${MAIL_HOST}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    port: ${MAIL_PORT}
   thymeleaf.check-template-location: false
 
 logging:
@@ -72,7 +92,7 @@ server:
   forward-headers-strategy: framework
   servlet:
     encoding:
-      charset: UTF-8
-      enabled: true
+      charset: UTF-8 # Charset of HTTP requests and responses. Added to the "Content-Type" header if not set explicitly
+      enabled: true # Enable http encoding support
       force: true
 springdoc.swagger-ui.path: /doc
