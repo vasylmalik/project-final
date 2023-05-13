@@ -23,3 +23,7 @@
 
 Список выполненных задач:
 TASK-0001 Delete Yandex and VK from authorization
+TASK-0002 Extract secure values to environment variables
+
+TODO:
+fill environment variables for Docker
