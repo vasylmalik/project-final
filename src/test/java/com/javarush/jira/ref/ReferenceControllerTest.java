@@ -20,7 +20,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
 public class ReferenceControllerTest extends AbstractControllerTest {
     private static final String REST_URL = ReferenceController.REST_URL + "/";
 

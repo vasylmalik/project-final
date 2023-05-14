@@ -36,7 +36,6 @@ import static com.javarush.jira.profile.web.ProfileTestData.USER_PASSWORD;
 import static com.javarush.jira.profile.web.ProfileTestData.getUpdated;
 import static com.javarush.jira.profile.web.ProfileTestData.jsonWithPassword;
 import static com.javarush.jira.profile.web.ProfileTestData.userProfileTo;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -49,13 +48,13 @@ class ProfileRestControllerTest extends AbstractControllerTest {
     ProfileMapper profileMapper;
 
     @Test
-    @WithUserDetails(value = ProfileTestData.USER_MAIL)
+    @WithUserDetails(value = USER_MAIL)
     void get() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(PROFILE_TO_MATCHER.contentJson(profileMapper.toTo(new Profile(USER_ID))));
+                .andExpect(PROFILE_TO_MATCHER.contentJson(userProfileTo));
     }
 
     @Test
