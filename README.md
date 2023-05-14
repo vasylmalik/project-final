@@ -24,6 +24,7 @@
 Список выполненных задач:
 TASK-0001 Delete Yandex and VK from authorization
 TASK-0002 Extract secure values to environment variables
+TASK-0003 Using H2 in tests instead of postgres 
 
 TODO:
 fill environment variables for Docker
