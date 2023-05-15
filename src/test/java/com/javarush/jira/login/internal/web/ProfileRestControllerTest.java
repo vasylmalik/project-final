@@ -51,7 +51,6 @@ class ProfileRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isUnauthorized())
                 .andDo(print())   ;
     }
-    // Test doesn't pass with "IllegalArgumetException":"Value with key email not found at request /api/profile"
     @Test
     @Disabled
     @WithUserDetails(value = ADMIN_MAIL)
