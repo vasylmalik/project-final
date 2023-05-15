@@ -136,14 +136,24 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<!--        https://youtrack.jetbrains.com/issue/IDEA-231927-->
+
 		<dependency>
 			<groupId>org.junit.platform</groupId>
 			<artifactId>junit-platform-launcher</artifactId>
 			<scope>test</scope>
 		</dependency>
-	</dependencies>
 
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+		<groupId>io.github.cdimascio</groupId>
+		<artifactId>java-dotenv</artifactId>
+		<version>5.2.2</version>
+	</dependency>
+	</dependencies>
 	<build>
 		<plugins>
 			<plugin>
