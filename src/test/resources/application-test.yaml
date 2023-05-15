@@ -1,5 +1,11 @@
-spring.cache.type: none
 spring:
+  cache:
+    type: none
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:db;NON_KEYWORDS=VALUE
+    username: sa
+    password: sa
   sql:
     init:
       mode: always
