@@ -1,5 +1,6 @@
 package com.javarush.jira.bugtracking.internal.model;
 
+import com.javarush.jira.bugtracking.to.BelongType;
 import com.javarush.jira.bugtracking.to.ObjectType;
 import com.javarush.jira.common.model.TimestampEntry;
 import com.javarush.jira.common.util.validation.Code;
@@ -36,4 +37,11 @@ public class UserBelong extends TimestampEntry {
     @Code
     @Column(name = "user_type_code", nullable = false)
     private String userTypeCode;
+
+    // object belonging type to user
+    @Column(name = "belong_type", nullable = false, columnDefinition = "int default 0")
+    @Enumerated(EnumType.ORDINAL)
+    @NotNull
+    private BelongType belongType;
+
 }

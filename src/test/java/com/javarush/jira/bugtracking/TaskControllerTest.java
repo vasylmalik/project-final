@@ -54,4 +54,15 @@ public class TaskControllerTest extends AbstractControllerTest {
                 .andDo(print());
     }
 
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void subscribeToTask() throws Exception {
+        perform(MockMvcRequestBuilders.put(REST_URL + "/subscribe")
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+                .param("taskId", "1")
+                .param("userTypeCode", "admin"))
+                .andExpect(status().isNoContent())
+                .andDo(print());
+    }
+
 }

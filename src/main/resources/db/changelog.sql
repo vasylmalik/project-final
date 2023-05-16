@@ -148,6 +148,7 @@ create table USER_BELONG
     OBJECT_TYPE    smallint    not null,
     USER_ID        bigint      not null,
     USER_TYPE_CODE varchar(32) not null,
+    BELONG_TYPE    bigint default 0 not null,
     STARTPOINT     timestamp,
     ENDPOINT       timestamp,
     constraint FK_USER_BELONG foreign key (USER_ID) references USERS (ID)
