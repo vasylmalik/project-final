@@ -267,3 +267,7 @@ INSERT INTO user_belong (id, object_id, object_type, user_id, user_type_code, st
 INSERT INTO user_belong (id, object_id, object_type, user_id, user_type_code, startpoint, endpoint) VALUES (4, 3, 2, 2, 'admin', null, null);
 INSERT INTO user_belong (id, object_id, object_type, user_id, user_type_code, startpoint, endpoint) VALUES (5, 4, 2, 2, 'admin', null, null);
 INSERT INTO user_belong (id, object_id, object_type, user_id, user_type_code, startpoint, endpoint) VALUES (6, 5, 2, 2, 'admin', null, null);
+
+insert into ACTIVITY ( ID, AUTHOR_ID, TASK_ID, UPDATED, STATUS_CODE ) values (1, 1, 2, to_timestamp('2023-05-01 9:30:20', 'YYYY-MM-DD HH24:MI:SS'), 'in progress');
+insert into ACTIVITY ( ID, AUTHOR_ID, TASK_ID, UPDATED, STATUS_CODE ) values (2, 1, 2, to_timestamp('2017-03-13 13:14:20', 'YYYY-MM-DD HH24:MI:SS'), 'ready');
+insert into ACTIVITY ( ID, AUTHOR_ID, TASK_ID, UPDATED, STATUS_CODE ) values (3, 1, 2, to_timestamp('2017-03-15 16:41:20', 'YYYY-MM-DD HH24:MI:SS'), 'done');

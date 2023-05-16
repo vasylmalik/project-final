@@ -1,10 +1,13 @@
 package com.javarush.jira.bugtracking;
 
 import com.javarush.jira.bugtracking.internal.mapper.TaskMapper;
+import com.javarush.jira.bugtracking.internal.model.Activity;
 import com.javarush.jira.bugtracking.internal.model.Task;
+import com.javarush.jira.bugtracking.internal.repository.ActivityRepository;
 import com.javarush.jira.bugtracking.internal.repository.TaskRepository;
 import com.javarush.jira.bugtracking.to.TaskTo;
 import com.javarush.jira.common.error.IllegalRequestDataException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -13,6 +16,10 @@ import java.util.Set;
 
 @Service
 public class TaskService extends BugtrackingService<Task, TaskTo, TaskRepository> {
+
+    @Autowired
+    private ActivityRepository activityRepository;
+
     public TaskService(TaskRepository repository, TaskMapper mapper) {
         super(repository, mapper);
     }
@@ -39,6 +46,16 @@ public class TaskService extends BugtrackingService<Task, TaskTo, TaskRepository
         }
         task.getTags().addAll(tags);
         repository.save(task);
+    }
+
+    public long takeMsInProgress(Task task) {
+        List<Activity> activityList = activityRepository.findAllByTaskOrderByUpdatedDesc(task);
+        return TaskUtil.takeMsInProgress(activityList);
+    }
+
+    public long takeMsInTesting(Task task) {
+        List<Activity> activityList = activityRepository.findAllByTaskOrderByUpdatedDesc(task);
+        return TaskUtil.takeMsInTesting(activityList);
     }
 
 }

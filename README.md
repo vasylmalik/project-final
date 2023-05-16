@@ -28,6 +28,7 @@ TASK-0003 Using H2 in tests instead of postgres
 TASK-0004 Add tests for ProfileRestController
 TASK-0005 Implement addTag rest method
 TASK-0006 Implement subscribe to task
+TASK-0007 Implement takeMsInProgress and takeMsInTesting methods for task
 
 TODO:
 fill environment variables for Docker
