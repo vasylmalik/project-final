@@ -29,6 +29,7 @@ TASK-0004 Add tests for ProfileRestController
 TASK-0005 Implement addTag rest method
 TASK-0006 Implement subscribe to task
 TASK-0007 Implement takeMsInProgress and takeMsInTesting methods for task
+TASK-0008 Add ru/fr localization to index.html and mail templates
 
 TODO:
 fill environment variables for Docker

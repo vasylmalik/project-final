@@ -81,6 +81,9 @@ spring:
     port: 587
   thymeleaf.check-template-location: false
 
+  messages:
+    basename: lang/messages
+
 logging:
   level:
     root: WARN

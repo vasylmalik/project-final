@@ -47,11 +47,9 @@ public class TaskTo extends NodeTo<TaskTo> {
 
     Set<String> tags;
 
-    List<ActivityTo> activities;
-
     public TaskTo(Long id, String title, boolean enabled, String typeCode, String statusCode, String description, SprintTo sprint,
                   ProjectTo project, LocalDateTime updated,
-                  String priorityCode, int estimate, int storyPoints, Set<String> tags, List<ActivityTo> activities, TaskTo parent) {
+                  String priorityCode, int estimate, int storyPoints, Set<String> tags, TaskTo parent) {
         super(id, title, enabled, parent);
         this.typeCode = typeCode;
         this.statusCode = statusCode;
@@ -63,6 +61,5 @@ public class TaskTo extends NodeTo<TaskTo> {
         this.estimate = estimate;
         this.storyPoints = storyPoints;
         this.tags = tags;
-        this.activities = activities;
     }
 }
