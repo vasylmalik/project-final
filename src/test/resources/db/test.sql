@@ -1,6 +1,4 @@
---liquibase formatted sql
 
---changeset kmpk:init_schema
 DROP TABLE IF EXISTS USER_ROLE;
 DROP TABLE IF EXISTS CONTACT;
 DROP TABLE IF EXISTS MAIL_CASE;

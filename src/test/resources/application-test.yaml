@@ -3,9 +3,11 @@ spring:
   sql:
     init:
       mode: always
-  hibernate:
-    ddl-auto: update
-    dialect: org.hibernate.dialect.H2Dialect
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    open-in-view: false
 
     properties:
       #  http://docs.jboss.org/hibernate/orm/5.3/userguide/html_single/Hibernate_User_Guide.html#configurations
@@ -16,21 +18,24 @@ spring:
         jdbc.batch_size: 20
 
   datasource:
-    url: jdbc:h2:mem:jira2;NON_KEYWORDS=KEY,VALUE;MODE=PostgreSQL
+    url: jdbc:h2:mem:jira;NON_KEYWORDS=KEY,VALUE
     driverClassName: org.h2.Driver
     user: sa
     password: sa
 
-#  liquibase:
-#    changeLog: "classpath:db/test.sql"
+
+  mail:
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
+          auth: true
+    host: smtp.gmail.com
+    username: jira4jr@gmail.com
+    password: zdfzsrqvgimldzyj
+    port: 587
 
   liquibase:
 
     change-log: "classpath:db/test.sql"
-
-#  liquibase:
-#    url: jdbc:postgresql://localhost/jira;NON_KEYWORDS=KEY,VALUE
-#    driverClassName: org.postgresql.Driver
-#    user: jira
-#    password: JiraRush
-#    changeLog: "classpath:db/changelog.sql"
