@@ -1,4 +1,4 @@
-package com.javarush.jira.common.util;
+package com.javarush.jira.login.internal.web.util;
 
 import com.javarush.jira.bugtracking.to.ProjectTo;
 import com.javarush.jira.common.to.TreeNode;
