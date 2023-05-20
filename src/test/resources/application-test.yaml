@@ -20,7 +20,7 @@ spring:
   datasource:
     url: jdbc:h2:mem:jira;NON_KEYWORDS=KEY,VALUE
     driverClassName: org.h2.Driver
-    user: sa
+    username: sa
     password: sa
 
 
