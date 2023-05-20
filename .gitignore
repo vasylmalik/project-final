@@ -4,6 +4,6 @@ target
 *.iml
 logs
 *.patch
-local.properties
+
 
 
