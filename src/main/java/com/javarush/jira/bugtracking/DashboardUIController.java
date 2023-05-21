@@ -29,4 +29,18 @@ public class DashboardUIController {
         model.addAttribute("taskMap", taskMap);
         return "index";
     }
+
+
+    @PostMapping("/tasks/{id}/tags")
+    public String addTagToTask(@PathVariable("id") Long taskId, Set<String> tags) {
+        taskService.addTagToTask(taskId, tags);
+        return "redirect:/";
+    }
+
+    @PostMapping("/tasks/{tid}/user/{uid}")
+    public String addTaskToUser(@PathVariable("tid") Long taskId,
+                                @PathVariable("uid") Long userId) {
+        taskService.addTaskToUser(taskId, userId);
+        return "redirect:/";
+    }
 }

@@ -5,7 +5,7 @@
 
 <th:block th:replace="~{layout/main::page(title='JiraRush: mini bugtracking system',appMain=~{::appMain})}">
     <appMain>
-        <h1>Dashboard</h1>
+        <h1 th:text="#{index.dashboard}">Dashboard</h1>
         <div class="container text-center">
             <div class="row " th:each="entry: ${taskMap}">
                 <div class="card">
