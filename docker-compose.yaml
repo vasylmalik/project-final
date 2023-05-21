@@ -4,7 +4,7 @@ services:
   app-server:
     container_name: server_jira
     build:
-      context: .
+      context: src/main/java
       dockerfile: Dockerfile
     image: jira-app
     ports:
