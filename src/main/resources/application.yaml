@@ -26,6 +26,7 @@ spring:
 
   liquibase:
     changeLog: "classpath:db/changelog.sql"
+    enabled: false
 
   # Jackson Fields Serialization
   jackson:
