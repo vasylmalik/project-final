@@ -17,6 +17,27 @@ public class TaskControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
+    void addNewTagWithoutTaskId() throws Exception {
+        perform(MockMvcRequestBuilders.put(REST_URL + "/addtag")
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+                .param("tags", "newtag"))
+                .andExpect(status().isUnprocessableEntity())
+                .andDo(print());
+    }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void addNewTagWithIncorrectTaskId() throws Exception {
+        perform(MockMvcRequestBuilders.put(REST_URL + "/addtag")
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+                .param("tags", "newtag")
+                .param("taskId", "-1"))
+                .andExpect(status().isNotFound())
+                .andDo(print());
+    }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
     void addNewTag() throws Exception {
         perform(MockMvcRequestBuilders.put(REST_URL + "/addtag")
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
