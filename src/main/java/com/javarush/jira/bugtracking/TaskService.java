@@ -17,11 +17,11 @@ import java.util.Set;
 @Service
 public class TaskService extends BugtrackingService<Task, TaskTo, TaskRepository> {
 
-    @Autowired
-    private ActivityRepository activityRepository;
+    private final ActivityRepository activityRepository;
 
-    public TaskService(TaskRepository repository, TaskMapper mapper) {
+    public TaskService(TaskRepository repository, TaskMapper mapper, ActivityRepository activityRepository) {
         super(repository, mapper);
+        this.activityRepository = activityRepository;
     }
 
     public List<TaskTo> getAll() {

@@ -1,9 +1,7 @@
 package com.javarush.jira.bugtracking;
 
 import com.javarush.jira.login.AuthUser;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -12,16 +10,18 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Set;
 
 @RestController
-@RequestMapping(value = TaskController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
-@RequiredArgsConstructor
+@RequestMapping(value = TaskRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
-public class TaskController {
+public class TaskRestController {
     static final String REST_URL = "/api/bugtracking/task";
 
-    @Autowired
-    private TaskService taskService;
-    @Autowired
-    private UserBelongService userBelongService;
+    private final TaskService taskService;
+    private final UserBelongService userBelongService;
+
+    public TaskRestController(TaskService taskService, UserBelongService userBelongService) {
+        this.taskService = taskService;
+        this.userBelongService = userBelongService;
+    }
 
     @PutMapping(path = "addtag", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)

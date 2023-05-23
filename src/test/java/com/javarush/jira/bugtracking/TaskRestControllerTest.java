@@ -11,9 +11,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-public class TaskControllerTest extends AbstractControllerTest {
+public class TaskRestControllerTest extends AbstractControllerTest {
 
-    private static final String REST_URL = TaskController.REST_URL;
+    private static final String REST_URL = TaskRestController.REST_URL;
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)

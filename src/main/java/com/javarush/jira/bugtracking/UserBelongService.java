@@ -13,8 +13,11 @@ import java.util.List;
 @Service
 public class UserBelongService {
 
-    @Autowired
-    private UserBelongRepository repository;
+    private final UserBelongRepository repository;
+
+    public UserBelongService(UserBelongRepository repository) {
+        this.repository = repository;
+    }
 
     public void subscribeToTask(User user, long taskId, String userTypeCode) {
         List<UserBelong> userBelongAssignToTaskList = repository.findUserBelongByUserIdAndByObjectTypeAndObjectId(user.getId(), ObjectType.TASK, taskId);
