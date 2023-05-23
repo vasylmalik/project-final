@@ -27,7 +27,7 @@ public class TaskController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
     public void addTags(@PathVariable("taskId") Optional<Long> taskId, @RequestParam("tags") List<String> tags) throws BindException {
-        if (taskId.isPresent() || tags.isEmpty()) {
+        if (!taskId.isPresent() || tags.isEmpty()) {
             throw new BindException("Incorrect request parameter or path variable.");
         }
         taskService.addTags(taskId.get(), tags);
