@@ -1,6 +1,6 @@
 #  https://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
 app:
-  host-url: http://localhost:8080
+  host-url: http://localhost:5432
   test-mail: jira4jr@gmail.com
   templates-update-cache: 5s
   mail-sending-props:
@@ -26,6 +26,7 @@ spring:
 
   liquibase:
     changeLog: "classpath:db/changelog.sql"
+    enabled: false
 
   # Jackson Fields Serialization
   jackson:

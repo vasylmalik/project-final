@@ -1,3 +1,6 @@
+package com.javarush.jira.bugtracking;
+
+import com.javarush.jira.bugtracking.BugtrackingService;
 import com.javarush.jira.bugtracking.internal.mapper.TaskMapper;
 import com.javarush.jira.bugtracking.internal.model.Task;
 import com.javarush.jira.bugtracking.internal.model.UserBelong;
