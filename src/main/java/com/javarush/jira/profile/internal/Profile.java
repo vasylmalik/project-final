@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * id is the same as User.id (not autogenerate)
+ * id is the same as User. ID (not autogenerate)
  */
 @Entity
 @Table(name = "profile")

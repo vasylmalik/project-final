@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-<!--/*@thymesVar id="authUser" type="com.javarush.jira.login.AuthUser"*/-->
 
 <div th:fragment="header">
     <header class="fixed-top d-none d-md-block header-nav">
@@ -15,15 +14,15 @@
                             <a href="/doc" type="button" class="btn btn-yellow" target="_blank">Swagger API</a>
                         </li>
                     </ul>
+                    <a type="button" class="btn btn-orange" href="/?lang=en">EN</a>
+                    <a type="button" class="btn btn-orange" href="/?lang=ru">RU</a>
                     <div th:if="${authUser} == null">
-                        <a href="/view/login" type="button" class="btn btn-orange">Login/Register</a>
+                        <a href="/view/login" type="button" class="btn btn-orange" th:text="#{header.logreg}">Login/Register</a>
                     </div>
                     <th:block th:if="${authUser} != null">
-                        <a href="/ui/profile" type="button" class="btn btn-orange"><i class="fa-solid fa-address-card"></i> Profile</a>
+                        <a href="/ui/profile" type="button" class="btn btn-orange" th:text="#{header.profile}"><i class="fa-solid fa-address-card"></i> Profile</a>
                         <form action="/ui/logout" method="post" class="mx-2">
-                            <button class="btn btn-yellow btn-orange" type="submit"><i class="fa-solid fa-sign-out"></i> Logout</button>
-                        </form>
-                    </th:block>
+                            <button class="btn btn-yellow btn-orange" type="submit" th:text="#{header.logout}"><i class="fa-solid fa-sign-out"></i> Logout</button>
                 </div>
             </div>
         </nav>
