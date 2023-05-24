@@ -4,7 +4,7 @@ spring:
     init:
       mode: always
 
-  datasource:
-    url: jdbc:postgresql://localhost:5432/jira
-    username: postgres
-    password: 1234!qwer
+#  datasource:
+#   url: jdbc:postgresql://localhost:5432/jira
+#    username: postgres
+#   password: 1234!qwer

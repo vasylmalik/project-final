@@ -1,8 +1,9 @@
-package com.javarush.jira.profile.web;
+package com.javarush.jira.login.internal.web;
 
 import com.javarush.jira.AbstractControllerTest;
 import com.javarush.jira.profile.ProfileTo;
 import com.javarush.jira.profile.internal.ProfileMapper;
+import com.javarush.jira.profile.web.ProfileRestController;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
