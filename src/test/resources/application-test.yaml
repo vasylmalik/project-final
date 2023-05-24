@@ -36,6 +36,3 @@ spring:
     password: zdfzsrqvgimldzyj
     port: 587
 
-  liquibase:
-
-    change-log: "classpath:db/test.sql"
