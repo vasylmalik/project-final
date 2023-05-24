@@ -7,6 +7,7 @@ import com.javarush.jira.bugtracking.internal.repository.TaskRepository;
 import com.javarush.jira.bugtracking.internal.repository.UserBelongRepository;
 import com.javarush.jira.bugtracking.to.ObjectType;
 import com.javarush.jira.bugtracking.to.TaskTo;
+import com.javarush.jira.common.error.WrongTagException;
 import com.javarush.jira.login.User;
 import com.javarush.jira.login.internal.UserRepository;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,9 @@ public class TaskService extends BugtrackingService<Task, TaskTo, TaskRepository
 
     private final UserBelongRepository userBelongRepository;
 
+    private final int minLength = 2;
+    private final int maxLength = 32;
+
     public TaskService(TaskRepository repository, TaskMapper mapper, UserRepository userRepository, UserBelongRepository userBelongRepository) {
         super(repository, mapper);
         this.userRepository = userRepository;
@@ -29,23 +33,21 @@ public class TaskService extends BugtrackingService<Task, TaskTo, TaskRepository
         return mapper.toToList(repository.getAll());
     }
 
-    // 1. if size = 0, validate 2/32; add tag
-    // 2. if size != 0; check if exist; validate; add
-
     //ADD TAG TO TASK
     public void addTag(String tag, long taskId){
         Task task = repository.getExisted(taskId);
         Set<String> tags = task.getTags();
         if (tags.isEmpty() || !tags.contains(tag)){
-            validateAndAdd(tag, 2, 32, tags);
+            validateAndAdd(tag, minLength, maxLength, tags);
             repository.save(task);
         }
     }
 
-    public void validateAndAdd(String tag, int min, int max, Set<String> tags){
-        if (tag.length()>=2 && tag.length()<=32){
+    //VALIDATE IF THE TAG LENGTH IS CORRECT
+    private void validateAndAdd(String tag, int min, int max, Set<String> tags){
+        if (tag.length()>=min && tag.length()<=max){
             tags.add(tag);
-        }
+        } else throw new WrongTagException("Tag character number should be more than 2 but less than 32");
     }
 
     //ASSIGN TASK TO USER
