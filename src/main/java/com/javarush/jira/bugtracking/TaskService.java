@@ -4,8 +4,7 @@ import com.javarush.jira.bugtracking.internal.mapper.TaskMapper;
 import com.javarush.jira.bugtracking.internal.model.Task;
 import com.javarush.jira.bugtracking.internal.repository.TaskRepository;
 import com.javarush.jira.bugtracking.to.TaskTo;
-import com.javarush.jira.common.error.NotFoundException;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.ValidationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -23,12 +22,24 @@ public class TaskService extends BugtrackingService<Task, TaskTo, TaskRepository
         return mapper.toToList(repository.getAll());
     }
 
-    public void addTags(Long id, List<String> tags) {
+    public void addTags(Long id, Set<String> tags) {
+        int maxSizeTag = 32;
+        int minSizeTag = 2;
+
         Task task = repository.getExisted(id);
-        Set<@Size(min = 2, max = 32) String> curTags = task.getTags();
-        curTags.stream().forEach(curTags::add);
-        task.setTags(curTags);
+        Set<String> curTags = task.getTags();
+        for (String tag : tags) {
+            if (curTags.contains(tag)) continue;
+            validateSize(tag, minSizeTag, maxSizeTag);
+            curTags.add(tag);
+        }
         repository.save(task);
         log.info("Tags have been added to the task with id={}", id);
+    }
+
+    private void validateSize(String tags, int min, int max) {
+        if (tags.length() < min || tags.length() > max) {
+            throw new ValidationException("Size can't be more max or less min");
+        }
     }
 }
