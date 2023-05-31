@@ -18,9 +18,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class ProfileRestControllerTest extends AbstractControllerTest {
     private static final String REST_URL = ProfileRestController.REST_URL;
 
-    @Autowired
-    protected ProfileMapper profileMapper;
-
     @Test
     @WithUserDetails(value = USER_MAIL)
     void getProfileTo() throws Exception {
