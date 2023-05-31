@@ -39,7 +39,7 @@ public class TaskService extends BugtrackingService<Task, TaskTo, TaskRepository
 
     private void validateSize(String tags, int min, int max) {
         if (tags.length() < min || tags.length() > max) {
-            throw new ValidationException("Size can't be more max or less min");
+            throw new ValidationException(String.format("Tag size can't be less %d or more %d", min, max));
         }
     }
 }
