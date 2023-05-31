@@ -23,7 +23,7 @@ class TaskControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = ADMIN_MAIL)
     public void shouldGetStatus404WhenTaskIsNotFound() throws Exception {
         perform(MockMvcRequestBuilders.put(REST_URL + "/{taskId}/addTags", 6)
-                .param("tags", "tag1")
+                .param("tags", "tagTest")
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE))
                 .andExpect(status().isNotFound())
                 .andDo(print());
@@ -41,20 +41,25 @@ class TaskControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
-    public void shouldGetStatus400WhenPathVariableIsEmpty() throws Exception {
-        perform(MockMvcRequestBuilders.put(REST_URL + "/{taskId}/addTags")
-                .param("tags", "tag3")
+    public void shouldThrowValidationExceptionWhenTagSizeLess2() throws Exception {
+        perform(MockMvcRequestBuilders.put(REST_URL + "/{taskId}/addTags", 2)
+                .param("tags", "t")
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE))
-                .andExpect(status().isBadRequest())
+                .andExpect(result -> assertEquals("Tag size can't be less 2 or more 32",
+                        result.getResolvedException().getMessage()))
                 .andDo(print());
     }
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
-    public void shouldGetStatus400WhenRequestParamIsEmpty() throws Exception {
+    public void shouldThrowValidationExceptionWhenTagSizeMore32() throws Exception {
         perform(MockMvcRequestBuilders.put(REST_URL + "/{taskId}/addTags", 2)
+                .param("tags", "There are more than 32 characters here that's for sure.")
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE))
-                .andExpect(status().isBadRequest())
+                .andExpect(result -> assertEquals("Tag size can't be less 2 or more 32",
+                        result.getResolvedException().getMessage()))
                 .andDo(print());
     }
+
+
 }
