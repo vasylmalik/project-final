@@ -124,7 +124,7 @@
     text-decoration: underline;
 }
 
-tr[data-user-enabled="false"] {
+.data-enabled[enabled=false] {
     opacity: 0.3;
 }
 
@@ -183,4 +183,94 @@ tr[data-user-enabled="false"] {
 .app-main {
     background-color: var(--main-background);
     /*height: 100vh;*/
+}
+
+/*CONTEXT MENU*/
+.context-menu {
+    display: none;
+    position: absolute;
+    z-index: 10;
+    padding: 12px 0;
+    width: 240px;
+    background-color: #fff;
+    border: solid 1px #dfdfdf;
+    box-shadow: 1px 1px 2px #cfcfcf;
+}
+
+.context-menu--active {
+    display: block;
+}
+
+.context-menu-items {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.context-menu-item {
+    display: block;
+    margin-bottom: 4px;
+}
+
+.context-menu-item:last-child {
+    margin-bottom: 0;
+}
+
+.context-menu-link {
+    display: block;
+    padding: 4px 12px;
+    color: #0066aa;
+    text-decoration: none;
+}
+
+.context-menu-link:hover {
+    color: #fff;
+    background-color: #0066aa;
+}
+
+.context-menu-submenu-expander {
+    display: block;
+    padding: 4px 12px;
+    color: black;
+    text-decoration: none;
+}
+
+.context-menu-expand-icon {
+    float: right;
+    padding-top: 5px;
+}
+
+.context-menu-submenu {
+    position: absolute;
+    left: 235px;
+    top: 0;
+    display: none;
+    padding: 12px 0;
+    min-width: 120px;
+    background-color: #fff;
+    border: solid 1px #dfdfdf;
+    box-shadow: 1px 1px 2px #cfcfcf;
+}
+
+.context-menu-submenu-expander:hover .context-menu-submenu {
+    display: block;
+}
+
+/*DASHBOARD TASK CARD*/
+.ready-for {
+    background-color: #daf2fd;
+    border-radius: 5px;
+    border: 1px solid #43cef6;
+}
+
+.user-belong {
+    background-color: #ffeb3ba8;
+    border-radius: 5px;
+    border: 1px solid #f4bc15;
+}
+
+/*ACTIVITIES*/
+.scroll-area {
+    max-height: clamp(5em, 50vh, 300px);
+    overflow: auto;
 }

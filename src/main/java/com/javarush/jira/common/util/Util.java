@@ -1,7 +1,9 @@
 package com.javarush.jira.common.util;
 
-import com.javarush.jira.bugtracking.to.NodeTo;
-import com.javarush.jira.common.to.TreeNode;
+import com.javarush.jira.bugtracking.tree.ITreeNode;
+import com.javarush.jira.common.HasIdAndParentId;
+import com.javarush.jira.common.error.NotFoundException;
+import com.javarush.jira.common.model.TimestampEntry;
 import jakarta.validation.constraints.NotNull;
 import lombok.experimental.UtilityClass;
 import org.jsoup.Jsoup;
@@ -10,15 +12,18 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.CollectionUtils;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.function.Function;
 
 @UtilityClass
 public class Util {
     public static <K, V> V getExisted(Map<K, V> map, K key) {
         return notNull(map.get(key), "Value with key {0} not found", key);
+    }
+
+    public static <T> T checkExist(long id, Optional<T> opt) {
+        return opt.orElseThrow(() -> new NotFoundException("Entity with id=" + id + " not found"));
     }
 
     public static <T> T notNull(@Nullable T object, String message, Object... vars) {
@@ -41,19 +46,31 @@ public class Util {
         return result;
     }
 
-    public static <E extends NodeTo<E>> List<TreeNode<E>> makeTree(List<E> nodes) {
-        List<TreeNode<E>> roots = new ArrayList<>();
-        Map<E, TreeNode<E>> map = new HashMap<>();
-        for (E node : nodes) {
-            TreeNode<E> treeNode = map.computeIfAbsent(node, TreeNode::new);
-            E parent = node.getParent();
-            if (parent != null) {
-                TreeNode<E> parentNode = map.computeIfAbsent(parent, TreeNode::new);
-                parentNode.children().add(treeNode);
-            } else {
+    public static <T extends HasIdAndParentId, R extends ITreeNode<T, R>> List<R> makeTree(List<T> nodes, Function<T, R> treeNodeCreator) {
+        List<R> roots = new ArrayList<>();
+        Map<Long, R> map = new HashMap<>();
+        for (T node : nodes) {
+            R treeNode = treeNodeCreator.apply(node);
+            map.put(node.id(), treeNode);
+            if (node.getParentId() == null) {
                 roots.add(treeNode);
             }
         }
+        for (T node : nodes) {
+            if (node.getParentId() != null) {
+                R parent = map.get(node.getParentId());
+                R current = map.get(node.id());
+                if (parent != null) {
+                    parent.subNodes().add(current);
+                } else {
+                    roots.add(current);
+                }
+            }
+        }
         return roots;
+    }
+
+    public boolean isEnabled(TimestampEntry entity) {
+        return entity.getEndpoint() == null || entity.getEndpoint().isAfter(LocalDateTime.now());
     }
 }

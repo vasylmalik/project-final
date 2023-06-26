@@ -1,6 +1,6 @@
 package com.javarush.jira.bugtracking.attachment;
 
-import com.javarush.jira.bugtracking.to.ObjectType;
+import com.javarush.jira.bugtracking.ObjectType;
 import com.javarush.jira.login.AuthUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,21 +12,21 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
 import java.util.List;
+
+import static com.javarush.jira.common.BaseHandler.createdResponse;
 
 @RestController
 @RequestMapping(value = AttachmentController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @Slf4j
 public class AttachmentController {
-    static final String REST_URL = "/api/bugtracking/attachments";
+    static final String REST_URL = "/api/attachments";
     private final AttachmentRepository repository;
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Transactional
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Attachment> upload(@RequestPart MultipartFile file, @RequestParam ObjectType type,
                                              @RequestParam Long objectId, @AuthenticationPrincipal AuthUser authUser) {
         log.debug("upload file {} to folder {}", file.getOriginalFilename(), type.toString().toLowerCase());
@@ -36,12 +36,7 @@ public class AttachmentController {
         String fileName = attachment.id() + "_" + file.getOriginalFilename();
         attachment.setFileLink(attachment.getFileLink() + fileName);
         FileUtil.upload(file, path, fileName);
-
-        URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path(REST_URL + "/{id}")
-                .buildAndExpand(created.getId()).toUri();
-
-        return ResponseEntity.created(uriOfNewResource).body(created);
+        return createdResponse(REST_URL, created);
     }
 
     @DeleteMapping("/{id}")
@@ -54,7 +49,7 @@ public class AttachmentController {
     }
 
     @GetMapping(value = "/download/{id}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public ResponseEntity<Resource> download(@PathVariable Long id) {
+    public ResponseEntity<Resource> download(@PathVariable long id) {
         log.debug("download file id = {}", id);
         Attachment attachment = repository.getExisted(id);
         Resource resource = FileUtil.download(attachment.getFileLink());
@@ -63,16 +58,10 @@ public class AttachmentController {
                 .body(resource);
     }
 
-    @GetMapping("/by-type")
-    public List<Attachment> getAllByObjectType(@RequestParam ObjectType type) {
-        log.info("get all attachment by type = {}", type);
-        return repository.getAllByObjectType(type);
-    }
-
-    @GetMapping("/by-object-id")
-    public List<Attachment> getAllByObjectId(@RequestParam Long objectId) {
+    @GetMapping("/for-object")
+    public List<Attachment> getAllForObject(@RequestParam long objectId, @RequestParam ObjectType type) {
         log.info("get all attachment by objectId = {}", objectId);
-        return repository.getAllByObjectId(objectId);
+        return repository.getAllForObject(objectId, type);
     }
 
     @GetMapping

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!--/*@thymesVar id="sprint" type="com.javarush.jira.bugtracking.sprint.to.SprintToFull"*/-->
+<!--/*@thymesVar id="statuses" type="java.util.Map<String, com.javarush.jira.ref.RefTo>"*/-->
+
+<th:block
+        th:replace="~{layout/bugtrackLayout::edit(${sprint}, '/ui/mngr/sprints', '/api/mngr/sprints/' + ${sprint.id}, ~{::appEdit}, 'sprint')}">
+    <appEdit>
+        <input hidden id="projectId" th:field="*{projectId}">
+        <div class="form-group">
+            <label class="col-form-label" for="statusCode">Status</label>
+            <select class="form-select w-25" id="statusCode" th:field="*{statusCode}">
+                <option th:each="status : ${statuses}"
+                        th:selected="${!sprint.isNew() && sprint.statusCode.equals(status.key)}"
+                        th:text="${status.value.title}"
+                        th:value="${status.key}">
+                </option>
+            </select>
+        </div>
+    </appEdit>
+</th:block>
+<script>
+    const objectId = [[${sprint.id}]];
+    const objectType = "SPRINT";
+</script>
+<script src="/static/js/attachments.js"></script>
+<script src="/static/js/common.js"></script>

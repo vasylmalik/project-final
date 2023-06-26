@@ -2,8 +2,8 @@ package com.javarush.jira.mail;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.javarush.jira.common.config.AppConfig;
-import com.javarush.jira.common.config.AppProperties;
+import com.javarush.jira.common.internal.config.AppConfig;
+import com.javarush.jira.common.internal.config.AppProperties;
 import com.javarush.jira.common.util.Util;
 import com.javarush.jira.login.User;
 import com.javarush.jira.mail.internal.MailCase;
@@ -45,6 +45,10 @@ public class MailService {
 
     @Value("${spring.mail.username}")
     private String email;
+
+    public static boolean isOk(String result) {
+        return OK.equals(result);
+    }
 
     public String sendToUserWithParams(@NonNull String template, @NonNull User user, @NonNull Map<String, Object> params) {
         String email = Objects.requireNonNull(user.getEmail());
@@ -143,8 +147,8 @@ public class MailService {
     }
 
     private static class GroupResultBuilder {
-        private int success = 0;
         private final List<MailResult> failed = new ArrayList<>();
+        private int success = 0;
         private String failedCause = null;
 
         private GroupResult buildOK() {
@@ -193,9 +197,5 @@ public class MailService {
                     "Failed: " + failed.toString() + '\n' +
                     (failedCause == null ? "" : "Failed cause" + failedCause);
         }
-    }
-
-    public static boolean isOk(String result) {
-        return OK.equals(result);
     }
 }

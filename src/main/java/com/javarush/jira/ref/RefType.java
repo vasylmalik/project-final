@@ -6,12 +6,12 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum RefType {
-    CONTACT,
-    PROJECT,
-    TASK,
-    TASK_STATUS,
-    SPRINT_STATUS,
-    USER_TYPE,
-    MAIL_NOTIFICATION,
-    PRIORITY
+    CONTACT,           // 0
+    PROJECT,           // 1
+    TASK,              // 2
+    TASK_STATUS,       // 3
+    SPRINT_STATUS,     // 4
+    USER_TYPE,         // 5
+    MAIL_NOTIFICATION, // 6
+    PRIORITY           // 7
 }

@@ -8,11 +8,13 @@ app:
     max-pool-size: 100
 
 spring:
+  init:
+    mode: never
   jpa:
     show-sql: true
     open-in-view: false
 
-# validate db by model
+    # validate db by model
     hibernate:
       ddl-auto: validate
 
@@ -114,6 +116,9 @@ spring:
     port: 587
   thymeleaf.check-template-location: false
 
+  mvc.throw-exception-if-no-handler-found: true
+  web.resources.add-mappings: false
+
 logging:
   level:
     root: WARN
@@ -122,7 +127,7 @@ logging:
     org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver: DEBUG
 
 server:
-#  https://springdoc.org/index.html#how-can-i-deploy-springdoc-openapi-ui-behind-a-reverse-proxy
+  #  https://springdoc.org/index.html#how-can-i-deploy-springdoc-openapi-ui-behind-a-reverse-proxy
   forward-headers-strategy: framework
   servlet:
     encoding:
