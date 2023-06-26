@@ -1,6 +1,6 @@
 package com.javarush.jira;
 
-import com.javarush.jira.common.config.AppProperties;
+import com.javarush.jira.common.internal.config.AppProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

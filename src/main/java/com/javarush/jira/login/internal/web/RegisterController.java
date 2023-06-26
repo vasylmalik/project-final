@@ -19,10 +19,10 @@ import org.springframework.web.bind.support.SessionStatus;
 
 import static com.javarush.jira.common.util.validation.ValidationUtil.checkNew;
 
-@Slf4j
 @Controller
 @RequestMapping(RegisterController.REGISTER_URL)
 @RequiredArgsConstructor
+@Slf4j
 public class RegisterController extends AbstractUserController {
     static final String REGISTER_URL = "/ui/register";
 
@@ -52,7 +52,7 @@ public class RegisterController extends AbstractUserController {
                                       @SessionAttribute("token") ConfirmData confirmData) {
         log.info("confirm registration {}", confirmData);
         if (token.equals(confirmData.getToken())) {
-            create(confirmData.getUserTo());
+            handler.createFromTo(confirmData.getUserTo());
             session.invalidate();
             status.setComplete();
             return "login";

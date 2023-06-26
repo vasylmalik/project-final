@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<!-- view/edit layouts for Task, Sprint, Project -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!--/*@thymesVar id="codeTo" type="com.javarush.jira.common.to.CodeTo"*/-->
+<!--/*@thymesVar id="attachs" type="java.util.List<com.javarush.jira.bugtracking.attachment.Attachment>"*/-->
+<!--/*@thymesVar id="belongs" type="java.util.List<com.javarush.jira.bugtracking.UserBelong>"*/-->
+
+<th:block th:fragment="view(codeTo, urlEdit, content, fragment)">
+    <th:block
+            th:replace="${fragment} ? ~{::appView} : ~{layout/main::page(title='View '+${codeTo.code},appMain=~{::appView})}">
+        <appView>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h4 class="data-enabled" th:attr="enabled=${codeTo.enabled}" th:text="${codeTo.code}"/>
+                    <h2 th:if="${codeTo instanceof T(com.javarush.jira.common.to.TitleTo)}"
+                        th:text="${codeTo.title}"></h2>
+                    <div th:if="${!belongs.isEmpty()}">
+                        <hr>
+                        <h5>Assigned:</h5>
+                        <table class="table table-striped" id="datatable">
+                            <thead class="sticky-top bg-white">
+                            <tr>
+                                <th>User ID</th>
+                                <th>Role</th>
+                                <th>Assigned</th>
+                                <th>Endpoint</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr class="data-enabled" th:attr="enabled=${belong.enabled}" th:each="belong : ${belongs}">
+                                <td th:text="${belong.userId}"></td>
+                                <td th:text="${belong.userTypeCode}"></td>
+                                <td th:text="${#temporals.format(belong.startpoint, 'dd.MM.yyyy HH:mm')}"></td>
+                                <td th:text="${#temporals.format(belong.endpoint, 'dd.MM.yyyy HH:mm')} ?: '-'"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <hr>
+                    </div>
+                    <th:block th:insert="${content}"/>
+                    <div th:if="${!attachs.isEmpty()}">
+                        <hr>
+                        <h5>Attachments:</h5>
+                        <h6 th:each="att : ${attachs}">
+                            <a download th:href="@{'/api/attachments/download/' + ${att.id}}">[[${att.name}]]</a> (<a
+                                target="_blank" th:href="@{'/api/attachments/download/' + ${att.id}}">open</a>)
+                        </h6>
+                    </div>
+                    <div th:if="${urlEdit!=null}">
+                        <hr>
+                        <div class="mb-3">
+                            <a class="btn btn-primary" th:href="${urlEdit + codeTo.id}">Edit</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </appView>
+    </th:block>
+</th:block>
+
+<div th:fragment="edit(codeTo, urlSave, urlEnable, content, objectName)">
+    <th:block
+            th:replace="~{layout/main::page(title=${codeTo.isNew()? 'New '+objectName : 'Edit '+codeTo.code}, appMain=~{::appEdit})}">
+        <appEdit>
+            <div class="card">
+                <div class="card-body">
+                    <form method="post" th:action="@{${urlSave}}" th:object="${__${objectName}__}">
+                        <input hidden th:field="*{id}">
+                        <div th:if="${codeTo instanceof T(com.javarush.jira.common.to.TitleTo)}">
+                            <div th:replace="~{::inputField('Title', 'title')}"></div>
+                        </div>
+                        <div th:hidden="${codeTo instanceof T(com.javarush.jira.bugtracking.task.to.TaskTo)}">
+                            <div th:replace="~{::inputField(labelText='Code', fieldName='code')}"></div>
+                        </div>
+                        <br>
+                        <div class="form-check" th:hidden="${codeTo.isNew()}">
+                            <input class="form-check-input" id="enabled" th:checked="${codeTo.enabled}"
+                                   th:onclick="enable(this, [[${urlEnable}]])" type="checkbox">
+                            <label class="form-check-label w-25" for="enabled">Enabled</label>
+                        </div>
+                        <hr>
+                        <th:block th:insert="${content}"/>
+                        <attachments th:hidden="${codeTo.isNew()}">
+                            <hr>
+                            <div class="col-auto me-auto" id="alert"></div>
+                            <h5 class="fw-bold text-secondary ms-1">Attachments</h5>
+                            <div class="scroll-area table-responsive text-nowrap">
+                                <table class="table table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="table-body">
+                                    <tr th:each="att : ${attachs}">
+                                        <th><a download th:href="@{'/api/attachments/download/' + ${att.id}}">[[${att.name}]]</a>
+                                            (<a target="_blank"
+                                                th:href="@{'/api/attachments/download/' + ${att.id}}">open</a>)
+                                        </th>
+                                        <th><a href="#" th:data-att-id="${att.id}"
+                                               th:onclick="deleteAtt(this.getAttribute('data-att-id'))"><span
+                                                class="fa fa-remove"></span></a></th>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <input id="att-upload" name="file" type="file">
+                            <button class="btn btn-primary" disabled id="upload-btn" type="button">+ Upload attachment
+                            </button>
+                            <hr>
+                        </attachments>
+                        <br>
+                        <div class="mb-3">
+                            <a class="btn btn-secondary" th:href="|/ui/${objectName}s/*{id}|" th:if="*{id != null}">Cancel</a>
+                            <button class="btn btn-primary" type="submit">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </appEdit>
+    </th:block>
+    <script>
+        function enable(value, url) {
+            const enabled = $(value).is(':checked')
+            if (confirm("Are you sure to " + (enabled ? "enable" : "disable") + " [[${codeTo.code}]]?")) {
+                $.ajax({
+                    url: url,
+                    type: "PATCH",
+                    data: "enabled=" + enabled
+                });
+            } else {
+                $(value).prop('checked', !enabled);
+            }
+        }
+    </script>
+</div>
+
+<div class="form-group"
+     th:fragment="inputField(labelText, fieldName)"
+     th:with="inputType=${inputType?:'text'}, placeholder=${placeholder?:''}, readonly=${readonly?:false}">
+    <label class="col-form-label" th:for="${fieldName}" th:text="${labelText}"/>
+    <input class="form-control w-25" th:errorclass="is-invalid" th:field="*{__${fieldName}__}" th:id="${fieldName}"
+           th:placeholder="${placeholder}" th:readonly="${readonly}" th:type="${inputType}">
+    <div th:if="${#fields.hasErrors('__${fieldName}__')}">
+        <ul>
+            <li class="text-danger text-start" th:each="err : ${#fields.errors('__${fieldName}__')}" th:text="${err}"/>
+        </ul>
+    </div>
+</div>
+</html>

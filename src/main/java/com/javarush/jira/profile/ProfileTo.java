@@ -25,16 +25,16 @@ public class ProfileTo extends BaseTo {
     @NotNull
     private Set<@Valid ContactTo> contacts;
 
-    public boolean isContactTypePresent(String type) {
-        return contacts.stream()
-                .map(ContactTo::getCode)
-                .anyMatch(s -> s.equals(type));
-    }
-
     public ProfileTo(Long id, @Nullable Set<String> mailNotifications, @Nullable Set<@Valid ContactTo> contacts) {
         super(id);
         this.mailNotifications = mailNotifications == null ? Collections.emptySet() : Set.copyOf(mailNotifications);
         this.contacts = contacts == null ? Collections.emptySet() : Set.copyOf(contacts);
         this.lastLogin = null;
+    }
+
+    public boolean isContactTypePresent(String type) {
+        return contacts.stream()
+                .map(ContactTo::getCode)
+                .anyMatch(s -> s.equals(type));
     }
 }

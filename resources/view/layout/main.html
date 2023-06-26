@@ -1,35 +1,38 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
-<th:block th:fragment="page" th:with="img=${img}?: 'https://javarush.com/assets/images/site/homepage/og-image-jr.jpg', descr=${descr}?: ${title}">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="page"
+          th:with="img=${img}?: 'https://javarush.com/assets/images/site/homepage/og-image-jr.jpg', descr=${descr}?: ${title}">
     <head>
-        <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta content="text/html;charset=utf-8" http-equiv="Content-Type"/>
+        <meta content="width=device-width, initial-scale=1" name="viewport">
         <meta name="title" th:content="${title}"/>
         <meta name="Description" th:content="${descr}"/>
 
         <title th:text="${title}"></title>
-        <link rel="apple-touch-icon" sizes="180x180" href="/static/images/icon/apple-touch-icon.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="/static/images/icon/favicon-32x32.png">
-        <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css"/>
-        <link rel="stylesheet" href="/static/fontawesome/css/all.min.css"/>
-        <link rel="stylesheet" href="/static/css/color.css?v=1"/>
-        <link rel="stylesheet" href="/static/css/main.css?v=1"/>
-        <link rel="stylesheet" href="/static/datatables/css/dataTables.bootstrap5.min.css"/>
-        <link rel="stylesheet" href="/static/noty/css/noty.css"/>
+        <link href="/static/images/icon/apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180">
+        <link href="/static/images/icon/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png">
+        <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+        <link href="/static/fontawesome/css/all.min.css" rel="stylesheet"/>
+        <link href="/static/css/color.css?v=1" rel="stylesheet"/>
+        <link href="/static/css/main.css?v=1" rel="stylesheet"/>
+        <link href="/static/datatables/css/dataTables.bootstrap5.min.css" rel="stylesheet"/>
+        <link href="/static/noty/css/noty.css" rel="stylesheet"/>
+        <link href="/static/bootstrap/css/bootstrap-select.min.css" rel="stylesheet"/>
+        <link href="/static/jquery/css/ui.fancytree.css" rel="stylesheet"/>
 
         <link rel="image_src" th:href="${img}"/>
-        <meta name="keywords"
-              CONTENT="Java,программист,курсы,обучение,трудоустройво,разработчик,практика,bugtracking,jira">
+        <meta CONTENT="Java,программист,курсы,обучение,трудоустройво,разработчик,практика,bugtracking,jira"
+              name="keywords">
         <!-- facebook & Open Graph -->
-        <meta property="og:type" content="website"/>
-        <meta property="og:site_name" content="Jira Rush">
+        <meta content="website" property="og:type"/>
+        <meta content="Jira Rush" property="og:site_name">
         <meta property="og:title" th:content="${title}"/>
         <meta property="og:description" th:content="${descr}"/>
         <meta property="og:image" th:content="${img}"/>
 
         <!--twitter-->
         <meta name="twitter:title" th:content="${descr}"/>
-        <meta name="twitter:card" content="summary_large_image"/>
+        <meta content="summary_large_image" name="twitter:card"/>
         <meta name="twitter:image" th:content="${img}"/>
 
         <!-- google -->
@@ -46,9 +49,12 @@
 
         <div th:replace="~{/layout/sidebar :: sidebar}"></div>
 
-        <main class="app-main py-5 px-md-5 min-vh-100">
+        <main class="app-main py-3 px-md-3 min-vh-100">
             <div class="container">
-                <th:block th:insert="${appMain}"/>
+                <th:block th:insert="${appMain}?: ~{}"/>
+            </div>
+            <div class="container-fluid">
+                <th:block th:insert="${appMainFluid}?: ~{}"/>
             </div>
         </main>
 
@@ -56,10 +62,13 @@
     </div>
     </body>
     <script src="/static/jquery/js/jquery.min.js"></script>
-    <script src="/static/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="/static/js/main.js?v=1"></script>
-    <script src="/static/datatables/js/jquery.dataTables.min.js" defer></script>
-    <script src="/static/datatables/js/dataTables.bootstrap5.min.js" defer></script>
-    <script src="/static/noty/js/noty.min.js" defer></script>
+    <script>
+        $([[${activeMenuItem}]]).addClass('active');
+    </script>
+    <script defer src="/static/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script defer src="/static/datatables/js/jquery.dataTables.min.js"></script>
+    <script defer src="/static/datatables/js/dataTables.bootstrap5.min.js"></script>
+    <script defer src="/static/noty/js/noty.min.js"></script>
+    <script defer src="/static/bootstrap/js/bootstrap-select.min.js"></script>
 </th:block>
 </html>

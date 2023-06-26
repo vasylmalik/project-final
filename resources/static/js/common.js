@@ -109,7 +109,7 @@ function failNoty(jqXHR) {
     var errorInfo = jqXHR.responseJSON;
     failedNote = new Noty({
         text: "<span class='fa fa-lg fa-exclamation-circle'></span> &nbsp;" + errorInfo.title + "<br>" +
-        errorInfo.invalid_params ? JSON.stringify(errorInfo.invalid_params) : errorInfo.detail,
+            (errorInfo.invalid_params ? JSON.stringify(errorInfo.invalid_params) : errorInfo.detail),
         type: "error",
         layout: "bottomRight"
     });

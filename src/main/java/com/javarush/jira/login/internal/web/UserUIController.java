@@ -32,7 +32,7 @@ public class UserUIController extends AbstractUserController {
             redirectAttrs.addFlashAttribute(USER_ERROR_ATTRIBUTE, errorMessageHandler.getErrorList(result));
             return "redirect:" + REDIRECT_PROFILE;
         }
-        authUser.setUser(update(user, authUser.id()));
+        authUser.setUser(handler.updateFromTo(user, authUser.id()));
         redirectAttrs.addFlashAttribute(USER_SUCCESS_ATTRIBUTE, "Successfully changed");
         return "redirect:" + REDIRECT_PROFILE;
     }

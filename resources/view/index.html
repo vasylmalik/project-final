@@ -1,37 +1,14 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <!--/*@thymesVar id="authUser" type="com.javarush.jira.login.AuthUser"*/-->
-<!--/*@thymesVar id="taskMap" type="java.util.Map<com.javarush.jira.bugtracking.to.SprintTo, java.util.List<com.javarush.jira.bugtracking.to.TaskTo>>"*/-->
 
 <th:block th:replace="~{layout/main::page(title='JiraRush: mini bugtracking system',appMain=~{::appMain})}">
     <appMain>
-        <h1>Dashboard</h1>
-        <div class="container text-center">
-            <div class="row " th:each="entry: ${taskMap}">
-                <div class="card">
-                    <div class="card-body" th:with="sprint=${entry.key}, tasks=${entry.value}">
-                        <h5 class="card-title" th:text="|Sprint: ${sprint.title}|"></h5>
-                        <h6 class="card-subtitle mb-2 text-muted" style="text-align: left; "
-                            th:text="|Status: ${sprint.statusCode}|"></h6>
-                        <h6 class="card-subtitle mb-2 text-muted" style="text-align: left; "
-                            th:text="|Due date: ${#temporals.format(sprint.endpoint,'dd.MM.yyyy')}|"></h6>
-                        <div class="row">
-                            <div class="col" th:each="task: ${tasks}">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h5 class="card-title mb-2 text-muted" style="text-align: left; "
-                                            th:text="${task.title}"></h5>
-                                        <h6 class="card-subtitle mb-2 text-muted" style="text-align: left; "
-                                            th:text="${task.description}"></h6>
-                                        <h6 class="card-subtitle mb-2 text-muted" style="text-align: left; "
-                                            th:text="${task.priorityCode}"></h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <h1>JiraRush Home page</h1>
+        <div th:if="${authUser} != null">
+            <form action="/ui/logout" method="post">
+                <button class="btn btn-primary btn-lg mt-3" type="submit">Logout</button>
+            </form>
         </div>
     </appMain>
 </th:block>

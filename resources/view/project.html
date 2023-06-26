@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!--/*@thymesVar id="project" type="com.javarush.jira.bugtracking.project.to.ProjectToFull"*/-->
+<!--/*@thymesVar id="fragment" type="boolean"*/-->
+<!--/*@thymesVar id="authUser" type="com.javarush.jira.login.AuthUser"*/-->
+<th:block
+        th:replace="~{layout/bugtrackLayout::view(${project}, ${authUser.isManager()}?'/ui/mngr/projects/edit/':null, ~{::project}, ${fragment})}">
+    <project>
+        <div class="mb-2 row">
+            <div class="col-md-3 col-10">
+                <p th:text="${project.description}"></p>
+            </div>
+        </div>
+        <div class="mb-2 row">
+            <div class="col-md-3 col-10">
+                <p th:if="${project.parentId != null}">Parent project: <a
+                        th:href="@{'/ui/projects/' + ${project.parentId}}" th:text="${project.parent.code}">
+                </a></p>
+            </div>
+        </div>
+    </project>
+    <br/>
+</th:block>

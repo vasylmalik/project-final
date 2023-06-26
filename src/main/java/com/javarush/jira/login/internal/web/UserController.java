@@ -6,7 +6,6 @@ import com.javarush.jira.login.AuthUser;
 import com.javarush.jira.login.User;
 import com.javarush.jira.login.UserTo;
 import jakarta.validation.constraints.Size;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
@@ -15,11 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
+import static com.javarush.jira.common.BaseHandler.createdResponse;
 
-@Slf4j
 @Validated
 @RestController
 @RequestMapping(UserController.REST_URL)
@@ -30,30 +27,27 @@ public class UserController extends AbstractUserController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<User> createWithLocation(@Validated(View.OnCreate.class) @RequestBody UserTo userTo) {
-        User created = super.create(userTo);
-        URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path(REST_URL)
-                .buildAndExpand(created.getId()).toUri();
-        return ResponseEntity.created(uriOfNewResource).body(created);
+        User created = handler.createFromTo(userTo);
+        return createdResponse(REST_URL, created);
     }
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @JsonView(View.OnUpdate.class)
     public void update(@Validated(View.OnUpdate.class) @RequestBody UserTo userTo, @AuthenticationPrincipal AuthUser authUser) {
-        authUser.setUser(super.update(userTo, authUser.id()));
+        authUser.setUser(handler.updateFromTo(userTo, authUser.id()));
     }
 
     @GetMapping
     public User get(@AuthenticationPrincipal AuthUser authUser) {
-        return super.get(authUser.id());
+        return handler.get(authUser.id());
     }
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CacheEvict(key = "#authUser.user.email")
     public void delete(@AuthenticationPrincipal AuthUser authUser) {
-        super.delete(authUser.id());
+        handler.delete(authUser.id());
     }
 
     @PostMapping("/change_password")

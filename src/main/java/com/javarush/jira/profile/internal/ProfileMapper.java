@@ -2,7 +2,9 @@ package com.javarush.jira.profile.internal;
 
 import com.javarush.jira.profile.ContactTo;
 import com.javarush.jira.profile.ProfileTo;
-import com.javarush.jira.profile.web.ProfilePostRequest;
+import com.javarush.jira.profile.internal.model.Contact;
+import com.javarush.jira.profile.internal.model.Profile;
+import com.javarush.jira.profile.internal.web.ProfilePostRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;

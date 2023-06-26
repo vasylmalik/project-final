@@ -1,6 +1,7 @@
 package com.javarush.jira.common;
 
 import com.javarush.jira.common.error.NotFoundException;
+import com.javarush.jira.common.util.Util;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -25,6 +26,6 @@ public interface BaseRepository<T> extends JpaRepository<T, Long> {
     }
 
     default T getExisted(long id) {
-        return findById(id).orElseThrow(() -> new NotFoundException("Entity with id=" + id + " not found"));
+        return Util.checkExist(id, findById(id));
     }
 }

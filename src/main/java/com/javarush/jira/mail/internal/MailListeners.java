@@ -1,6 +1,6 @@
 package com.javarush.jira.mail.internal;
 
-import com.javarush.jira.common.config.AppProperties;
+import com.javarush.jira.common.internal.config.AppProperties;
 import com.javarush.jira.login.User;
 import com.javarush.jira.login.internal.UserMapper;
 import com.javarush.jira.login.internal.passwordreset.PasswordResetEvent;

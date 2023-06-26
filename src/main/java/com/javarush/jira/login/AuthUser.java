@@ -53,6 +53,10 @@ public class AuthUser extends org.springframework.security.core.userdetails.User
         return user.hasRole(Role.ADMIN);
     }
 
+    public boolean isManager() {
+        return user.hasRole(Role.MANAGER) || isAdmin();
+    }
+
     @Override
     public String toString() {
         return "AuthUser:" + user.getId() + '[' + user.getEmail() + ']';

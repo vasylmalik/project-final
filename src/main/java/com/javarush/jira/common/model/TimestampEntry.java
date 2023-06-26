@@ -19,6 +19,14 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @MappedSuperclass
 public abstract class TimestampEntry extends BaseEntity {
+    @CreationTimestamp
+    @Column(name = "startpoint", nullable = false)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    protected LocalDateTime startpoint;
+    @Column(name = "endpoint")
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    protected LocalDateTime endpoint = null;
+
     protected TimestampEntry(Long id) {
         super(id);
     }
@@ -28,15 +36,6 @@ public abstract class TimestampEntry extends BaseEntity {
         this.startpoint = startpoint;
         this.endpoint = endpoint;
     }
-
-    @CreationTimestamp
-    @Column(name = "startpoint", nullable = false)
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    protected LocalDateTime startpoint;
-
-    @Column(name = "endpoint")
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    protected LocalDateTime endpoint = null;
 
     public boolean isEnabled() {
         return endpoint == null || endpoint.isAfter(LocalDateTime.now());

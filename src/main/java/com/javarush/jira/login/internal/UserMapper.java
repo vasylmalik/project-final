@@ -18,5 +18,5 @@ public interface UserMapper extends BaseMapper<User, UserTo> {
 
     @Override
     @Mapping(target = "password", ignore = true)
-    User updateFromTo(@MappingTarget User entity, UserTo to);
+    User updateFromTo(UserTo to, @MappingTarget User entity);
 }

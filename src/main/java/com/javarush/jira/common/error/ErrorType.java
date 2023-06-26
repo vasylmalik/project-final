@@ -12,11 +12,10 @@ public enum ErrorType {
     UNAUTHORIZED("Request unauthorized", HttpStatus.UNAUTHORIZED),
     FORBIDDEN("Request forbidden", HttpStatus.FORBIDDEN);
 
+    public final String title;
+    public final HttpStatus status;
     ErrorType(String title, HttpStatus status) {
         this.title = title;
         this.status = status;
     }
-
-    public final String title;
-    public final HttpStatus status;
 }
