@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!--/*@thymesVar id="task" type="com.javarush.jira.bugtracking.task.to.TaskToFull"*/-->
+<!--/*@thymesVar id="statuses" type="java.util.Map<String, com.javarush.jira.ref.RefTo>"*/-->
+<!--/*@thymesVar id="types" type="java.util.Map<String, com.javarush.jira.ref.RefTo>"*/-->
+<!--/*@thymesVar id="priorities" type="java.util.Map<String, com.javarush.jira.ref.RefTo>"*/-->
+<!--/*@thymesVar id="comments" type="java.util.List<com.javarush.jira.bugtracking.task.to.ActivityTo>"*/-->
+<!--/*@thymesVar id="authUser" type="com.javarush.jira.login.AuthUser"*/-->
+
+<th:block
+        th:replace="~{layout/bugtrackLayout::edit(${task}, '/ui/tasks', '/api/tasks/' + ${task.id}, ~{::appEdit}, 'task')}">
+    <appEdit>
+        <input hidden id="parentId" th:field="*{parentId}">
+        <input hidden id="projectId" th:field="*{projectId}">
+        <input hidden id="sprintId" th:field="*{sprintId}">
+        <div class="form-group">
+            <label class="col-form-label" for="typeCode">Type</label>
+            <select class="form-select w-25" id="typeCode" th:field="*{typeCode}">
+                <option th:each="type : ${types}"
+                        th:selected="${!task.isNew() && task.typeCode.equals(type.key)}"
+                        th:text="${type.value.title}"
+                        th:value="${type.key}">
+                </option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="col-form-label" for="statusCode">Status</label>
+            <select class="form-select w-25" id="statusCode" th:field="*{statusCode}">
+                <option th:each="status : ${statuses}"
+                        th:selected="${!task.isNew() && task.statusCode.equals(status.key)}"
+                        th:text="${status.value.title}"
+                        th:value="${status.key}">
+                </option>
+            </select>
+        </div>
+        <div th:replace="~{::inputField('Description', 'description')}"></div>
+        <div class="form-group">
+            <label class="col-form-label" for="priorityCode">Priority</label>
+            <select class="form-select w-25" id="priorityCode" th:field="*{priorityCode}">
+                <option th:each="priority : ${priorities}"
+                        th:selected="${!task.isNew() && priority.key.equals(task.priorityCode)}"
+                        th:text="${priority.value.title}"
+                        th:value="${priority.key}">
+                </option>
+            </select>
+        </div>
+        <div th:replace="~{::inputField(labelText='Estimate', fieldName='estimate', inputType='number')}"></div>
+        <hr>
+
+        <!--Comments-->
+        <div class="row d-flex align-items-center mb-2" th:if="${!task.isNew()}">
+            <div class="col">
+                <span class="h5 fw-bold text-secondary ms-1">Comments</span>
+            </div>
+            <div class="col text-end">
+                <button class="btn btn-primary" data-bs-target="#comment-modal" data-bs-toggle="modal" type="button">Add
+                    comment
+                </button>
+            </div>
+        </div>
+        <div class="scroll-area" id="comments-area" th:hidden="${task.isNew()}">
+            <div th:each="comment : ${comments}">
+                <div class="card bg-light mb-2 me-1">
+                    <div class="card-body py-2">
+                        <div class="row">
+                            <div class="col">
+                                <span class="fw-bold" th:text="${comment.author.displayName}"></span>
+                            </div>
+                            <div class="col text-end" th:if="${comment.authorId == authUser.id}">
+                                <a class="text-success" data-bs-target="#comment-modal" data-bs-toggle="modal"
+                                   th:data-author_id="${comment.authorId}"
+                                   th:data-comment="${comment.comment}" th:data-id="${comment.id}"
+                                   type="button">
+                                    <i class="fa fa-pencil"></i>
+                                </a>
+                                <a class="text-danger ms-1" th:onclick="deleteComment([[${comment.id}]])" type="button">
+                                    <i class="fa fa-trash"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <small th:text="${#temporals.format(comment.updated, 'dd.MM.yyyy, HH:mm:ss')}"></small>
+                        <div class="mt-1" style="white-space: pre-wrap" th:text="${comment.comment}">Comment</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--History log-->
+        <history th:if="${!task.isNew()}">
+            <div th:replace="~{/task :: history-log}"></div>
+        </history>
+
+        <!--Comment modal-->
+        <div class="modal" id="comment-modal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-body text-end">
+                        <textarea class="form-control mb-2" id="comment-field" rows="5"></textarea>
+                        <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Close</button>
+                        <button class="btn btn-primary" id="save-comment-button" onclick="saveComment()" type="button">
+                            Save comment
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </appEdit>
+</th:block>
+<script>
+    const taskId = [[${task.id}]];
+    const objectId = [[${task.id}]];
+    const objectType = "TASK";
+    const authUserId = [[${authUser.id}]];
+</script>
+<script src="/static/js/common.js"></script>
+<script src="/static/js/attachments.js"></script>
+<script src="/static/js/activity.js"></script>

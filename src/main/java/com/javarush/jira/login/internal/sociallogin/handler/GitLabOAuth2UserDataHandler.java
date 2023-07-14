@@ -3,7 +3,7 @@ package com.javarush.jira.login.internal.sociallogin.handler;
 import org.springframework.stereotype.Component;
 
 @Component("gitlab")
-public class GitLabOAuth2UserDataHandler implements OAuth2UserDataHandler{
+public class GitLabOAuth2UserDataHandler implements OAuth2UserDataHandler {
     @Override
     public String getFirstName(OAuth2UserData oAuth2UserData) {
         String name = oAuth2UserData.getData("name");

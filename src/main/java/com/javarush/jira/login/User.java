@@ -36,14 +36,17 @@ import java.util.Set;
 public class User extends TimestampEntry implements HasIdAndEmail, Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
-
+    @NoHtml
+    @Size(max = 32)
+    @Nullable
+    @Column(name = "display_name", nullable = false, unique = true)
+    String displayName;
     @Column(name = "email", nullable = false, unique = true)
     @Email
     @NotBlank
     @Size(max = 128)
     @NoHtml   // https://stackoverflow.com/questions/17480809
     private String email;
-
     @Column(name = "password")
     @NotBlank(groups = {View.OnCreate.class})
     @Size(min = 5, max = 128, groups = {View.OnCreate.class})
@@ -52,25 +55,16 @@ public class User extends TimestampEntry implements HasIdAndEmail, Serializable 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonView(View.OnCreate.class)
     private String password;
-
     @NotBlank
     @Size(min = 2, max = 32)
     @NoHtml
     @Column(name = "first_name", nullable = false)
     private String firstName;
-
     @Size(max = 32)
     @NoHtml
     @Column(name = "last_name")
     @Nullable
     private String lastName;
-
-    @NoHtml
-    @Size(max = 32)
-    @Nullable
-    @Column(name = "display_name", nullable = false, unique = true)
-    String displayName;
-
     @CollectionTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),
             uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "role"}, name = "uk_user_role"))
@@ -79,10 +73,6 @@ public class User extends TimestampEntry implements HasIdAndEmail, Serializable 
     @JoinColumn
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Role> roles;
-
-    public void setRoles(Collection<Role> roles) {
-        this.roles = CollectionUtils.isEmpty(roles) ? EnumSet.noneOf(Role.class) : EnumSet.copyOf(roles);
-    }
 
     public User(User user) {
         this(user.id, user.email, user.password, user.firstName, user.lastName, user.displayName,
@@ -105,6 +95,10 @@ public class User extends TimestampEntry implements HasIdAndEmail, Serializable 
         this.displayName = displayName;
         setRoles(roles);
         normalize();
+    }
+
+    public void setRoles(Collection<Role> roles) {
+        this.roles = CollectionUtils.isEmpty(roles) ? EnumSet.noneOf(Role.class) : EnumSet.copyOf(roles);
     }
 
     public void normalize() {

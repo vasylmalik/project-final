@@ -14,7 +14,7 @@ function enable(chkbox, id) {
         type: "PATCH",
         data: "enabled=" + enabled
     }).done(function () {
-        chkbox.closest("tr").attr("data-user-enabled", enabled);
+        chkbox.closest("tr").attr("enabled", enabled);
         successNoty(enabled ? "User enabled" : "User disabled");
     }).fail(function () {
         $(chkbox).prop("checked", !enabled);
@@ -82,8 +82,9 @@ $(function () {
             ]
         ],
         "createdRow": function (row, data, dataIndex) {
+            $(row).addClass("data-enabled") // пробовал добавить class="data-enabled" тегу <tr> в users, так не работало
             if (data.endpoint) {
-                $(row).attr("data-user-enabled", false);
+                $(row).attr("enabled", false);
             }
         }
     });

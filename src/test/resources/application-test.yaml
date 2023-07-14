@@ -1,9 +1,8 @@
 spring.cache.type: none
 spring:
-  sql:
-    init:
-      mode: always
-
-  mail:
-    username: test@gmail.com
-    password: test
+  init:
+    mode: always
+  datasource:
+    url: jdbc:postgresql://localhost:5433/jira-test
+    username: jira
+    password: JiraRush

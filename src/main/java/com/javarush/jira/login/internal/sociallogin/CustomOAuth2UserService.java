@@ -41,7 +41,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                     clientRegistrationId + " account does not contain email or first name");
         }
         return new CustomOAuth2User(oAuth2User, repository.findByEmailIgnoreCase(email.toLowerCase()).orElseGet(() ->
-                repository.prepareAndCreate(new User(null, email, SOCIAL_PASSWORD,
+                repository.save(new User(null, email, SOCIAL_PASSWORD,
                         firstName, oAuth2UserDataHandler.getLastName(oAuth2UserData), "", Role.DEV))));
     }
 }

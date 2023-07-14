@@ -18,7 +18,7 @@ import java.nio.file.Paths;
 
 @UtilityClass
 public class FileUtil {
-    private static final String ATTACHMENT_PATH = "./resources/attachments/%s/";
+    private static final String ATTACHMENT_PATH = "./attachments/%s/";
 
     public static void upload(MultipartFile multipartFile, String directoryPath, String fileName) {
         if (multipartFile.isEmpty()) {
