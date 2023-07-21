@@ -1,0 +1,8 @@
+spring.cache.type: none
+spring:
+  init:
+    mode: always
+  datasource:
+    url: jdbc:postgresql://localhost:5433/jira-test
+    username: jira
+    password: JiraRush

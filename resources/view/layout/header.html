@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!--/*@thymesVar id="authUser" type="com.javarush.jira.login.AuthUser"*/-->
+
+<div th:fragment="header">
+    <header class="fixed-top d-none d-md-block header-nav">
+        <nav class="navbar navbar-expand-lg navbar-dark" id="header">
+            <div class="container-fluid">
+                <div class="collapse navbar-collapse mt-2 mb-2 px-5">
+                    <ul class="navbar-nav m-auto">
+                        <form class="d-flex" role="search">
+                            <input aria-label="Search" class="form-control" id="header-search" placeholder="Search"
+                                   type="search">
+                        </form>
+                        <li class="nav-item menu-item me-3 ms-4">
+                            <a class="btn btn-yellow" href="/doc" target="_blank" type="button">Swagger API</a>
+                        </li>
+                    </ul>
+                    <div th:if="${authUser} == null">
+                        <a class="btn btn-orange" href="/view/login" type="button">Login/Register</a>
+                    </div>
+                    <th:block th:if="${authUser} != null">
+                        <a class="btn btn-orange" href="/ui/profile" type="button"><i
+                                class="fa-solid fa-address-card"></i> Profile</a>
+                        <form action="/ui/logout" class="mx-2" method="post">
+                            <button class="btn btn-yellow btn-orange" type="submit"><i class="fa-solid fa-sign-out"></i>
+                                Logout
+                            </button>
+                        </form>
+                    </th:block>
+                </div>
+            </div>
+        </nav>
+    </header>
+</div>
+</html>

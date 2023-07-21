@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:replace="~{layout/main::page(title='References',appMain=~{::appMain}, activeMenuItem='references')}">
+    <appMain>
+        <h1>References</h1>
+        <br>
+        <div class="card">
+            <div class="card-body">
+                <div class="container">
+                    <div class="row align-items-center justify-content-between">
+                        <div class="col-auto me-auto">
+                            <button class="btn btn-primary" data-bs-target="#modalRef" data-bs-toggle="modal" id="create"
+                                    type="button">+ Add reference
+                            </button>
+                        </div>
+                        <div class="col-auto me-auto" id="alert">
+
+                        </div>
+                        <div class="col-4">
+                            <select aria-label="select-reftype" class="form-select" id="select-reftype">
+                                <option th:each="type : ${refTypes}" th:text="${type}" th:value="${type}"></option>
+                            </select></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+
+        <table class="table table-striped" id="table" style="text-align: left;">
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Code</th>
+                <th>AUX</th>
+                <th></th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody id="table-body">
+
+            </tbody>
+        </table>
+
+        <div aria-hidden="true" aria-labelledby="modalRefLabel" class="modal fade" id="modalRef" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalRefLabel"></h5>
+                        <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+                    </div>
+                    <form id="modal-form">
+                        <div class="modal-body text-start">
+
+                            <div class="mb-3">
+                                <label class="col-form-label" for="ref-title">Title:</label>
+                                <input class="form-control" id="ref-title" type="text">
+                            </div>
+                            <div class="mb-3">
+                                <label class="col-form-label" for="ref-code">Code:</label>
+                                <input class="form-control" id="ref-code" type="text"></input>
+                            </div>
+                            <div class="mb-3">
+                                <label class="col-form-label" for="ref-aux">AUX:</label>
+                                <input class="form-control" id="ref-aux" type="text">
+                            </div>
+                            <div class="mb-3">
+                                <label class="col-form-label" for="ref-type">Type:</label>
+                                <select aria-label="ref-type" class="form-select" id="ref-type">
+                                    <option th:each="type : ${refTypes}" th:text="${type}" th:value="${type}"></option>
+                                </select>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Close</button>
+                            <button class="btn btn-primary" id="save-btn" type="submit">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </appMain>
+</th:block>
+<script src="/static/js/references.js"></script>
