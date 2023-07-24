@@ -1,0 +1,1 @@
+DELETE FROM reference WHERE code = 'vk';
