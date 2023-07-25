@@ -1,12 +1,11 @@
 package com.javarush.jira.common.internal.config;
 
+import java.time.Duration;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.lang.NonNull;
 import org.springframework.validation.annotation.Validated;
-
-import java.time.Duration;
 
 @ConfigurationProperties("app")
 @Validated

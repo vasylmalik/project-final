@@ -1,18 +1,16 @@
 package com.javarush.jira.bugtracking.task;
 
 import com.javarush.jira.MatcherFactory;
+import static com.javarush.jira.bugtracking.ObjectType.TASK;
 import com.javarush.jira.bugtracking.UserBelong;
 import com.javarush.jira.bugtracking.task.to.ActivityTo;
 import com.javarush.jira.bugtracking.task.to.TaskTo;
 import com.javarush.jira.bugtracking.task.to.TaskToExt;
 import com.javarush.jira.bugtracking.task.to.TaskToFull;
 import com.javarush.jira.common.to.CodeTo;
-
-import java.util.List;
-
-import static com.javarush.jira.bugtracking.ObjectType.TASK;
 import static com.javarush.jira.login.internal.web.UserTestData.ADMIN_ID;
 import static com.javarush.jira.login.internal.web.UserTestData.USER_ID;
+import java.util.List;
 
 public class TaskTestData {
     public static final MatcherFactory.Matcher<Task> TASK_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Task.class, "id", "startpoint", "endpoint", "activities", "project", "sprint", "parent", "tags");

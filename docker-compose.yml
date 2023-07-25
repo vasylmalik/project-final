@@ -1,0 +1,33 @@
+version: "3.9"
+
+services:
+  jirarush-app:
+    container_name: jirarush-app
+    build:
+      context: .
+    expose:
+      - "8080"
+    env_file:
+      - .app-env
+    depends_on:
+      - jirarush-db
+    restart: on-failure
+  jirarush-db:
+    image: postgres
+    container_name: jirarush-db
+    env_file:
+      - .db-env
+    ports:
+      - "5434:5432"
+    restart: on-failure
+  jirarush-nginx:
+    image: nginx
+    container_name: jirarush-nginx
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./resources/static:/opt/jirarush/resources/static:ro
+      - ./config/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - jirarush-app
+    restart: on-failure

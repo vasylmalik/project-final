@@ -2,6 +2,7 @@ package com.javarush.jira.profile.internal.web;
 
 import com.javarush.jira.common.error.ErrorMessageHandler;
 import com.javarush.jira.login.AuthUser;
+import static com.javarush.jira.profile.internal.web.ProfileUIController.PROFILE_URL;
 import com.javarush.jira.ref.RefType;
 import com.javarush.jira.ref.ReferenceService;
 import jakarta.validation.Valid;
@@ -14,8 +15,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import static com.javarush.jira.profile.internal.web.ProfileUIController.PROFILE_URL;
 
 @Controller
 @RequiredArgsConstructor

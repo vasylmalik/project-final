@@ -1,9 +1,20 @@
 package com.javarush.jira.common.internal.web;
 
-import com.javarush.jira.common.error.*;
+import com.javarush.jira.common.error.AppException;
+import com.javarush.jira.common.error.DataConflictException;
+import com.javarush.jira.common.error.ErrorMessageHandler;
+import com.javarush.jira.common.error.ErrorType;
+import static com.javarush.jira.common.error.ErrorType.APP_ERROR;
+import com.javarush.jira.common.error.IllegalRequestDataException;
+import com.javarush.jira.common.error.NotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ValidationException;
+import java.io.FileNotFoundException;
+import java.nio.file.AccessDeniedException;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.NestedExceptionUtils;
@@ -16,14 +27,6 @@ import org.springframework.validation.BindException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.servlet.NoHandlerFoundException;
-
-import java.io.FileNotFoundException;
-import java.nio.file.AccessDeniedException;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Optional;
-
-import static com.javarush.jira.common.error.ErrorType.APP_ERROR;
 
 @Slf4j
 public class BasicExceptionHandler {

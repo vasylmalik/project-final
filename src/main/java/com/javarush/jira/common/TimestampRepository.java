@@ -1,11 +1,10 @@
 package com.javarush.jira.common;
 
 import com.javarush.jira.common.model.TimestampEntry;
+import java.util.List;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.NoRepositoryBean;
-
-import java.util.List;
 
 @NoRepositoryBean
 public interface TimestampRepository<T extends TimestampEntry> extends BaseRepository<T> {

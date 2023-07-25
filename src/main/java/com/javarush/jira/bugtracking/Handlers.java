@@ -30,14 +30,13 @@ import com.javarush.jira.common.BaseRepository;
 import com.javarush.jira.common.HasId;
 import com.javarush.jira.common.to.BaseTo;
 import com.javarush.jira.login.AuthUser;
+import java.util.List;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 
 public class Handlers {
     @Component

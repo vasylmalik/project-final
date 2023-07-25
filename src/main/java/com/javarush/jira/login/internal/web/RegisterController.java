@@ -1,6 +1,7 @@
 package com.javarush.jira.login.internal.web;
 
 import com.javarush.jira.common.error.DataConflictException;
+import static com.javarush.jira.common.util.validation.ValidationUtil.checkNew;
 import com.javarush.jira.common.util.validation.View;
 import com.javarush.jira.login.UserTo;
 import com.javarush.jira.login.internal.verification.ConfirmData;
@@ -14,10 +15,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.support.SessionStatus;
-
-import static com.javarush.jira.common.util.validation.ValidationUtil.checkNew;
 
 @Controller
 @RequestMapping(RegisterController.REGISTER_URL)

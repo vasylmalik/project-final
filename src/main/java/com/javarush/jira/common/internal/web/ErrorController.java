@@ -16,18 +16,18 @@
 
 package com.javarush.jira.common.internal.web;
 
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
+import static org.springframework.boot.web.error.ErrorAttributeOptions.Include.BINDING_ERRORS;
+import static org.springframework.boot.web.error.ErrorAttributeOptions.Include.EXCEPTION;
+import static org.springframework.boot.web.error.ErrorAttributeOptions.Include.MESSAGE;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
-
-import java.util.Map;
-
-import static org.springframework.boot.web.error.ErrorAttributeOptions.Include.*;
 
 @Controller
 @Slf4j

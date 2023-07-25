@@ -5,16 +5,19 @@ import com.javarush.jira.common.HasIdAndParentId;
 import com.javarush.jira.common.error.NotFoundException;
 import com.javarush.jira.common.model.TimestampEntry;
 import jakarta.validation.constraints.NotNull;
+import java.text.MessageFormat;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
 import lombok.experimental.UtilityClass;
 import org.jsoup.Jsoup;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.util.CollectionUtils;
-
-import java.text.MessageFormat;
-import java.time.LocalDateTime;
-import java.util.*;
-import java.util.function.Function;
 
 @UtilityClass
 public class Util {

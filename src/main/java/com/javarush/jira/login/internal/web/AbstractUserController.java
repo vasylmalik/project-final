@@ -1,14 +1,13 @@
 package com.javarush.jira.login.internal.web;
 
 import com.javarush.jira.common.error.IllegalRequestDataException;
+import static com.javarush.jira.common.internal.config.SecurityConfig.PASSWORD_ENCODER;
 import com.javarush.jira.login.User;
 import com.javarush.jira.login.internal.UserHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
-
-import static com.javarush.jira.common.internal.config.SecurityConfig.PASSWORD_ENCODER;
 
 @Slf4j
 public abstract class AbstractUserController {

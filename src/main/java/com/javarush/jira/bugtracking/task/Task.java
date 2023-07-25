@@ -2,22 +2,30 @@ package com.javarush.jira.bugtracking.task;
 
 import com.javarush.jira.bugtracking.project.Project;
 import com.javarush.jira.bugtracking.sprint.Sprint;
+import static com.javarush.jira.bugtracking.task.TaskUtil.checkStatusChangePossible;
 import com.javarush.jira.common.HasCode;
 import com.javarush.jira.common.model.TitleEntity;
 import com.javarush.jira.common.util.validation.Code;
 import jakarta.annotation.Nullable;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.Size;
+import java.util.List;
+import java.util.Set;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-
-import java.util.List;
-import java.util.Set;
-
-import static com.javarush.jira.bugtracking.task.TaskUtil.checkStatusChangePossible;
 
 @Entity
 @Table(name = "task")

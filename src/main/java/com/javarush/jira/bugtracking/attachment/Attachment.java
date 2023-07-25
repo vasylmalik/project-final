@@ -3,13 +3,16 @@ package com.javarush.jira.bugtracking.attachment;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.javarush.jira.bugtracking.ObjectType;
 import com.javarush.jira.common.model.NamedEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "attachment")

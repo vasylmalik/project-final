@@ -5,11 +5,10 @@ import com.javarush.jira.common.util.validation.Code;
 import com.javarush.jira.common.util.validation.Description;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Positive;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.time.LocalDateTime;
 import java.util.Objects;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter

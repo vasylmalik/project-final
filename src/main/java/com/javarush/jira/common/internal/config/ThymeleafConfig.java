@@ -1,13 +1,12 @@
 package com.javarush.jira.common.internal.config;
 
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.FileTemplateResolver;
-
-import java.util.Set;
 
 @Configuration
 //http://www.thymeleaf.org/doc/articles/thymeleaf3migration.html

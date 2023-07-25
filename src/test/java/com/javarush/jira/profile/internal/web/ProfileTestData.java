@@ -5,7 +5,6 @@ import com.javarush.jira.profile.ContactTo;
 import com.javarush.jira.profile.ProfileTo;
 import com.javarush.jira.profile.internal.model.Contact;
 import com.javarush.jira.profile.internal.model.Profile;
-
 import java.util.Collections;
 import java.util.Set;
 

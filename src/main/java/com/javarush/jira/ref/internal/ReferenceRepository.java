@@ -3,11 +3,10 @@ package com.javarush.jira.ref.internal;
 import com.javarush.jira.common.BaseRepository;
 import com.javarush.jira.common.error.NotFoundException;
 import com.javarush.jira.ref.RefType;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 @Transactional(readOnly = true)
 public interface ReferenceRepository extends BaseRepository<Reference> {

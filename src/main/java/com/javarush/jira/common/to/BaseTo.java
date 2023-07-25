@@ -2,12 +2,11 @@ package com.javarush.jira.common.to;
 
 import com.javarush.jira.common.HasId;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Objects;
 
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PROTECTED)

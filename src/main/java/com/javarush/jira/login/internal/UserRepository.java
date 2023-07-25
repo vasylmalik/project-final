@@ -3,13 +3,12 @@ package com.javarush.jira.login.internal;
 import com.javarush.jira.common.BaseRepository;
 import com.javarush.jira.common.error.NotFoundException;
 import com.javarush.jira.login.User;
+import java.util.Optional;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Transactional(readOnly = true)
 @CacheConfig(cacheNames = "users")

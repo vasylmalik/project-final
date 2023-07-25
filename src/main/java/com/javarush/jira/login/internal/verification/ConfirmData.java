@@ -1,12 +1,11 @@
 package com.javarush.jira.login.internal.verification;
 
 import com.javarush.jira.login.UserTo;
+import java.io.Serializable;
+import java.util.UUID;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
-
-import java.io.Serializable;
-import java.util.UUID;
 
 @Getter
 @ToString

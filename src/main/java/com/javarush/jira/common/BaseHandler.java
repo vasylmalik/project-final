@@ -2,6 +2,12 @@ package com.javarush.jira.common;
 
 import com.javarush.jira.common.model.TimestampEntry;
 import com.javarush.jira.common.to.BaseTo;
+import static com.javarush.jira.common.util.validation.ValidationUtil.assureIdConsistent;
+import static com.javarush.jira.common.util.validation.ValidationUtil.checkNew;
+import java.net.URI;
+import java.util.List;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,14 +15,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import java.net.URI;
-import java.util.List;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-
-import static com.javarush.jira.common.util.validation.ValidationUtil.assureIdConsistent;
-import static com.javarush.jira.common.util.validation.ValidationUtil.checkNew;
 
 public class BaseHandler<E extends HasId, T extends BaseTo, R extends BaseRepository<E>, M extends BaseMapper<E, T>> {
     public static final String REST_URL = "/api";

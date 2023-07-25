@@ -1,10 +1,9 @@
 package com.javarush.jira.bugtracking.project;
 
 import com.javarush.jira.common.TimestampRepository;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Transactional(readOnly = true)
 public interface ProjectRepository extends TimestampRepository<Project> {

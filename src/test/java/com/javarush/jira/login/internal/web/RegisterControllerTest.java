@@ -3,19 +3,20 @@ package com.javarush.jira.login.internal.web;
 import com.javarush.jira.AbstractControllerTest;
 import com.javarush.jira.login.UserTo;
 import com.javarush.jira.login.internal.verification.ConfirmData;
-import org.junit.jupiter.api.Test;
-import org.springframework.security.test.context.support.WithUserDetails;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
-import java.util.Objects;
-
 import static com.javarush.jira.login.internal.web.RegisterController.REGISTER_URL;
 import static com.javarush.jira.login.internal.web.UserTestData.TO_MATCHER;
 import static com.javarush.jira.login.internal.web.UserTestData.USER_MAIL;
+import java.util.Objects;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import org.junit.jupiter.api.Test;
+import org.springframework.security.test.context.support.WithUserDetails;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 class RegisterControllerTest extends AbstractControllerTest {
 

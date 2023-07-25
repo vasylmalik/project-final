@@ -1,16 +1,14 @@
 package com.javarush.jira.bugtracking.task;
 
 import com.javarush.jira.bugtracking.Handlers;
+import static com.javarush.jira.bugtracking.task.TaskUtil.getLatestValue;
 import com.javarush.jira.bugtracking.task.to.ActivityTo;
 import com.javarush.jira.common.error.DataConflictException;
 import com.javarush.jira.login.AuthUser;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-
-import static com.javarush.jira.bugtracking.task.TaskUtil.getLatestValue;
 
 @Service
 @RequiredArgsConstructor

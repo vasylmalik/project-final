@@ -2,10 +2,9 @@ package com.javarush.jira.bugtracking.report;
 
 import com.javarush.jira.bugtracking.task.Task;
 import com.javarush.jira.common.BaseRepository;
+import java.util.List;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Transactional(readOnly = true)
 public interface ReportRepository extends BaseRepository<Task> {

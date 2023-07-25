@@ -6,11 +6,10 @@ import com.javarush.jira.login.internal.UserMapper;
 import com.javarush.jira.login.internal.passwordreset.PasswordResetEvent;
 import com.javarush.jira.login.internal.verification.RegistrationConfirmEvent;
 import com.javarush.jira.mail.MailService;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
-
-import java.util.Map;
 
 @Component
 @AllArgsConstructor

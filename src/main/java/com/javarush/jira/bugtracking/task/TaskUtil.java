@@ -5,13 +5,15 @@ import com.javarush.jira.bugtracking.task.to.TaskToFull;
 import com.javarush.jira.common.error.DataConflictException;
 import com.javarush.jira.login.AuthUser;
 import com.javarush.jira.ref.RefTo;
-
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
 import static com.javarush.jira.ref.RefType.TASK_STATUS;
 import static com.javarush.jira.ref.ReferenceService.getRefs;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class TaskUtil {
 

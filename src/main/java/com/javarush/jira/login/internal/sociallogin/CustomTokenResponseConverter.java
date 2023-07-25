@@ -1,12 +1,11 @@
 package com.javarush.jira.login.internal.sociallogin;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AccessTokenResponse;
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class CustomTokenResponseConverter implements Converter<Map<String, Object>, OAuth2AccessTokenResponse> {
     @Override

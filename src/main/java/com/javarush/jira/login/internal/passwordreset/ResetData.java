@@ -1,11 +1,10 @@
 package com.javarush.jira.login.internal.passwordreset;
 
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.ToString;
-
 import java.io.Serializable;
 import java.util.UUID;
+import lombok.Getter;
+import lombok.ToString;
 
 @Getter
 @ToString

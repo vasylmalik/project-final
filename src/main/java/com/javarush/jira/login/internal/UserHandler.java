@@ -3,9 +3,8 @@ package com.javarush.jira.login.internal;
 import com.javarush.jira.common.BaseHandler;
 import com.javarush.jira.login.User;
 import com.javarush.jira.login.UserTo;
-import org.springframework.stereotype.Component;
-
 import java.util.function.BinaryOperator;
+import org.springframework.stereotype.Component;
 
 @Component
 public class UserHandler extends BaseHandler<User, UserTo, UserRepository, UserMapper> {

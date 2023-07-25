@@ -9,10 +9,9 @@ import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
+import java.time.LocalDateTime;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
-
-import java.time.LocalDateTime;
 
 @Value
 @EqualsAndHashCode(callSuper = true)

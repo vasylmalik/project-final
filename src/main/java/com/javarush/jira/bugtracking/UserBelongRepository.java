@@ -1,11 +1,10 @@
 package com.javarush.jira.bugtracking;
 
 import com.javarush.jira.common.BaseRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 @Transactional(readOnly = true)
 public interface UserBelongRepository extends BaseRepository<UserBelong> {

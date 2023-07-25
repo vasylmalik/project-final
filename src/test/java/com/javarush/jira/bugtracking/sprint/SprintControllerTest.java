@@ -1,23 +1,38 @@
 package com.javarush.jira.bugtracking.sprint;
 
 import com.javarush.jira.AbstractControllerTest;
+import static com.javarush.jira.bugtracking.sprint.SprintTestData.ACTIVE;
+import static com.javarush.jira.bugtracking.sprint.SprintTestData.NOT_FOUND;
+import static com.javarush.jira.bugtracking.sprint.SprintTestData.PROJECT1_ID;
+import static com.javarush.jira.bugtracking.sprint.SprintTestData.SPRINT1_ID;
+import static com.javarush.jira.bugtracking.sprint.SprintTestData.SPRINT_MATCHER;
+import static com.javarush.jira.bugtracking.sprint.SprintTestData.SPRINT_TO_MATCHER;
+import static com.javarush.jira.bugtracking.sprint.SprintTestData.getNewTo;
+import static com.javarush.jira.bugtracking.sprint.SprintTestData.getUpdatedTo;
+import static com.javarush.jira.bugtracking.sprint.SprintTestData.sprintTo1;
+import static com.javarush.jira.bugtracking.sprint.SprintTestData.sprintTo2;
+import static com.javarush.jira.bugtracking.sprint.SprintTestData.sprintTo3;
+import static com.javarush.jira.bugtracking.sprint.SprintTestData.sprintTo4;
 import com.javarush.jira.bugtracking.sprint.to.SprintTo;
+import static com.javarush.jira.common.BaseHandler.REST_URL;
+import static com.javarush.jira.common.util.JsonUtil.writeValue;
+import static com.javarush.jira.login.internal.web.UserTestData.ADMIN_MAIL;
+import static com.javarush.jira.login.internal.web.UserTestData.MANAGER_MAIL;
+import static com.javarush.jira.login.internal.web.UserTestData.USER_MAIL;
+import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
-import static com.javarush.jira.bugtracking.sprint.SprintTestData.NOT_FOUND;
-import static com.javarush.jira.bugtracking.sprint.SprintTestData.*;
-import static com.javarush.jira.common.BaseHandler.REST_URL;
-import static com.javarush.jira.common.util.JsonUtil.writeValue;
-import static com.javarush.jira.login.internal.web.UserTestData.*;
-import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class SprintControllerTest extends AbstractControllerTest {
     private static final String SPRINTS_REST_URL = REST_URL + "/sprints/";

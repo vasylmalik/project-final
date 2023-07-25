@@ -2,7 +2,12 @@ package com.javarush.jira.bugtracking;
 
 import com.javarush.jira.common.model.TimestampEntry;
 import com.javarush.jira.common.util.validation.Code;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

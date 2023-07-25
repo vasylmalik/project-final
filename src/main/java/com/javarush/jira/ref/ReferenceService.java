@@ -1,22 +1,20 @@
 package com.javarush.jira.ref;
 
 import com.javarush.jira.bugtracking.ObjectType;
+import static com.javarush.jira.common.util.Util.getExisted;
 import com.javarush.jira.ref.internal.ReferenceMapper;
 import com.javarush.jira.ref.internal.ReferenceRepository;
 import jakarta.annotation.PostConstruct;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Service;
-
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import static com.javarush.jira.common.util.Util.getExisted;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor

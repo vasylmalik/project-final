@@ -4,11 +4,10 @@ import com.javarush.jira.profile.ContactTo;
 import com.javarush.jira.ref.RefTo;
 import com.javarush.jira.ref.RefType;
 import com.javarush.jira.ref.ReferenceService;
-import lombok.experimental.UtilityClass;
-
 import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class ProfileUtil {

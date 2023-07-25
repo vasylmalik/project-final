@@ -9,6 +9,9 @@ import com.javarush.jira.bugtracking.sprint.to.SprintTo;
 import com.javarush.jira.bugtracking.task.TaskRepository;
 import com.javarush.jira.bugtracking.task.mapper.TaskMapper;
 import com.javarush.jira.common.util.Util;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -16,10 +19,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Function;
 
 @RestController
 @RequiredArgsConstructor

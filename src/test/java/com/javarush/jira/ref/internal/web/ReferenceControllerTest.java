@@ -1,11 +1,22 @@
 package com.javarush.jira.ref.internal.web;
 
 import com.javarush.jira.AbstractControllerTest;
+import static com.javarush.jira.common.util.JsonUtil.writeValue;
+import static com.javarush.jira.login.internal.web.UserTestData.ADMIN_MAIL;
 import com.javarush.jira.ref.RefTo;
 import com.javarush.jira.ref.RefType;
 import com.javarush.jira.ref.ReferenceService;
 import com.javarush.jira.ref.internal.Reference;
 import com.javarush.jira.ref.internal.ReferenceRepository;
+import static com.javarush.jira.ref.internal.web.ReferenceTestData.REFERENCE_MATCHER;
+import static com.javarush.jira.ref.internal.web.ReferenceTestData.REFTO_MATCHER;
+import static com.javarush.jira.ref.internal.web.ReferenceTestData.TASK_CODE;
+import static com.javarush.jira.ref.internal.web.ReferenceTestData.getNew;
+import static com.javarush.jira.ref.internal.web.ReferenceTestData.getUpdated;
+import static com.javarush.jira.ref.internal.web.ReferenceTestData.refTo;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +25,6 @@ import org.springframework.lang.NonNull;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
-import static com.javarush.jira.common.util.JsonUtil.writeValue;
-import static com.javarush.jira.login.internal.web.UserTestData.ADMIN_MAIL;
-import static com.javarush.jira.ref.internal.web.ReferenceTestData.*;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;

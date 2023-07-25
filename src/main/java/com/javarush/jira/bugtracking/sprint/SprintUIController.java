@@ -1,21 +1,25 @@
 package com.javarush.jira.bugtracking.sprint;
 
 import com.javarush.jira.bugtracking.Handlers;
+import static com.javarush.jira.bugtracking.ObjectType.SPRINT;
 import com.javarush.jira.bugtracking.project.ProjectRepository;
 import com.javarush.jira.bugtracking.sprint.to.SprintTo;
 import com.javarush.jira.common.BaseHandler;
 import com.javarush.jira.common.util.Util;
+import static com.javarush.jira.ref.RefType.SPRINT_STATUS;
+import static com.javarush.jira.ref.ReferenceService.getRefs;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-
-import static com.javarush.jira.bugtracking.ObjectType.SPRINT;
-import static com.javarush.jira.ref.RefType.SPRINT_STATUS;
-import static com.javarush.jira.ref.ReferenceService.getRefs;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Slf4j
 @Controller
