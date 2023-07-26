@@ -20,6 +20,7 @@ import com.javarush.jira.ref.RefType;
 import static com.javarush.jira.ref.ReferenceService.getRefTo;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -137,5 +138,12 @@ public class TaskService {
         if (!userType.equals(possibleUserType)) {
             throw new DataConflictException(String.format(assign ? CANNOT_ASSIGN : CANNOT_UN_ASSIGN, userType, task.getStatusCode()));
         }
+    }
+
+    @Transactional
+    public void addTagsToTask(Long taskId, Set<String> tags) {
+        TaskRepository taskRepository = handler.getRepository();
+        Task task = taskRepository.getExisted(taskId);
+        task.getTags().addAll(tags);
     }
 }

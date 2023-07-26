@@ -17,6 +17,7 @@ import jakarta.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -87,6 +88,12 @@ public class TaskController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Task> createWithLocation(@Valid @RequestBody TaskToExt taskTo) {
         return createdResponse(REST_URL, taskService.create(taskTo));
+    }
+
+    @PostMapping("/{id}/tag")
+    public void addTagsToTask(@PathVariable Long id, @RequestBody Set<String> tags) {
+        log.info("add tags to task with id = {}", id);
+        taskService.addTagsToTask(id, tags);
     }
 
     @PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
