@@ -9,9 +9,16 @@ import java.util.Collections;
 import java.util.Set;
 
 public class ProfileTestData {
+
+    public static MatcherFactory.Matcher<ProfileTo> PROFILE_MATCHER_TO =
+            MatcherFactory.usingIgnoringFieldsComparator(ProfileTo.class, "id");
     public static MatcherFactory.Matcher<Profile> PROFILE_MATCHER =
             MatcherFactory.usingIgnoringFieldsComparator(Profile.class, "user");
 
+    public static ProfileTo ADMIN_PROFILE_TO = new ProfileTo(null,
+        Set.of("three_days_before_deadline", "two_days_before_deadline", "one_day_before_deadline"),
+        Set.of(new ContactTo("github", "adminGitHub"),
+            new ContactTo("tg", "adminTg")));
     public static ProfileTo USER_PROFILE_TO = new ProfileTo(null,
             Set.of("assigned", "overdue", "deadline"),
             Set.of(new ContactTo("skype", "userSkype"),
