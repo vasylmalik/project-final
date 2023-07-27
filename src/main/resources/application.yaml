@@ -8,6 +8,11 @@ app:
     max-pool-size: 100
 
 spring:
+  messages:
+    encoding: UTF-8
+    basename: lang
+  config:
+    import: classpath:secret-env.yaml
   init:
     mode: never
   jpa:
@@ -26,13 +31,13 @@ spring:
         # https://stackoverflow.com/questions/21257819/what-is-the-difference-between-hibernate-jdbc-fetch-size-and-hibernate-jdbc-batc
         jdbc.batch_size: 20
   datasource:
-#    url: jdbc:postgresql://jirarush-db:5432/jira
-    url: jdbc:postgresql://jirarush-db:5432/jira
-    username: jira
-    password: JiraRush
+    url: ${spring.datasource.url}
+    username: ${spring.datasource.username}
+    password: ${spring.datasource.password}
 
   liquibase:
-    changeLog: "classpath:db/changelog-master.yml"
+    changeLog: classpath:db/changelog-master.yml
+    enabled: true
 
   # Jackson Fields Serialization
   jackson:
@@ -52,19 +57,19 @@ spring:
       client:
         registration:
           github:
-            client-id: 3d0d8738e65881fff266
-            client-secret: 0f97031ce6178b7dfb67a6af587f37e222a16120
+            client-id: ${spring.security.oauth2.client.registration.github.client-id}
+            client-secret: ${spring.security.oauth2.client.registration.github.client-secret}
             scope:
               - email
           google:
-            client-id: 329113642700-f8if6pu68j2repq3ef6umd5jgiliup60.apps.googleusercontent.com
-            client-secret: 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
+            client-id: ${spring.security.oauth2.client.registration.google.client-id}
+            client-secret: ${spring.security.oauth2.client.registration.google.client-secret}
             scope:
               - email
               - profile
           gitlab:
-            client-id: b8520a3266089063c0d8261cce36971defa513f5ffd9f9b7a3d16728fc83a494
-            client-secret: e72c65320cf9d6495984a37b0f9cc03ec46be0bb6f071feaebbfe75168117004
+            client-id: ${spring.security.oauth2.client.registration.gitlab.client-id}
+            client-secret: ${spring.security.oauth2.client.registration.gitlab.client-secret}
             client-name: GitLab
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
             authorization-grant-type: authorization_code
@@ -88,9 +93,9 @@ spring:
             enable: true
           auth: true
     host: smtp.gmail.com
-    username: jira4jr@gmail.com
-    password: zdfzsrqvgimldzyj
-    port: 587
+    username: ${spring.mail.username}
+    password: ${spring.mail.password}
+    port: ${spring.mail.port}
   thymeleaf.check-template-location: false
 
   mvc.throw-exception-if-no-handler-found: true
