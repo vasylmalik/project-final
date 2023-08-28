@@ -14,6 +14,7 @@ import com.javarush.jira.common.error.NotFoundException;
 import com.javarush.jira.common.util.Util;
 import com.javarush.jira.login.AuthUser;
 import com.javarush.jira.ref.RefType;
+import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +22,7 @@ import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import static com.javarush.jira.bugtracking.ObjectType.TASK;
 import static com.javarush.jira.bugtracking.task.TaskUtil.fillExtraFields;
@@ -140,4 +142,24 @@ public class TaskService {
             throw new DataConflictException(String.format(assign ? CANNOT_ASSIGN : CANNOT_UN_ASSIGN, userType, task.getStatusCode()));
         }
     }
+
+    @Transactional
+    public Set<String> addTag(Long id, String tag) {
+        Task task = handler.get(id);
+        task.getTags().add(tag);
+
+        return task.getTags();
+    }
+
+    @Transactional
+    public void deleteTag(Long id, String tag) {
+        Task task = handler.get(id);
+        task.getTags()
+                .stream()
+                .filter(s -> s.equals(tag))
+                .findAny()
+                .ifPresent(findedTag -> task.getTags().remove(findedTag));
+
+    }
+
 }
