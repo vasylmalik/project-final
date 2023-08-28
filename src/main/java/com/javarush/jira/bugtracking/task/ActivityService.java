@@ -76,46 +76,49 @@ public class ActivityService {
         }
     }
 
-    public Long getTaskInWork(Task task){
-        Long taskId = task.getId();
-        List<Activity> activities = task.getActivities();
-        LocalDateTime readyForReviewTime = LocalDateTime.now();
-        LocalDateTime inProgressTime = LocalDateTime.now();
+    public Long getTaskInWork(Task task) {
+        LocalDateTime inProgressTime = task.getActivities().stream()
+                .filter(activity ->
+                        "in_progress".equals(activity.getStatusCode()))
+                .findAny()
+                .orElse(null)
+                .getUpdated();
 
-        for (Activity activity : activities) {
-            if (activity.getTaskId() == taskId){
-                String statusCode = activity.getStatusCode();
-                if("ready_for_review".equals(statusCode)){
-                    readyForReviewTime = activity.getUpdated();
-                }
-                else if ("in_progress".equals(statusCode)){
-                    inProgressTime = activity.getUpdated();
-                }
-            }
+        LocalDateTime readyForReviewTime = task.getActivities().stream()
+                .filter(activity ->
+                        "ready_for_review".equals(activity.getStatusCode()))
+                .findAny()
+                .orElse(null)
+                .getUpdated();
+
+        if (inProgressTime == null || readyForReviewTime == null){
+            LocalDateTime now = LocalDateTime.now();
+            return Duration.between(now, now).getSeconds();
         }
 
         return Duration.between(inProgressTime, readyForReviewTime).getSeconds();
 
     }
 
-    public Long getTaskInTest(Task task){
-        Long taskId = task.getId();
-        List<Activity> activities = task.getActivities();
-        LocalDateTime doneTime = LocalDateTime.now();
-        LocalDateTime readyForReviewTime = LocalDateTime.now();
+    public Long getTaskInTest(Task task) {
+        LocalDateTime doneTime = task.getActivities().stream()
+                .filter(activity ->
+                        "done".equals(activity.getStatusCode()))
+                .findAny()
+                .orElse(null)
+                .getUpdated();
 
-        for (Activity activity : activities) {
-            Long taskIdInActivity = activity.getTaskId();
-            if (taskIdInActivity == taskId){
-                String statusCode = activity.getStatusCode();
-                if("done".equals(statusCode)){
-                    doneTime = activity.getUpdated();
+        LocalDateTime readyForReviewTime = task.getActivities().stream()
+                .filter(activity ->
+                        "ready_for_review".equals(activity.getStatusCode()))
+                .findAny()
+                .orElse(null)
+                .getUpdated();
 
-                }
-                else if ("ready_for_review".equals(statusCode)){
-                    readyForReviewTime = activity.getUpdated();
-                }
-            }
+
+        if (doneTime == null || readyForReviewTime == null){
+            LocalDateTime now = LocalDateTime.now();
+            return Duration.between(now, now).getSeconds();
         }
 
         return Duration.between(readyForReviewTime, doneTime).getSeconds();
