@@ -142,16 +142,17 @@ public class TaskService {
             throw new DataConflictException(String.format(assign ? CANNOT_ASSIGN : CANNOT_UN_ASSIGN, userType, task.getStatusCode()));
         }
     }
-
-    @Transactional
+    
     public Set<String> addTag(Long id, String tag) {
         Task task = handler.get(id);
         task.getTags().add(tag);
 
+        handler.update(task, id);
+
         return task.getTags();
     }
 
-    @Transactional
+
     public void deleteTag(Long id, String tag) {
         Task task = handler.get(id);
         task.getTags()
@@ -160,6 +161,7 @@ public class TaskService {
                 .findAny()
                 .ifPresent(findedTag -> task.getTags().remove(findedTag));
 
+        handler.update(task, id);
     }
 
 
