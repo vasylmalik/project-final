@@ -14,7 +14,6 @@ import com.javarush.jira.common.error.NotFoundException;
 import com.javarush.jira.common.util.Util;
 import com.javarush.jira.login.AuthUser;
 import com.javarush.jira.ref.RefType;
-import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -142,14 +141,12 @@ public class TaskService {
             throw new DataConflictException(String.format(assign ? CANNOT_ASSIGN : CANNOT_UN_ASSIGN, userType, task.getStatusCode()));
         }
     }
-    
+
     public Set<String> addTag(Long id, String tag) {
         Task task = handler.get(id);
         task.getTags().add(tag);
 
-        handler.update(task, id);
-
-        return task.getTags();
+        return handler.update(task, id).getTags();
     }
 
 

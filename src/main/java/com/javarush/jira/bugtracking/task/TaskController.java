@@ -158,15 +158,5 @@ public class TaskController {
         }
     }
 
-    @PostMapping("/{id}/tags")
-    public Set<String> addTag(@PathVariable Long id,
-                              @RequestBody String tag){
-        return taskService.addTag(id, tag);
-    }
 
-    @DeleteMapping("/{id}/tags")
-    public void deleteTag(@PathVariable Long id,
-                          @RequestBody String tag){
-        taskService.deleteTag(id, tag);
-    }
 }
