@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.javarush.jira.bugtracking.task.TaskUtil.getLatestValue;
@@ -72,5 +74,54 @@ public class ActivityService {
                 task.setTypeCode(latestType);
             }
         }
+    }
+
+    public Long getTaskInWork(Task task) {
+        LocalDateTime inProgressTime = task.getActivities().stream()
+                .filter(activity ->
+                        "in_progress".equals(activity.getStatusCode()))
+                .findAny()
+                .orElse(null)
+                .getUpdated();
+
+        LocalDateTime readyForReviewTime = task.getActivities().stream()
+                .filter(activity ->
+                        "ready_for_review".equals(activity.getStatusCode()))
+                .findAny()
+                .orElse(null)
+                .getUpdated();
+
+        if (inProgressTime == null || readyForReviewTime == null){
+            LocalDateTime now = LocalDateTime.now();
+            return Duration.between(now, now).getSeconds();
+        }
+
+        return Duration.between(inProgressTime, readyForReviewTime).getSeconds();
+
+    }
+
+    public Long getTaskInTest(Task task) {
+        LocalDateTime doneTime = task.getActivities().stream()
+                .filter(activity ->
+                        "done".equals(activity.getStatusCode()))
+                .findAny()
+                .orElse(null)
+                .getUpdated();
+
+        LocalDateTime readyForReviewTime = task.getActivities().stream()
+                .filter(activity ->
+                        "ready_for_review".equals(activity.getStatusCode()))
+                .findAny()
+                .orElse(null)
+                .getUpdated();
+
+
+        if (doneTime == null || readyForReviewTime == null){
+            LocalDateTime now = LocalDateTime.now();
+            return Duration.between(now, now).getSeconds();
+        }
+
+        return Duration.between(readyForReviewTime, doneTime).getSeconds();
+
     }
 }

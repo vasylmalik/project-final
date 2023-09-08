@@ -21,6 +21,7 @@ import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import static com.javarush.jira.bugtracking.ObjectType.TASK;
 import static com.javarush.jira.bugtracking.task.TaskUtil.fillExtraFields;
@@ -140,4 +141,26 @@ public class TaskService {
             throw new DataConflictException(String.format(assign ? CANNOT_ASSIGN : CANNOT_UN_ASSIGN, userType, task.getStatusCode()));
         }
     }
+
+    public Set<String> addTag(Long id, String tag) {
+        Task task = handler.get(id);
+        task.getTags().add(tag);
+
+        return handler.update(task, id).getTags();
+    }
+
+
+    public void deleteTag(Long id, String tag) {
+        Task task = handler.get(id);
+        task.getTags()
+                .stream()
+                .filter(s -> s.equals(tag))
+                .findAny()
+                .ifPresent(findedTag -> task.getTags().remove(findedTag));
+
+        handler.update(task, id);
+    }
+
+
+
 }

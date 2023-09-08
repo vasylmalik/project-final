@@ -92,4 +92,5 @@ public class Task extends TitleEntity implements HasCode {
     public String getCode() {
         return typeCode + '-' + id;
     }
+
 }

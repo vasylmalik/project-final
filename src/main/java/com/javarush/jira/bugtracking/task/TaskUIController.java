@@ -145,4 +145,16 @@ public class TaskUIController {
                 .filter(activity -> activity.getComment() != null)
                 .toList();
     }
+
+    @PostMapping("/edit/{id}")
+    public Set<String> addTag(@PathVariable Long id,
+                              @RequestBody String tag){
+        return service.addTag(id, tag);
+    }
+
+    @DeleteMapping("/edit/{id}")
+    public void deleteTag(@PathVariable Long id,
+                          @RequestBody String tag){
+        service.deleteTag(id, tag);
+    }
 }
