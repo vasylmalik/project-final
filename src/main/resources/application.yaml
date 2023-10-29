@@ -61,12 +61,6 @@ spring:
             scope:
               - email
               - profile
-          yandex:
-            client-id: 2f3395214ba84075956b76a34b231985
-            client-secret: ed236c501e444a609b0f419e5e88f1e1
-            client-name: Yandex
-            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
-            authorization-grant-type: authorization_code
           gitlab:
             client-id: b8520a3266089063c0d8261cce36971defa513f5ffd9f9b7a3d16728fc83a494
             client-secret: e72c65320cf9d6495984a37b0f9cc03ec46be0bb6f071feaebbfe75168117004
@@ -75,11 +69,6 @@ spring:
             authorization-grant-type: authorization_code
             scope: read_user
         provider:
-          yandex:
-            authorization-uri: https://oauth.yandex.ru/authorize
-            token-uri: https://oauth.yandex.ru/token
-            user-info-uri: https://login.yandex.ru/info
-            user-name-attribute: login
           gitlab:
             authorization-uri: https://gitlab.com/oauth/authorize
             token-uri: https://gitlab.com/oauth/token
