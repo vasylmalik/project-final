@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 import static com.javarush.jira.common.BaseHandler.createdResponse;
@@ -28,7 +29,7 @@ public class AttachmentController {
     @Transactional
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Attachment> upload(@RequestPart MultipartFile file, @RequestParam ObjectType type,
-                                             @RequestParam Long objectId, @AuthenticationPrincipal AuthUser authUser) {
+                                             @RequestParam Long objectId, @AuthenticationPrincipal AuthUser authUser) throws IOException {
         log.debug("upload file {} to folder {}", file.getOriginalFilename(), type.toString().toLowerCase());
         String path = FileUtil.getPath(type.toString());
         Attachment attachment = new Attachment(null, path, objectId, type, authUser.id(), file.getOriginalFilename());
