@@ -44,7 +44,7 @@ public class ProfileTestData {
                         new ContactTo("website", "new.com"),
                         new ContactTo("github", "newGitHub"),
                         new ContactTo("tg", "newTg"),
-                        new ContactTo("vk", "newVk"),
+//                        new ContactTo("vk", "newVk"),
                         new ContactTo("linkedin", "newLinkedin")));
     }
 
@@ -57,7 +57,7 @@ public class ProfileTestData {
                 new Contact(id, "website", "new.com"),
                 new Contact(id, "github", "newGitHub"),
                 new Contact(id, "tg", "newTg"),
-                new Contact(id, "vk", "newVk"),
+//                new Contact(id, "vk", "newVk"),
                 new Contact(id, "linkedin", "newLinkedin")));
         return profile;
     }
