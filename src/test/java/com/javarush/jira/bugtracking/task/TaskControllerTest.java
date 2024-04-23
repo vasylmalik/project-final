@@ -22,6 +22,7 @@ import static com.javarush.jira.common.util.JsonUtil.writeValue;
 import static com.javarush.jira.login.internal.web.UserTestData.*;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -353,7 +354,7 @@ class TaskControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = ADMIN_MAIL)
     void createTaskWithLocation() throws Exception {
         TaskToExt newTo = getNewTaskTo();
-        ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
+        ResultActions action = perform(post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(newTo)))
                 .andExpect(status().isCreated());
@@ -367,7 +368,7 @@ class TaskControllerTest extends AbstractControllerTest {
 
     @Test
     void createTaskUnauthorized() throws Exception {
-        perform(MockMvcRequestBuilders.post(REST_URL)
+        perform(post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(getNewTaskTo())))
                 .andExpect(status().isUnauthorized());
@@ -377,7 +378,7 @@ class TaskControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = ADMIN_MAIL)
     void createTaskInvalid() throws Exception {
         TaskToExt invalidTo = new TaskToExt(null, "", null, null, "epic", null, null, null, 3, null, PROJECT1_ID, SPRINT1_ID);
-        perform(MockMvcRequestBuilders.post(REST_URL)
+        perform(post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(invalidTo)))
                 .andDo(print())
@@ -388,7 +389,7 @@ class TaskControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = ADMIN_MAIL)
     void createTaskWhenProjectNotExists() throws Exception {
         TaskToExt notExistsProjectTo = new TaskToExt(null, "epic-1", "Data New", "task NEW", "epic", "in_progress", "low", null, 3, null, NOT_FOUND, SPRINT1_ID);
-        perform(MockMvcRequestBuilders.post(REST_URL)
+        perform(post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(notExistsProjectTo)))
                 .andDo(print())
@@ -399,7 +400,7 @@ class TaskControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = USER_MAIL)
     void createActivityWithLocation() throws Exception {
         ActivityTo newTo = getNewActivityTo();
-        ResultActions action = perform(MockMvcRequestBuilders.post(ACTIVITIES_REST_URL)
+        ResultActions action = perform(post(ACTIVITIES_REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(newTo)))
                 .andExpect(status().isCreated());
@@ -415,7 +416,7 @@ class TaskControllerTest extends AbstractControllerTest {
 
     @Test
     void createActivityUnauthorized() throws Exception {
-        perform(MockMvcRequestBuilders.post(ACTIVITIES_REST_URL)
+        perform(post(ACTIVITIES_REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(getNewTaskTo())))
                 .andExpect(status().isUnauthorized());
@@ -426,7 +427,7 @@ class TaskControllerTest extends AbstractControllerTest {
     void createActivityWhenTaskNotExists() throws Exception {
         ActivityTo notExistsTaskTo = new ActivityTo(null, NOT_FOUND, ADMIN_ID, null, null, null,
                 null, "epic", null, null, 4, null);
-        perform(MockMvcRequestBuilders.post(ACTIVITIES_REST_URL)
+        perform(post(ACTIVITIES_REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(notExistsTaskTo)))
                 .andDo(print())

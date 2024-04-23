@@ -1,8 +1,33 @@
-spring.cache.type: none
 spring:
-  init:
-    mode: always
+  liquibase:
+    changeLog: "classpath:changelog.sql"
+  config:
+    activate:
+      on-profile: test
   datasource:
-    url: jdbc:postgresql://localhost:5433/jira-test
-    username: jira
-    password: JiraRush
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop # или другая подходящая стратегия для вашего приложения
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        show_sql: true # Установите в true, чтобы увидеть SQL-запросы, выполненные Hibernate
+  mail:
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
+          auth: true
+    host: smtp.gmail.com
+    username: jira4jr@gmail.com
+    password: zdfzsrqvgimldzyj
+    port: 587
+  thymeleaf.check-template-location: false
+
+  mvc.throw-exception-if-no-handler-found: true
+  web.resources.add-mappings: false
