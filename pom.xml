@@ -142,9 +142,23 @@
             <artifactId>junit-platform-launcher</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>2.2.224</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/io.github.cdimascio/java-dotenv -->
+        <dependency>
+            <groupId>io.github.cdimascio</groupId>
+            <artifactId>java-dotenv</artifactId>
+            <version>5.2.2</version>
+        </dependency>
     </dependencies>
 
     <build>
+        <finalName>root</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -175,6 +189,12 @@
                 </configuration>
             </plugin>
         </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
     </build>
 
     <profiles>
@@ -194,6 +214,24 @@
                     </plugin>
                 </plugins>
             </build>
+        </profile>
+        <profile>
+            <id>nativeTest</id>
+            <properties>
+                <spring.profiles.active>nativeTest</spring.profiles.active>
+            </properties>
+            <dependencies>
+
+            </dependencies>
+        </profile>
+        <profile>
+            <id>native</id>
+            <properties>
+                <spring.profiles.active>native</spring.profiles.active>
+            </properties>
+            <dependencies>
+
+            </dependencies>
         </profile>
     </profiles>
 </project>

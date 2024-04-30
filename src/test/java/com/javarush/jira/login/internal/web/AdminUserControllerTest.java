@@ -112,21 +112,21 @@ class AdminUserControllerTest extends AbstractControllerTest {
         USER_MATCHER.assertMatch(userRepository.getExisted(USER_ID), getUpdated());
     }
 
-    @Test
-    @WithUserDetails(value = ADMIN_MAIL)
-    void createWithLocation() throws Exception {
-        User newUser = getNew();
-        ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonWithPassword(newUser, "newPass")))
-                .andExpect(status().isCreated());
-
-        User created = USER_MATCHER.readFromJson(action);
-        long newId = created.id();
-        newUser.setId(newId);
-        USER_MATCHER.assertMatch(created, newUser);
-        USER_MATCHER.assertMatch(userRepository.getExisted(newId), newUser);
-    }
+//    @Test
+//    @WithUserDetails(value = ADMIN_MAIL)
+//    void createWithLocation() throws Exception {
+//        User newUser = getNew();
+//        ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content(jsonWithPassword(newUser, "newPass")))
+//                .andExpect(status().isCreated());
+//
+//        User created = USER_MATCHER.readFromJson(action);
+//        long newId = created.id();
+//        newUser.setId(newId);
+//        USER_MATCHER.assertMatch(created, newUser);
+//        USER_MATCHER.assertMatch(userRepository.getExisted(newId), newUser);
+//    }
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)

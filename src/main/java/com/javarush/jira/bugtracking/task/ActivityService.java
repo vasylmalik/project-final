@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.javarush.jira.bugtracking.task.TaskUtil.getLatestValue;
@@ -71,6 +73,48 @@ public class ActivityService {
                 }
                 task.setTypeCode(latestType);
             }
+        }
+    }
+
+    public Duration calculateTimeInProgress(Task task) {
+        List<Activity> activities = handler.getRepository().findAllByTaskIdOrderByUpdatedDesc(task.getId());
+        LocalDateTime inProgressTime = null;
+        LocalDateTime readyForReviewTime = null;
+
+        for (Activity activity : activities) {
+            if ("in_progress".equals(activity.getStatusCode())) {
+                inProgressTime = activity.getUpdated();
+            } else if ("ready_for_review".equals(activity.getStatusCode())) {
+                readyForReviewTime = activity.getUpdated();
+                break;
+            }
+        }
+
+        if (inProgressTime != null && readyForReviewTime != null) {
+            return Duration.between(inProgressTime, readyForReviewTime);
+        } else {
+            return Duration.ZERO;
+        }
+    }
+
+    public Duration calculateTimeInTesting(Task task) {
+        List<Activity> activities = handler.getRepository().findAllByTaskIdOrderByUpdatedDesc(task.getId());
+        LocalDateTime readyForReviewTime = null;
+        LocalDateTime doneTime = null;
+
+        for (Activity activity : activities) {
+            if ("ready_for_review".equals(activity.getStatusCode())) {
+                readyForReviewTime = activity.getUpdated();
+            } else if ("done".equals(activity.getStatusCode())) {
+                doneTime = activity.getUpdated();
+                break;
+            }
+        }
+
+        if (readyForReviewTime != null && doneTime != null) {
+            return Duration.between(readyForReviewTime, doneTime);
+        } else {
+            return Duration.ZERO;
         }
     }
 }

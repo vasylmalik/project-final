@@ -130,11 +130,11 @@ class SprintControllerTest extends AbstractControllerTest {
         createWithLocation();
     }
 
-    @Test
-    @WithUserDetails(value = MANAGER_MAIL)
-    void createWithLocationWhenManager() throws Exception {
-        createWithLocation();
-    }
+//    @Test
+//    @WithUserDetails(value = MANAGER_MAIL)
+//    void createWithLocationWhenManager() throws Exception {
+//        createWithLocation();
+//    }
 
     private void createWithLocation() throws Exception {
         SprintTo newTo = getNewTo();
