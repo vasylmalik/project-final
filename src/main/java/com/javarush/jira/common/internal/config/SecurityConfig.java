@@ -3,7 +3,6 @@ package com.javarush.jira.common.internal.config;
 import com.javarush.jira.login.AuthUser;
 import com.javarush.jira.login.Role;
 import com.javarush.jira.login.internal.UserRepository;
-import com.javarush.jira.login.internal.sociallogin.CustomOAuth2UserService;
 import com.javarush.jira.login.internal.sociallogin.CustomTokenResponseConverter;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +11,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.converter.FormHttpMessageConverter;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -24,6 +25,7 @@ import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCo
 import org.springframework.security.oauth2.client.http.OAuth2ErrorResponseErrorHandler;
 import org.springframework.security.oauth2.core.http.converter.OAuth2AccessTokenResponseHttpMessageConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
@@ -36,21 +38,13 @@ import java.util.Arrays;
 public class SecurityConfig {
     public static final PasswordEncoder PASSWORD_ENCODER = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
-    private final UserRepository userRepository;
-    private final CustomOAuth2UserService customOAuth2UserService;
     private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
+    private final JwtFilter jwtFilter;
+    private final UserService userService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return PASSWORD_ENCODER;
-    }
-
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return email -> {
-            log.debug("Authenticating '{}'", email);
-            return new AuthUser(userRepository.getExistedByEmail(email));
-        };
     }
 
     @Bean
@@ -61,10 +55,10 @@ public class SecurityConfig {
                 .requestMatchers("/api/mngr/**").hasAnyRole(Role.ADMIN.name(), Role.MANAGER.name())
                 .requestMatchers(HttpMethod.POST, "/api/users").anonymous()
                 .requestMatchers("/api/**").authenticated()
-                .and().httpBasic()
-                .authenticationEntryPoint(restAuthenticationEntryPoint)
-                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER) // support sessions Cookie for UI ajax
-                .and().csrf().disable();
+                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // support sessions Cookie for UI ajax
+                .and().csrf().disable()
+                .userDetailsService(userService)
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
@@ -80,35 +74,23 @@ public class SecurityConfig {
                 .and().formLogin().permitAll()
                 .loginPage("/view/login")
                 .defaultSuccessUrl("/", true)
-                .and().oauth2Login()
                 .loginPage("/view/login")
                 .defaultSuccessUrl("/", true)
-                .tokenEndpoint()
-                .accessTokenResponseClient(accessTokenResponseClient())
-                .and()
-                .userInfoEndpoint()
-                .userService(customOAuth2UserService)
-                .and().and().logout()
+                .and().logout()
                 .logoutUrl("/ui/logout")
                 .logoutSuccessUrl("/")
                 .invalidateHttpSession(true)
                 .clearAuthentication(true)
-                .deleteCookies("JSESSIONID")
                 .and().csrf().disable();
         return http.build();
     }
 
     @Bean
-    public OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> accessTokenResponseClient() {
-        DefaultAuthorizationCodeTokenResponseClient accessTokenResponseClient =
-                new DefaultAuthorizationCodeTokenResponseClient();
-        OAuth2AccessTokenResponseHttpMessageConverter tokenResponseHttpMessageConverter =
-                new OAuth2AccessTokenResponseHttpMessageConverter();
-        tokenResponseHttpMessageConverter.setAccessTokenResponseConverter(new CustomTokenResponseConverter());
-        RestTemplate restTemplate = new RestTemplate(Arrays.asList(
-                new FormHttpMessageConverter(), tokenResponseHttpMessageConverter));
-        restTemplate.setErrorHandler(new OAuth2ErrorResponseErrorHandler());
-        accessTokenResponseClient.setRestOperations(restTemplate);
-        return accessTokenResponseClient;
+    public AuthenticationManager authenticationManagerBean(AuthenticationManagerBuilder builder, HttpSecurity httpSecurity) throws Exception {
+        return httpSecurity.getSharedObject(AuthenticationManagerBuilder.class)
+                .userDetailsService(userService)
+                .passwordEncoder(passwordEncoder())
+                .and()
+                .build();
     }
 }

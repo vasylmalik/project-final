@@ -1,0 +1,10 @@
+spring.cache.type: none
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5433/jira-test
+    username: jira
+    password: JiraRush
+
+  liquibase:
+    change-log: classpath:postgres/changelog-postgres.sql

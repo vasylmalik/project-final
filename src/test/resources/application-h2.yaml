@@ -1,0 +1,10 @@
+spring.cache.type: none
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:jira;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;NON_KEYWORDS=VALUE
+    username: jira
+    password: JiraRush
+
+  liquibase:
+    change-log: classpath:h2/changelog-h2.sql

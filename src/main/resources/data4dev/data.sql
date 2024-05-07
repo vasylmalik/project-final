@@ -54,8 +54,7 @@ values (1, 'skype', 'userSkype'),
        (1, 'mobile', '+01234567890'),
        (1, 'website', 'user.com'),
        (2, 'github', 'adminGitHub'),
-       (2, 'tg', 'adminTg'),
-       (2, 'vk', 'adminVk');
+       (2, 'tg', 'adminTg');
 
 delete
 from ATTACHMENT;
@@ -323,5 +322,9 @@ values (6, 1, '2023-05-15 09:05:10', null, 'Data', null, 3, 'epic', 'in_progress
        (6, 1, '2023-05-15 14:05:10', null, 'Data', null, 4, null, null, null), ---task 118----
        (11, 118, '2023-05-16 10:05:10', null, 'UI tab of tasks', null, 4, 'task', 'in_progress', 'normal'),
        (5, 118, '2023-05-16 11:10:10', null, 'UI tab of tasks', null, null, null, null, 'high'),
+       (5, 2, '2023-05-16 11:10:10', null, 'in_progress task', null, null, null, 'in_progress', 'high'),
+       (5, 2, '2023-05-16 11:12:10', null, 'in_progress task', null, null, null, 'in_progress', 'high'),
+       (5, 2, '2023-05-16 11:15:10', null, 'ready_for_review task', null, null, null, 'ready_for_review', 'high'),
+       (5, 2, '2023-05-16 11:20:10', null, 'done task', null, null, null, 'done', 'high'),
        (11, 118, '2023-05-16 12:30:10', null, 'UI tab of tasks', null, 2, null, null, null);
 

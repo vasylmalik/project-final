@@ -1,8 +1,10 @@
 package com.javarush.jira.common.internal.config;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.FileTemplateResolver;
@@ -25,7 +27,18 @@ public class ThymeleafConfig {
         FileTemplateResolver mailResolver = createTemplateResolver("./resources/mails/");
         mailResolver.setOrder(2);
         engine.setTemplateResolvers(Set.of(viewResolver, mailResolver));
+        engine.setEnableSpringELCompiler(true);
+        engine.setMessageSource(messageSource());
+        engine.setTemplateEngineMessageSource(messageSource());
         return engine;
+    }
+
+    @Bean
+    public MessageSource messageSource() {
+        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+        messageSource.setBasename("messages/messages");
+        messageSource.setDefaultEncoding("UTF-8");
+        return messageSource;
     }
 
     private FileTemplateResolver createTemplateResolver(String pfx) {

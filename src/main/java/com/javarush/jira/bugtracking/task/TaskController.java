@@ -81,6 +81,18 @@ public class TaskController {
         return createdResponse(REST_URL, taskService.create(taskTo));
     }
 
+    @PatchMapping(path = "/{id}/add-tags")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void addTags(@PathVariable long id, @RequestParam String... tags) {
+        taskService.addTags(id, tags);
+    }
+
+    @PatchMapping(path = "/{id}/remove-tags")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void removeTags(@PathVariable long id, @RequestParam String... tags) {
+        taskService.removeTags(id, tags);
+    }
+
     @PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@Valid @RequestBody TaskToExt taskTo, @PathVariable long id) {

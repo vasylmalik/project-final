@@ -218,7 +218,6 @@ values ('task', 'Task', 2),
        ('mobile', 'Mobile', 0),
        ('phone', 'Phone', 0),
        ('website', 'Website', 0),
-       ('vk', 'VK', 0),
        ('linkedin', 'LinkedIn', 0),
        ('github', 'GitHub', 0),
 -- PRIORITY
@@ -329,3 +328,18 @@ values ('todo', 'ToDo', 3, 'in_progress,canceled|'),
 
 drop index UK_USER_BELONG;
 create unique index UK_USER_BELONG on USER_BELONG (OBJECT_ID, OBJECT_TYPE, USER_ID, USER_TYPE_CODE) where ENDPOINT is null;
+
+--changeset maxymyur:refresh_token
+
+create table if not exists public.refresh_token
+(
+    id          bigserial    not null,
+    created_at  timestamp(6) not null,
+    expiry_date timestamp(6) not null,
+    token       varchar(255) not null,
+    updated_at  timestamp(6) not null,
+    user_id     bigint       not null,
+    primary key (id),
+    constraint unique_refresh_token_user_id unique (user_id),
+    constraint fk_refresh_token_user_id FOREIGN KEY (user_id) REFERENCES USERS(id) ON DELETE CASCADE
+);

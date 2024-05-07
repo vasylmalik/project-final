@@ -2,9 +2,18 @@
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <!--/*@thymesVar id="authUser" type="com.javarush.jira.login.AuthUser"*/-->
 
-<th:block th:replace="~{layout/main::page(title='JiraRush: mini bugtracking system',appMain=~{::appMain})}">
+<th:block th:replace="~{layout/main::page(title=#{index.block.title},appMain=~{::appMain})}">
     <appMain>
-        <h1>JiraRush Home page</h1>
+        <script th:inline="javascript">
+            function changeLang(lang) {
+                var urlParams = new URLSearchParams(window.location.search);
+                urlParams.set('lang', lang);
+                window.location.href = window.location.pathname + '?' + urlParams.toString();
+            }
+        </script>
+        <h1 th:text="#{home.page.title}"></h1>
+        <button class="btn btn-primary btn-lg mt-3" type="button" onclick="changeLang('ua')">Українська</button>
+        <button class="btn btn-primary btn-lg mt-3" type="button" onclick="changeLang('en')">English</button>
         <div th:if="${authUser} != null">
             <form action="/ui/logout" method="post">
                 <button class="btn btn-primary btn-lg mt-3" type="submit">Logout</button>
@@ -12,3 +21,5 @@
         </div>
     </appMain>
 </th:block>
+
+
