@@ -1,32 +1,12 @@
 ---------  users ----------------------
-delete
-from USER_ROLE;
-delete
-from CONTACT;
-delete
-from PROFILE;
-
-delete
-from ACTIVITY;
-alter
-sequence ACTIVITY_ID_SEQ restart with 1;
-delete
-from TASK;
-alter
-sequence TASK_ID_SEQ restart with 1;
-delete
-from SPRINT;
-alter
-sequence SPRINT_ID_SEQ restart with 1;
-delete
-from PROJECT;
-alter
-sequence PROJECT_ID_SEQ restart with 1;
-
-delete
-from USERS;
-alter
-sequence USERS_ID_SEQ restart with 1;
+delete from USER_ROLE;
+delete from CONTACT;
+delete from PROFILE;
+delete from ACTIVITY;
+delete from TASK;
+delete from SPRINT;
+delete from PROJECT;
+delete from USERS;
 
 insert into USERS (EMAIL, PASSWORD, FIRST_NAME, LAST_NAME, DISPLAY_NAME)
 values ('user@gmail.com', '{noop}password', 'userFirstName', 'userLastName', 'userDisplayName'),
@@ -53,8 +33,7 @@ values (1, 'skype', 'userSkype'),
        (1, 'mobile', '+01234567890'),
        (1, 'website', 'user.com'),
        (2, 'github', 'adminGitHub'),
-       (2, 'tg', 'adminTg'),
-       (2, 'vk', 'adminVk');
+       (2, 'tg', 'adminTg');
 
 
 insert into PROJECT (code, title, description, type_code, parent_id)

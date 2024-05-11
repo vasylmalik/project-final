@@ -19,8 +19,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import static com.javarush.jira.bugtracking.ObjectType.TASK;
 import static com.javarush.jira.bugtracking.task.TaskUtil.fillExtraFields;
@@ -32,6 +34,9 @@ import static com.javarush.jira.ref.ReferenceService.getRefTo;
 public class TaskService {
     static final String CANNOT_ASSIGN = "Cannot assign as %s to task with status=%s";
     static final String CANNOT_UN_ASSIGN = "Cannot unassign as %s from task with status=%s";
+    static final String IN_PROGRESS_STATUS = "in_progress";
+    static final String READY_FOR_REVIEW_STATUS = "ready_for_review";
+    static final String DONE_STATUS = "done";
 
     private final Handlers.TaskExtHandler handler;
     private final Handlers.ActivityHandler activityHandler;
@@ -139,5 +144,77 @@ public class TaskService {
         if (!userType.equals(possibleUserType)) {
             throw new DataConflictException(String.format(assign ? CANNOT_ASSIGN : CANNOT_UN_ASSIGN, userType, task.getStatusCode()));
         }
+    }
+
+    @Transactional
+    public void addTagsToTask(long id, Set<String> tags) {
+        Task task = handler.getRepository().getExisted(id);
+        if (task == null) {
+            throw new NotFoundException("Task with id " + id + " not found");
+        }
+        if (tags == null || tags.isEmpty()) {
+            throw new IllegalArgumentException("Tags list must not be empty");
+        }
+        for (String tag : tags) {
+            if (tag != null && !tag.isEmpty()) {
+                task.getTags().add(tag);
+            }
+        }
+        handler.getRepository().save(task);
+    }
+    @Transactional
+    public void removeTagsFromTask(long id, Set<String> tags) {
+        Task task = handler.getRepository().getExisted(id);
+
+        if (task == null) {
+            throw new NotFoundException("Task with id " + id + " not found");
+        }
+
+        if (tags == null || tags.isEmpty()) {
+            throw new IllegalArgumentException("Tags list must not be empty");
+        }
+        for (String tag : tags) {
+            if (tag != null && !tag.isEmpty()) {
+                task.getTags().remove(tag);
+            }
+        }
+        handler.getRepository().save(task);
+    }
+    public Long calculateTimeInProgress(Task task) {
+        Long taskId = task.getId();
+        List<Activity> activities = task.getActivities();
+        LocalDateTime readyForReviewTime = LocalDateTime.now();
+        LocalDateTime inProgressTime = LocalDateTime.now();
+
+        for (Activity activity : activities) {
+            if (activity.getTaskId().equals(taskId)) {
+                String statusCode = activity.getStatusCode();
+                if (READY_FOR_REVIEW_STATUS.equals(statusCode)) {
+                    readyForReviewTime = activity.getUpdated();
+                } else if (IN_PROGRESS_STATUS.equals(statusCode)) {
+                    inProgressTime = activity.getUpdated();
+                }
+            }
+        }
+        return Duration.between(inProgressTime, readyForReviewTime).getSeconds();
+    }
+
+    public Long calculateTimeInTesting(Task task) {
+        Long taskId = task.getId();
+        List<Activity> activities = task.getActivities();
+        LocalDateTime doneTime = LocalDateTime.now();
+        LocalDateTime readyForReviewTime = LocalDateTime.now();
+
+        for (Activity activity : activities) {
+            if (activity.getTaskId().equals(taskId)) {
+                String statusCode = activity.getStatusCode();
+                if (DONE_STATUS.equals(statusCode)) {
+                    doneTime = activity.getUpdated();
+                } else if (READY_FOR_REVIEW_STATUS.equals(statusCode)) {
+                    readyForReviewTime = activity.getUpdated();
+                }
+            }
+        }
+        return Duration.between(readyForReviewTime, doneTime).getSeconds();
     }
 }

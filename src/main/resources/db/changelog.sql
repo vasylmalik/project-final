@@ -218,7 +218,6 @@ values ('task', 'Task', 2),
        ('mobile', 'Mobile', 0),
        ('phone', 'Phone', 0),
        ('website', 'Website', 0),
-       ('vk', 'VK', 0),
        ('linkedin', 'LinkedIn', 0),
        ('github', 'GitHub', 0),
 -- PRIORITY
@@ -329,3 +328,10 @@ values ('todo', 'ToDo', 3, 'in_progress,canceled|'),
 
 drop index UK_USER_BELONG;
 create unique index UK_USER_BELONG on USER_BELONG (OBJECT_ID, OBJECT_TYPE, USER_ID, USER_TYPE_CODE) where ENDPOINT is null;
+
+
+--changeset Opanasenko-Mykhailo:add-activity-task
+INSERT INTO ACTIVITY (ID, AUTHOR_ID, TASK_ID, UPDATED, STATUS_CODE)
+VALUES (7, 2, 1, '2024-12-10 08:00:00', 'in_progress'),
+       (8, 2, 1, '2024-12-10 12:00:00', 'ready_for_review'),
+       (9, 2, 1, '2024-12-10 16:00:00', 'done');

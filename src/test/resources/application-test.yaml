@@ -3,6 +3,10 @@ spring:
   init:
     mode: always
   datasource:
-    url: jdbc:postgresql://localhost:5433/jira-test
-    username: jira
-    password: JiraRush
+    url: jdbc:h2:mem:jira;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;NON_KEYWORDS=VALUE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: password
+
+  liquibase:
+    changeLog: "classpath:h2/changelog.sql"
