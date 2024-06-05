@@ -1,3 +1,4 @@
+/*
 package com.javarush.jira.login.internal.sociallogin.handler;
 
 import org.springframework.stereotype.Component;
@@ -19,3 +20,4 @@ public class YandexOAuth2UserDataHandler implements OAuth2UserDataHandler {
         return oAuth2UserData.getData("default_email");
     }
 }
+*/

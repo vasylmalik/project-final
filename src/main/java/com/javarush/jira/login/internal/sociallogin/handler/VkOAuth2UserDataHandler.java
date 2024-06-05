@@ -1,3 +1,4 @@
+/*
 package com.javarush.jira.login.internal.sociallogin.handler;
 
 import org.springframework.stereotype.Component;
@@ -33,3 +34,4 @@ public class VkOAuth2UserDataHandler implements OAuth2UserDataHandler {
         return null;
     }
 }
+*/
