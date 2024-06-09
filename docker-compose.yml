@@ -1,0 +1,64 @@
+version: '3'
+
+services:
+  postgres-db :
+    image : postgres
+    environment :
+      POSTGRES_USER : jira
+      POSTGRES_PASSWORD : JiraRush
+    ports :
+      - "5432:5432"
+    volumes :
+      - ./pgdata:/var/lib/postgresql/data
+    healthcheck :
+      test : [ "CMD-SHELL", "pg_isready -U postgres" ]
+    networks:
+      - mynetwork
+
+  postgres-db-test :
+    image : postgres
+    environment :
+      POSTGRES_USER : jira
+      POSTGRES_PASSWORD : JiraRush
+    ports :
+      - "5433:5432"
+    volumes :
+      - ./pgdata-test:/var/lib/postgresql/data
+    healthcheck :
+      test : [ "CMD-SHELL", "pg_isready -U postgres" ]
+    networks:
+      - mynetwork
+
+  myapp:
+    image: sha256:1893d8fe5a20
+    ports:
+      - "8080:8080"
+    extra_hosts :
+      - "host.docker.internal:host-gateway"
+    build :
+      context : .
+      dockerfile : Dockerfile
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/jira
+      SPRING_DATASOURCE_USERNAME: jira
+      SPRING_DATASOURCE_PASSWORD: JiraRush
+    depends_on :
+      postgres-db :
+        condition : service_healthy
+      postgres-db-test :
+        condition : service_healthy
+    networks:
+      - mynetwork
+  nginx :
+    image : nginx
+    volumes :
+      - ./config/nginx.conf:/etc/nginx/nginx.conf
+    ports :
+      - "80:80"
+    depends_on :
+      - myapp
+    networks :
+      - mynetwork
+networks:
+  mynetwork:
+    driver: bridge

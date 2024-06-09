@@ -5,6 +5,7 @@ import com.javarush.jira.bugtracking.UserBelongRepository;
 import com.javarush.jira.bugtracking.task.to.ActivityTo;
 import com.javarush.jira.bugtracking.task.to.TaskToExt;
 import com.javarush.jira.bugtracking.task.to.TaskToFull;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -579,7 +580,6 @@ class TaskControllerTest extends AbstractControllerTest {
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.detail", is(String.format(CANNOT_UN_ASSIGN, TASK_DEVELOPER, taskStatus))));
     }
-
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void unAssignFromTaskWhenNotAssigned() throws Exception {
@@ -589,5 +589,12 @@ class TaskControllerTest extends AbstractControllerTest {
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.detail", is(String
                         .format("Not found assignment with userType=%s for task {%d} for user {%d}", TASK_DEVELOPER, TASK1_ID, ADMIN_ID))));
+    }
+    @Test
+    @WithUserDetails(value = USER_MAIL)
+    void createTag() throws Exception {
+        perform(MockMvcRequestBuilders.post("/api/tasks/1/tags")
+                .param("tag", "testTag"))
+                .andExpect(status().isCreated());
     }
 }

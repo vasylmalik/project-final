@@ -5,9 +5,11 @@
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
 </head>
 <body>
-<p th:text="'Привет, ' + ${user.firstName} + '.'"/>
-<p>Чтобы завершить настройку учетной записи и начать пользоваться JiraRush, подтвердите, что вы правильно указали вашу
-    электронную почту.</p>
-<a th:href="${confirmationUrl}">Подтвердить почту</a>
+<p th:text="#{hello} +', ' + ${user.firstName} + '.'"/>
+<p th:text="#{email-confirmation.info_end_registration}"></p>
+<a th:href="${confirmationUrl}">
+    <span th:text="#{email-confirmation.confirm_mail}"/>
+</a>
+<div th:insert="~{fragments :: locale}"></div>
 </body>
 </html>

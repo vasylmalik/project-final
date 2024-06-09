@@ -20,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
+import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import static com.javarush.jira.bugtracking.ObjectType.TASK;
@@ -39,6 +41,7 @@ public class TaskService {
     private final SprintRepository sprintRepository;
     private final TaskExtMapper extMapper;
     private final UserBelongRepository userBelongRepository;
+    private final TaskRepository taskRepository;
 
     @Transactional
     public void changeStatus(long taskId, String statusCode) {
@@ -132,12 +135,28 @@ public class TaskService {
         assignment.setEndpoint(LocalDateTime.now());
     }
 
+    @Transactional
+    public void createTag(long id, String tag) {
+        var task = Util.checkExist(id, handler.getRepository().findFullById(id));
+        task.getTags().add(tag);
+        taskRepository.save(task);
+    }
+
+    @Transactional
+    public long timeInWork(long id) {
+        var task = Util.checkExist(id, handler.getRepository().findFullById(id));
+        var inProgress = taskRepository.findByStatusCode("in_progress");
+        var readyForReview = taskRepository.findByStatusCode("ready_for_review");
+        return ChronoUnit.HOURS.between(readyForReview, inProgress);
+    }
+
     private void checkAssignmentActionPossible(long id, String userType, boolean assign) {
         Assert.notNull(userType, "userType must not be null");
         Task task = handler.getRepository().getExisted(id);
         String possibleUserType = getRefTo(RefType.TASK_STATUS, task.getStatusCode()).getAux(1);
         if (!userType.equals(possibleUserType)) {
             throw new DataConflictException(String.format(assign ? CANNOT_ASSIGN : CANNOT_UN_ASSIGN, userType, task.getStatusCode()));
+
         }
     }
 }
