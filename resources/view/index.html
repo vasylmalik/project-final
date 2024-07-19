@@ -1,14 +1,33 @@
 <!DOCTYPE html>
-<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<html lang="${locale.language}" xmlns:th="http://www.thymeleaf.org">
 <!--/*@thymesVar id="authUser" type="com.javarush.jira.login.AuthUser"*/-->
 
-<th:block th:replace="~{layout/main::page(title='JiraRush: mini bugtracking system',appMain=~{::appMain})}">
+<th:block th:replace="~{layout/main::page(title='JiraRush: mini bugtracking system', appMain=~{::appMain})}">
     <appMain>
-        <h1>JiraRush Home page</h1>
+        <h1 th:text="#{home.title}">JiraRush Home page</h1>
         <div th:if="${authUser} != null">
             <form action="/ui/logout" method="post">
-                <button class="btn btn-primary btn-lg mt-3" type="submit">Logout</button>
+                <button class="btn btn-primary btn-lg mt-3" type="submit" th:text="#{logout.button}">Logout</button>
             </form>
         </div>
+        <span th:text="#{lang.change}"></span>:
+        <select id="locales">
+            <option value=""></option>
+            <option value="en" th:text="#{lang.en}"></option>
+            <option value="ru" th:text="#{lang.ru}"></option>
+        </select>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js">
+        </script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $("#locales").change(function () {
+                    var selectedOption = $('#locales').val();
+                    if (selectedOption != ''){
+                        window.location.replace('/?lang=' + selectedOption);
+                    }
+                });
+            });
+        </script>
     </appMain>
 </th:block>
+</html>

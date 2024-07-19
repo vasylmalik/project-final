@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
-
+@Deprecated
 @Component("vk")
 public class VkOAuth2UserDataHandler implements OAuth2UserDataHandler {
     @Override

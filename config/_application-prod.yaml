@@ -1,6 +1,6 @@
 # template for server
 app:
-  host-url: http://localhost
+  host-url: http://localhost:8080
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/jira

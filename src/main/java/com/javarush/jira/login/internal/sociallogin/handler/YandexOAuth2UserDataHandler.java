@@ -1,7 +1,7 @@
 package com.javarush.jira.login.internal.sociallogin.handler;
 
 import org.springframework.stereotype.Component;
-
+@Deprecated
 @Component("yandex")
 public class YandexOAuth2UserDataHandler implements OAuth2UserDataHandler {
     @Override
