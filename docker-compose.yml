@@ -1,0 +1,56 @@
+version: "3.9"
+services:
+  jirarush-nginx:
+    container_name: jirarush-nginx
+    image: nginx:1.25.4
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - ./config/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./resources/static:/opt/jirarush/resources/static:ro
+    depends_on:
+      - jirarush-app
+    restart: always
+
+  jirarush-app:
+    container_name: jirarush-app
+    image: jirarush-app:1.0.0
+    build: ./
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      DATASOURCE_URL: jdbc:postgresql://localhost:5433/jira
+      DATASOURCE_USERNAME: jira
+      DATASOURCE_PASSWORD: JiraRush
+      MAIL_HOST: smtp.gmail.com
+      MAIL_PORT: 587
+      MAIL_USERNAME: jira4jr@gmail.com
+      MAIL_PASSWORD: zdfzsrqvgimldzyj
+      OAUTH2_GITHUB_CLIENT_ID: 3d0d8738e65881fff266
+      OAUTH2_GITHUB_CLIENT_SECRET: 0f97031ce6178b7dfb67a6af587f37e222a16120
+      OAUTH2_GOOGLE_CLIENT_ID: 329113642700-f8if6pu68j2repq3ef6umd5jgiliup60.apps.googleusercontent.com
+      OAUTH2_GOOGLE_CLIENT_SECRET: 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
+      OAUTH2_GITLAB_CLIENT_ID: b8520a3266089063c0d8261cce36971defa513f5ffd9f9b7a3d16728fc83a494
+      OAUTH2_GITLAB_CLIENT_SECRET: e72c65320cf9d6495984a37b0f9cc03ec46be0bb6f071feaebbfe75168117004
+    expose:
+      - "8080"
+    depends_on:
+      - jirarush-db
+    restart: always
+
+  jirarush-db:
+    container_name: jirarush-db
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: jira
+      POSTGRES_USER: jira
+      POSTGRES_PASSWORD: JiraRush
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    restart: always
+    ports:
+      - "5433:5432"

@@ -54,8 +54,7 @@ values (1, 'skype', 'userSkype'),
        (1, 'mobile', '+01234567890'),
        (1, 'website', 'user.com'),
        (2, 'github', 'adminGitHub'),
-       (2, 'tg', 'adminTg'),
-       (2, 'vk', 'adminVk');
+       (2, 'tg', 'adminTg');
 
 delete
 from ATTACHMENT;
@@ -314,6 +313,10 @@ values ('Add role manager and filters in security', 'task', 'done', 1, 1, 1,
         now() + random() * interval '5 minutes' + random() * interval '20 seconds');
 alter
 sequence TASK_ID_SEQ restart with 1000;
+
+INSERT INTO task_tag(task_id, tag)
+values (1, 'foo'),
+       (1, 'bar');
 
 ---task 1------
 INSERT INTO ACTIVITY(AUTHOR_ID, TASK_ID, UPDATED, COMMENT, TITLE, DESCRIPTION, ESTIMATE, TYPE_CODE, STATUS_CODE,

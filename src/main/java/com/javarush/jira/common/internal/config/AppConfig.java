@@ -1,5 +1,4 @@
 package com.javarush.jira.common.internal.config;
-
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,28 +10,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.Profiles;
 import org.springframework.http.ProblemDetail;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
+import javax.sql.DataSource;
 import java.util.Map;
 import java.util.concurrent.Executor;
 
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.ANY;
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE;
-
 @Configuration
 @Slf4j
 @EnableCaching
 @RequiredArgsConstructor
 @EnableScheduling
 public class AppConfig {
-
     private final AppProperties appProperties;
     private final Environment env;
-
     @Bean("mailExecutor")
     Executor getAsyncExecutor() {
         return new ThreadPoolTaskExecutor() {
@@ -43,15 +43,12 @@ public class AppConfig {
             }
         };
     }
-
     public boolean isProd() {
         return env.acceptsProfiles(Profiles.of("prod"));
     }
-
     public boolean isTest() {
         return env.acceptsProfiles(Profiles.of("test"));
     }
-
     @Autowired
     void configureAndStoreObjectMapper(ObjectMapper objectMapper) {
         objectMapper.registerModule(new Hibernate5JakartaModule());
@@ -59,11 +56,23 @@ public class AppConfig {
         objectMapper.addMixIn(ProblemDetail.class, MixIn.class);
         JsonUtil.setMapper(objectMapper);
     }
-
     //    https://stackoverflow.com/a/74630129/548473
     @JsonAutoDetect(fieldVisibility = NONE, getterVisibility = ANY)
     interface MixIn {
         @JsonAnyGetter
         Map<String, Object> getProperties();
+    }
+
+    @Profile("test")
+    @Bean(name = "dataSource")
+    public DataSource dataSourceForTest() {
+        return
+                new EmbeddedDatabaseBuilder()
+                        .setType(EmbeddedDatabaseType.H2)
+                        .setName("testDB;MODE=PostgreSQL;NON_KEYWORDS=VALUE")
+                        .setScriptEncoding("UTF-8")
+                        .addScript("classpath:db/schema-test.sql")
+                        .addScript("classpath:db/data.sql")
+                        .build();
     }
 }

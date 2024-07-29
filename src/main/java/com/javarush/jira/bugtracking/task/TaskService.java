@@ -21,6 +21,7 @@ import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import static com.javarush.jira.bugtracking.ObjectType.TASK;
 import static com.javarush.jira.bugtracking.task.TaskUtil.fillExtraFields;
@@ -33,6 +34,7 @@ public class TaskService {
     static final String CANNOT_ASSIGN = "Cannot assign as %s to task with status=%s";
     static final String CANNOT_UN_ASSIGN = "Cannot unassign as %s from task with status=%s";
 
+    private final TaskRepository taskRepo;
     private final Handlers.TaskExtHandler handler;
     private final Handlers.ActivityHandler activityHandler;
     private final TaskFullMapper fullMapper;
@@ -139,5 +141,24 @@ public class TaskService {
         if (!userType.equals(possibleUserType)) {
             throw new DataConflictException(String.format(assign ? CANNOT_ASSIGN : CANNOT_UN_ASSIGN, userType, task.getStatusCode()));
         }
+    }
+    @Transactional
+    public void addTags(Long taskId, String[] tags) {
+        Task task = taskRepo.getExisted(taskId);
+        task.getTags().addAll(Set.of(tags));
+        taskRepo.save(task);
+    }
+
+    @Transactional(readOnly = true)
+    public String[] getTags(Long taskId) {
+        Task task = taskRepo.getExisted(taskId);
+        return task.getTags().toArray(String[]::new);
+    }
+
+    @Transactional
+    public void clearTags(Long taskId) {
+        Task task = taskRepo.getExisted(taskId);
+        task.getTags().clear();
+        taskRepo.save(task);
     }
 }
