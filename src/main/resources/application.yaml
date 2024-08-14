@@ -29,6 +29,7 @@ spring:
     url: jdbc:postgresql://localhost:5432/jira
     username: jira
     password: JiraRush
+    driverClassName: org.postgresql.Driver
 
   liquibase:
     changeLog: "classpath:db/changelog.sql"
