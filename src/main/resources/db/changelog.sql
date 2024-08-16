@@ -5,37 +5,37 @@ DROP TABLE IF EXISTS USER_ROLE;
 DROP TABLE IF EXISTS CONTACT;
 DROP TABLE IF EXISTS MAIL_CASE;
 DROP
-SEQUENCE IF EXISTS MAIL_CASE_ID_SEQ;
+    SEQUENCE IF EXISTS MAIL_CASE_ID_SEQ;
 DROP TABLE IF EXISTS PROFILE;
 DROP TABLE IF EXISTS TASK_TAG;
 DROP TABLE IF EXISTS USER_BELONG;
 DROP
-SEQUENCE IF EXISTS USER_BELONG_ID_SEQ;
+    SEQUENCE IF EXISTS USER_BELONG_ID_SEQ;
 DROP TABLE IF EXISTS ACTIVITY;
 DROP
-SEQUENCE IF EXISTS ACTIVITY_ID_SEQ;
+    SEQUENCE IF EXISTS ACTIVITY_ID_SEQ;
 DROP TABLE IF EXISTS TASK;
 DROP
-SEQUENCE IF EXISTS TASK_ID_SEQ;
+    SEQUENCE IF EXISTS TASK_ID_SEQ;
 DROP TABLE IF EXISTS SPRINT;
 DROP
-SEQUENCE IF EXISTS SPRINT_ID_SEQ;
+    SEQUENCE IF EXISTS SPRINT_ID_SEQ;
 DROP TABLE IF EXISTS PROJECT;
 DROP
-SEQUENCE IF EXISTS PROJECT_ID_SEQ;
+    SEQUENCE IF EXISTS PROJECT_ID_SEQ;
 DROP TABLE IF EXISTS REFERENCE;
 DROP
-SEQUENCE IF EXISTS REFERENCE_ID_SEQ;
+    SEQUENCE IF EXISTS REFERENCE_ID_SEQ;
 DROP TABLE IF EXISTS ATTACHMENT;
 DROP
-SEQUENCE IF EXISTS ATTACHMENT_ID_SEQ;
+    SEQUENCE IF EXISTS ATTACHMENT_ID_SEQ;
 DROP TABLE IF EXISTS USERS;
 DROP
-SEQUENCE IF EXISTS USERS_ID_SEQ;
+    SEQUENCE IF EXISTS USERS_ID_SEQ;
 
 create table PROJECT
 (
-    ID integer AUTO_INCREMENT primary key,
+    ID bigserial primary key,
     CODE        varchar(32)   not null
         constraint UK_PROJECT_CODE unique,
     TITLE       varchar(1024) not null,
@@ -43,14 +43,13 @@ create table PROJECT
     TYPE_CODE   varchar(32)   not null,
     STARTPOINT  timestamp,
     ENDPOINT    timestamp,
-    PARENT_ID   bigint
+    PARENT_ID   bigint,
+    constraint FK_PROJECT_PARENT foreign key (PARENT_ID) references PROJECT (ID) on delete cascade
 );
-
-CREATE SEQUENCE PROJECT_ID_SEQ START WITH 1 INCREMENT BY 1;
 
 create table MAIL_CASE
 (
-    ID integer AUTO_INCREMENT primary key,
+    ID bigserial primary key,
     EMAIL     varchar(255) not null,
     NAME      varchar(255) not null,
     DATE_TIME timestamp    not null,
@@ -60,19 +59,18 @@ create table MAIL_CASE
 
 create table SPRINT
 (
-    ID integer AUTO_INCREMENT primary key,
+    ID bigserial primary key,
     STATUS_CODE varchar(32)   not null,
     STARTPOINT  timestamp,
     ENDPOINT    timestamp,
     TITLE       varchar(1024) not null,
-    PROJECT_ID  bigint        not null
+    PROJECT_ID  bigint        not null,
+    constraint FK_SPRINT_PROJECT foreign key (PROJECT_ID) references PROJECT (ID) on delete cascade
 );
-
-CREATE SEQUENCE SPRINT_ID_SEQ START WITH 1 INCREMENT BY 1;
 
 create table REFERENCE
 (
-    ID integer AUTO_INCREMENT primary key,
+    ID bigserial primary key,
     CODE       varchar(32)   not null,
     REF_TYPE   smallint      not null,
     ENDPOINT   timestamp,
@@ -82,11 +80,9 @@ create table REFERENCE
     constraint UK_REFERENCE_REF_TYPE_CODE unique (REF_TYPE, CODE)
 );
 
-CREATE SEQUENCE REFERENCE_ID_SEQ START WITH 1 INCREMENT BY 1;
-
 create table USERS
 (
-    ID integer AUTO_INCREMENT primary key,
+    ID bigserial primary key,
     DISPLAY_NAME varchar(32)  not null
         constraint UK_USERS_DISPLAY_NAME unique,
     EMAIL        varchar(128) not null
@@ -98,28 +94,27 @@ create table USERS
     STARTPOINT   timestamp
 );
 
-CREATE SEQUENCE USERS_ID_SEQ START WITH 1 INCREMENT BY 1;
-
 create table PROFILE
 (
-    ID                 bigint AUTO_INCREMENT primary key,
+    ID                 bigint primary key,
     LAST_LOGIN         timestamp,
     LAST_FAILED_LOGIN  timestamp,
-    MAIL_NOTIFICATIONS bigint
-
+    MAIL_NOTIFICATIONS bigint,
+    constraint FK_PROFILE_USERS foreign key (ID) references USERS (ID) on delete cascade
 );
 
 create table CONTACT
 (
     ID    bigint       not null,
     CONTACT_CODE  varchar(32)  not null,
-    CONTACT_VALUE varchar(256) not null
+    CONTACT_VALUE varchar(256) not null,
+    primary key (ID, CONTACT_CODE),
+    constraint FK_CONTACT_PROFILE foreign key (ID) references PROFILE (ID) on delete cascade
 );
-
 
 create table TASK
 (
-    ID integer AUTO_INCREMENT primary key,
+    ID bigserial primary key,
     TITLE         varchar(1024) not null,
     DESCRIPTION   varchar(4096) not null,
     TYPE_CODE     varchar(32)   not null,
@@ -131,14 +126,15 @@ create table TASK
     SPRINT_ID     bigint,
     PARENT_ID     bigint,
     STARTPOINT    timestamp,
-    ENDPOINT      timestamp
+    ENDPOINT      timestamp,
+    constraint FK_TASK_SPRINT foreign key (SPRINT_ID) references SPRINT (ID) on delete set null,
+    constraint FK_TASK_PROJECT foreign key (PROJECT_ID) references PROJECT (ID) on delete cascade,
+    constraint FK_TASK_PARENT_TASK foreign key (PARENT_ID) references TASK (ID) on delete cascade
 );
-
-CREATE SEQUENCE TASK_ID_SEQ START WITH 1 INCREMENT BY 1;
 
 create table ACTIVITY
 (
-    ID integer AUTO_INCREMENT primary key,
+    ID bigserial primary key,
     AUTHOR_ID     bigint not null,
     TASK_ID       bigint not null,
     UPDATED       timestamp,
@@ -149,49 +145,51 @@ create table ACTIVITY
     ESTIMATE      integer,
     TYPE_CODE     varchar(32),
     STATUS_CODE   varchar(32),
-    PRIORITY_CODE varchar(32)
+    PRIORITY_CODE varchar(32),
+    constraint FK_ACTIVITY_USERS foreign key (AUTHOR_ID) references USERS (ID),
+    constraint FK_ACTIVITY_TASK foreign key (TASK_ID) references TASK (ID) on delete cascade
 );
-
-CREATE SEQUENCE ACTIVITY_ID_SEQ START WITH 1 INCREMENT BY 1;
 
 create table TASK_TAG
 (
-    TASK_ID bigint       not null,
+    TASK_ID bigint      not null,
     TAG     varchar(32) not null,
-    constraint UK_TASK_TAG unique (TASK_ID, TAG)
+    constraint UK_TASK_TAG unique (TASK_ID, TAG),
+    constraint FK_TASK_TAG foreign key (TASK_ID) references TASK (ID) on delete cascade
 );
 
 create table USER_BELONG
 (
-    ID integer AUTO_INCREMENT primary key,
+    ID bigserial primary key,
     OBJECT_ID      bigint      not null,
     OBJECT_TYPE    smallint    not null,
     USER_ID        bigint      not null,
     USER_TYPE_CODE varchar(32) not null,
     STARTPOINT     timestamp,
-    ENDPOINT       timestamp
-
+    ENDPOINT       timestamp,
+    constraint FK_USER_BELONG foreign key (USER_ID) references USERS (ID)
 );
+create unique index UK_USER_BELONG on USER_BELONG (OBJECT_ID, OBJECT_TYPE, USER_ID, USER_TYPE_CODE);
+create index IX_USER_BELONG_USER_ID on USER_BELONG (USER_ID);
 
 create table ATTACHMENT
 (
-    ID integer AUTO_INCREMENT primary key,
+    ID bigserial primary key,
     NAME        varchar(128)  not null,
     FILE_LINK   varchar(2048) not null,
     OBJECT_ID   bigint        not null,
     OBJECT_TYPE smallint      not null,
     USER_ID     bigint        not null,
-    DATE_TIME   timestamp
-
+    DATE_TIME   timestamp,
+    constraint FK_ATTACHMENT foreign key (USER_ID) references USERS (ID)
 );
-
-CREATE SEQUENCE ATTACHMENT_ID_SEQ START WITH 1 INCREMENT BY 1;
 
 create table USER_ROLE
 (
-    USER_ID bigint    not null,
+    USER_ID bigint   not null,
     ROLE    smallint not null,
-    constraint UK_USER_ROLE unique (USER_ID, ROLE)
+    constraint UK_USER_ROLE unique (USER_ID, ROLE),
+    constraint FK_USER_ROLE foreign key (USER_ID) references USERS (ID) on delete cascade
 );
 
 --changeset kmpk:populate_data
@@ -220,6 +218,7 @@ values ('task', 'Task', 2),
        ('mobile', 'Mobile', 0),
        ('phone', 'Phone', 0),
        ('website', 'Website', 0),
+       ('vk', 'VK', 0),
        ('linkedin', 'LinkedIn', 0),
        ('github', 'GitHub', 0),
 -- PRIORITY
@@ -249,19 +248,21 @@ values ('assigned', 'Assigned', 6, '1'),
 
 --changeset gkislin:change_backtracking_tables
 
-alter table SPRINT ALTER COLUMN TITLE RENAME TO CODE;
-alter table SPRINT ALTER COLUMN  STATUS_CODE  varchar (32);
+alter table SPRINT rename COLUMN TITLE to CODE;
 alter table SPRINT
-    alter column STATUS_CODE set not null;
+alter column CODE type varchar (32);
+alter table SPRINT
+    alter column CODE set not null;
+create unique index UK_SPRINT_PROJECT_CODE on SPRINT (PROJECT_ID, CODE);
 
 ALTER TABLE TASK
-    DROP COLUMN DESCRIPTION;
+DROP COLUMN DESCRIPTION;
 ALTER TABLE TASK
-    DROP COLUMN PRIORITY_CODE;
+DROP COLUMN PRIORITY_CODE;
 ALTER TABLE TASK
-    DROP COLUMN ESTIMATE;
+DROP COLUMN ESTIMATE;
 ALTER TABLE TASK
-    DROP COLUMN UPDATED;
+DROP COLUMN UPDATED;
 
 --changeset ishlyakhtenkov:change_task_status_reference
 
@@ -277,6 +278,20 @@ values ('todo', 'ToDo', 3, 'in_progress,canceled'),
        ('test', 'Test', 3, 'done,in_progress,canceled'),
        ('done', 'Done', 3, 'canceled'),
        ('canceled', 'Canceled', 3, null);
+
+--changeset gkislin:users_add_on_delete_cascade
+
+alter table ACTIVITY
+drop constraint FK_ACTIVITY_USERS,
+    add constraint FK_ACTIVITY_USERS foreign key (AUTHOR_ID) references USERS (ID) on delete cascade;
+
+alter table USER_BELONG
+drop constraint FK_USER_BELONG,
+    add constraint FK_USER_BELONG foreign key (USER_ID) references USERS (ID) on delete cascade;
+
+alter table ATTACHMENT
+drop constraint FK_ATTACHMENT,
+    add constraint FK_ATTACHMENT foreign key (USER_ID) references USERS (ID) on delete cascade;
 
 --changeset valeriyemelyanov:change_user_type_reference
 
@@ -294,6 +309,7 @@ values ('project_author', 'Author', 5),
        ('task_reviewer', 'Reviewer', 5),
        ('task_tester', 'Tester', 5);
 
+--changeset apolik:refactor_reference_aux
 
 -- TASK_TYPE
 delete
@@ -309,5 +325,7 @@ values ('todo', 'ToDo', 3, 'in_progress,canceled|'),
        ('done', 'Done', 3, 'canceled|'),
        ('canceled', 'Canceled', 3, null);
 
+--changeset ishlyakhtenkov:change_UK_USER_BELONG
 
-
+drop index UK_USER_BELONG;
+create unique index UK_USER_BELONG on USER_BELONG (OBJECT_ID, OBJECT_TYPE, USER_ID, USER_TYPE_CODE) where ENDPOINT is null;

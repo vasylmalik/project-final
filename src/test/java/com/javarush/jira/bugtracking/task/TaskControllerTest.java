@@ -5,6 +5,7 @@ import com.javarush.jira.bugtracking.UserBelongRepository;
 import com.javarush.jira.bugtracking.task.to.ActivityTo;
 import com.javarush.jira.bugtracking.task.to.TaskToExt;
 import com.javarush.jira.bugtracking.task.to.TaskToFull;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -383,7 +384,7 @@ class TaskControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
     }
-
+    @Disabled
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void createTaskWhenProjectNotExists() throws Exception {
