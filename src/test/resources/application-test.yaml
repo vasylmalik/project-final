@@ -6,7 +6,7 @@ spring:
     show-sql: true
     open-in-view: false
     hibernate:
-      ddl-auto: validate
+      ddl-auto: create-drop
     properties:
       #  http://docs.jboss.org/hibernate/orm/5.3/userguide/html_single/Hibernate_User_Guide.html#configurations
       hibernate:
@@ -14,6 +14,8 @@ spring:
         default_batch_fetch_size: 20
         # https://stackoverflow.com/questions/21257819/what-is-the-difference-between-hibernate-jdbc-fetch-size-and-hibernate-jdbc-batc
         jdbc.batch_size: 20
+        hbm2ddl:
+          auto: update
   datasource:
     url: jdbc:h2:mem:jira-test;DB_CLOSE_DELAY=-1
     username: jira
