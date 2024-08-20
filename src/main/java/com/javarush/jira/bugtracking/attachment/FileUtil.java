@@ -25,14 +25,17 @@ public class FileUtil {
             throw new IllegalRequestDataException("Select a file to upload.");
         }
 
-        File dir = new File(directoryPath);
-        if (dir.exists() || dir.mkdirs()) {
-            File file = new File(directoryPath + fileName);
-            try (OutputStream outStream = new FileOutputStream(file)) {
-                outStream.write(multipartFile.getBytes());
-            } catch (IOException ex) {
-                throw new IllegalRequestDataException("Failed to upload file" + multipartFile.getOriginalFilename());
+        Path dirPath = Paths.get(directoryPath);
+        try {
+            if (Files.notExists(dirPath)) {
+                Files.createDirectories(dirPath);
             }
+            Path filePath = dirPath.resolve(fileName);
+            try (OutputStream outStream = Files.newOutputStream(filePath)) {
+                outStream.write(multipartFile.getBytes());
+            }
+        } catch (IOException ex) {
+            throw new IllegalRequestDataException("Failed to upload file: " + multipartFile.getOriginalFilename());
         }
     }
 
