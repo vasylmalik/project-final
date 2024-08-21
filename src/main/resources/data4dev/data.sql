@@ -49,13 +49,12 @@ insert into PROFILE (ID, LAST_FAILED_LOGIN, LAST_LOGIN, MAIL_NOTIFICATIONS)
 values (1, null, null, 49),
        (2, null, null, 14);
 
-insert into CONTACT (ID, CONTACT_CODE, CONTACT_VALUE)
+insert into CONTACT (ID, CODE, VALUE)
 values (1, 'skype', 'userSkype'),
        (1, 'mobile', '+01234567890'),
        (1, 'website', 'user.com'),
        (2, 'github', 'adminGitHub'),
-       (2, 'tg', 'adminTg'),
-       (2, 'vk', 'adminVk');
+       (2, 'tg', 'adminTg');
 
 delete
 from ATTACHMENT;

@@ -179,7 +179,7 @@ class SprintControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
     }
-    @Disabled
+    //@Disabled
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void createDuplicateCode() throws Exception {
@@ -190,7 +190,7 @@ class SprintControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isConflict());
     }
-    @Disabled
+    //@Disabled
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void createWhenProjectNotExists() throws Exception {
@@ -274,7 +274,7 @@ class SprintControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
     }
-    @Disabled
+    //@Disabled
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void updateDuplicateCode() throws Exception {

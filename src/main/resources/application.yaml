@@ -8,6 +8,8 @@ app:
     max-pool-size: 100
 
 spring:
+  profiles:
+    active: prod
   init:
     mode: never
   jpa:

@@ -106,9 +106,9 @@ create table PROFILE
 create table CONTACT
 (
     ID    bigint       not null,
-    CONTACT_CODE  varchar(32)  not null,
-    CONTACT_VALUE varchar(256) not null,
-    primary key (ID, CONTACT_CODE),
+    CODE  varchar(32)  not null,
+    VALUE varchar(256) not null,
+    primary key (ID, CODE),
     constraint FK_CONTACT_PROFILE foreign key (ID) references PROFILE (ID) on delete cascade
 );
 
@@ -250,19 +250,19 @@ values ('assigned', 'Assigned', 6, '1'),
 
 alter table SPRINT rename COLUMN TITLE to CODE;
 alter table SPRINT
-alter column CODE type varchar (32);
+    alter column CODE type varchar (32);
 alter table SPRINT
     alter column CODE set not null;
 create unique index UK_SPRINT_PROJECT_CODE on SPRINT (PROJECT_ID, CODE);
 
 ALTER TABLE TASK
-DROP COLUMN DESCRIPTION;
+    DROP COLUMN DESCRIPTION;
 ALTER TABLE TASK
-DROP COLUMN PRIORITY_CODE;
+    DROP COLUMN PRIORITY_CODE;
 ALTER TABLE TASK
-DROP COLUMN ESTIMATE;
+    DROP COLUMN ESTIMATE;
 ALTER TABLE TASK
-DROP COLUMN UPDATED;
+    DROP COLUMN UPDATED;
 
 --changeset ishlyakhtenkov:change_task_status_reference
 
@@ -282,15 +282,15 @@ values ('todo', 'ToDo', 3, 'in_progress,canceled'),
 --changeset gkislin:users_add_on_delete_cascade
 
 alter table ACTIVITY
-drop constraint FK_ACTIVITY_USERS,
+    drop constraint FK_ACTIVITY_USERS,
     add constraint FK_ACTIVITY_USERS foreign key (AUTHOR_ID) references USERS (ID) on delete cascade;
 
 alter table USER_BELONG
-drop constraint FK_USER_BELONG,
+    drop constraint FK_USER_BELONG,
     add constraint FK_USER_BELONG foreign key (USER_ID) references USERS (ID) on delete cascade;
 
 alter table ATTACHMENT
-drop constraint FK_ATTACHMENT,
+    drop constraint FK_ATTACHMENT,
     add constraint FK_ATTACHMENT foreign key (USER_ID) references USERS (ID) on delete cascade;
 
 --changeset valeriyemelyanov:change_user_type_reference

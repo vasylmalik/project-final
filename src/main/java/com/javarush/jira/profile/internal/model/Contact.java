@@ -40,12 +40,12 @@ public class Contact implements HasId {
     // link to Reference.code with RefType.CONTACT
     @Id
     @Code
-    @Column(name = "CONTACT_CODE", nullable = false)
+    @Column(name = "CODE", nullable = false)
     private String code;
 
     @NotBlank
     @Size(min = 2, max = 256)
-    @Column(name = "CONTACT_VALUE", nullable = false)
+    @Column(name = "VALUE", nullable = false)
     @NoHtml
     private String value;
 

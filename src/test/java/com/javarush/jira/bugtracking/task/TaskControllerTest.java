@@ -384,7 +384,7 @@ class TaskControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
     }
-    @Disabled
+    //@Disabled
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void createTaskWhenProjectNotExists() throws Exception {
