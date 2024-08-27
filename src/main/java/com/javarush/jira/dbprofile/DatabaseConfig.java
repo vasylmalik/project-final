@@ -11,7 +11,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import javax.sql.DataSource;
 
 @Configuration
-@ConfigurationProperties("spring.datasource")
+//@ConfigurationProperties("spring.datasource")
 public class DatabaseConfig {
     // @Autowired
     private Environment env;
@@ -38,6 +38,6 @@ public class DatabaseConfig {
     public String productionConnectionStrings() {
         System.out.println("DB connection for 'prod'");
 
-        return "pro Enviroment Connected!";
+        return "prod Enviroment Connected!";
     }
 }

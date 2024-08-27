@@ -9,7 +9,7 @@ app:
 
 spring:
   profiles:
-    active: prod
+    active: test
   init:
     mode: never
   jpa:
@@ -114,3 +114,5 @@ server:
       enabled: true # Enable http encoding support
       force: true
 springdoc.swagger-ui.path: /doc
+
+

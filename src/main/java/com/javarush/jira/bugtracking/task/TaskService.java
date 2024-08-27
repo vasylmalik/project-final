@@ -21,6 +21,7 @@ import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import static com.javarush.jira.bugtracking.ObjectType.TASK;
 import static com.javarush.jira.bugtracking.task.TaskUtil.fillExtraFields;
@@ -139,5 +140,39 @@ public class TaskService {
         if (!userType.equals(possibleUserType)) {
             throw new DataConflictException(String.format(assign ? CANNOT_ASSIGN : CANNOT_UN_ASSIGN, userType, task.getStatusCode()));
         }
+    }
+    @Transactional
+    public List<String> getTags(long id) {
+        Task task = handler.getRepository().getExisted(id);
+        if (task == null) {
+            throw new DataConflictException("Can't get tags from the task");
+        }
+        Set<String> tags = task.getTags();
+
+        return tags.stream().toList();
+    }
+
+    @Transactional
+    public void deleteTag(long id, String tag) {
+        Task task = handler.getRepository().getExisted(id);
+        if (task == null) {
+            throw new DataConflictException("Can't delete tag from task");
+        }
+        Set<String> tags = task.getTags();
+        tags.remove(tag);
+        task.setTags(tags);
+        handler.getRepository().save(task);
+    }
+
+    @Transactional
+    public void addTag(long id, String tag) {
+        Task task = handler.getRepository().getExisted(id);
+        if (task == null) {
+            throw new DataConflictException("Can't add tag to the task");
+        }
+        Set<String> tags = task.getTags();
+        tags.add(tag);
+        task.setTags(tags);
+        handler.getRepository().save(task);
     }
 }

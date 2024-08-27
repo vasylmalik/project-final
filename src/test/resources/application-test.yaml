@@ -4,7 +4,10 @@ spring:
    mode: always
   datasource:
     url: jdbc:postgresql://localhost:5433/jira-test
+    #driver-class-name: org.h2.Driver
+    #url: jdbc:h2:mem:jira-test-h2;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false
     username: jira
     password: JiraRush
+
 app:
-  host-url: http://localhost:8081
+  host-url: http://localhost:8080
