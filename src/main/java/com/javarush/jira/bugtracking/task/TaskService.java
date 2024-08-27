@@ -19,8 +19,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static com.javarush.jira.bugtracking.ObjectType.TASK;
@@ -141,6 +143,7 @@ public class TaskService {
             throw new DataConflictException(String.format(assign ? CANNOT_ASSIGN : CANNOT_UN_ASSIGN, userType, task.getStatusCode()));
         }
     }
+
     @Transactional
     public List<String> getTags(long id) {
         Task task = handler.getRepository().getExisted(id);
@@ -174,5 +177,22 @@ public class TaskService {
         tags.add(tag);
         task.setTags(tags);
         handler.getRepository().save(task);
+    }
+
+    public Long getWorkTime(Task task) {
+        List<Activity> activities = task.getActivities();
+        Optional<Activity> in_progress = activities.stream().filter(a -> a.getStatusCode().equals("in_progress")).findAny();
+        Optional<Activity> ready_for_review = activities.stream().filter(a -> a.getStatusCode().equals("ready_for_review")).findAny();
+        Duration duration = Duration.between(in_progress.get().getUpdated(), ready_for_review.get().getUpdated());
+        return duration.toMinutes();
+
+    }
+
+    public Long getTestTime(Task task) {
+        List<Activity> activities = task.getActivities();
+        Optional<Activity> done = activities.stream().filter(a -> a.getStatusCode().equals("done")).findAny();
+        Optional<Activity> ready_for_review = activities.stream().filter(a -> a.getStatusCode().equals("ready_for_review")).findAny();
+        Duration duration = Duration.between(ready_for_review.get().getUpdated(), done.get().getUpdated());
+        return duration.toMinutes();
     }
 }
