@@ -323,3 +323,10 @@ values (6, 1, '2023-05-15 09:05:10', null, 'Data', null, 3, 'epic', 'in_progress
        (11, 118, '2023-05-16 10:05:10', null, 'UI tab of tasks', null, 4, 'task', 'in_progress', 'normal'),
        (5, 118, '2023-05-16 11:10:10', null, 'UI tab of tasks', null, null, null, null, 'high'),
        (11, 118, '2023-05-16 12:30:10', null, 'UI tab of tasks', null, 2, null, null, null);
+
+-----task8----------
+--changeset vasily:change_activity
+insert into ACTIVITY (ID, AUTHOR_ID, TASK_ID, UPDATED, STATUS_CODE)
+values (7, 5, 2, '2024-05-15 09:05:10', 'in_progress'),
+       (8, 5, 2, '2024-05-15 12:05:10', 'ready_for_review'),
+       (9, 5, 2, '2024-05-15 18:10:10', 'done')

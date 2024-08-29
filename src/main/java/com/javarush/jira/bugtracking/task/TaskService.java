@@ -178,7 +178,7 @@ public class TaskService {
         task.setTags(tags);
         handler.getRepository().save(task);
     }
-
+    @Transactional
     public Long getWorkTime(Task task) {
         List<Activity> activities = task.getActivities();
         Optional<Activity> in_progress = activities.stream().filter(a -> a.getStatusCode().equals("in_progress")).findAny();
@@ -187,7 +187,7 @@ public class TaskService {
         return duration.toMinutes();
 
     }
-
+    @Transactional
     public Long getTestTime(Task task) {
         List<Activity> activities = task.getActivities();
         Optional<Activity> done = activities.stream().filter(a -> a.getStatusCode().equals("done")).findAny();
