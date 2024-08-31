@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+   # Контейнер с приложением
+   client-backend:
+    image: client:0.0.1
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '8080:8080'
+    depends_on:
+      - postgres
+   # Контейнер с базой данных
+   postgres:
+    image: 'postgres'
+    container_name: 'postgres-db-1'
+    ports:
+      - '5432:5432'
+    environment:
+      - 'POSTGRES_USER=jira'
+      - 'POSTGRES_PASSWORD=JiraRush'
+      - 'POSTGRES_DB=jira'
+   # Контейнер с nginx
+   nginx:
+        container_name: proxy_nginx
+        depends_on:
+          - client-backend
+          - postgres
+        image: nginx:latest
+        ports:
+          - '80:80'
+        volumes:
+          - ./nginx/conf.d:/etc/nginx/conf.d
+        restart: always
+        links:
+          - client-backend
