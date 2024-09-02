@@ -14,7 +14,7 @@ import javax.sql.DataSource;
 //@ConfigurationProperties("spring.datasource")
 public class DatabaseConfig {
     // @Autowired
-    private Environment env;
+   // private Environment env;
 
     //    @Bean
 //    public DataSource postgresDataSource() {

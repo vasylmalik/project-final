@@ -5,5 +5,5 @@ import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
 @ActiveProfiles("test")
-abstract class BaseTests {
+abstract class BaseTests extends SpringDataTestcontainerTests{
 }

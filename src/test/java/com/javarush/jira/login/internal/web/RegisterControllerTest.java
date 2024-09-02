@@ -4,6 +4,7 @@ import com.javarush.jira.AbstractControllerTest;
 import com.javarush.jira.login.UserTo;
 import com.javarush.jira.login.internal.verification.ConfirmData;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -16,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class RegisterControllerTest extends AbstractControllerTest {
 
     @Test

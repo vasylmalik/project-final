@@ -1,8 +1,10 @@
 package com.javarush.jira.common.util;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
 // TODO
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UtilTest {
 
     @Test

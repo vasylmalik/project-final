@@ -2,7 +2,9 @@ package com.javarush.jira.bugtracking.sprint;
 
 import com.javarush.jira.MatcherFactory;
 import com.javarush.jira.bugtracking.sprint.to.SprintTo;
+import org.junit.jupiter.api.TestInstance;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class SprintTestData {
     public static final MatcherFactory.Matcher<SprintTo> SPRINT_TO_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(
             SprintTo.class, "enabled");

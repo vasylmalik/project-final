@@ -8,6 +8,7 @@ import com.javarush.jira.ref.internal.Reference;
 import com.javarush.jira.ref.internal.ReferenceRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.lang.NonNull;
@@ -23,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ReferenceControllerTest extends AbstractControllerTest {
     private static final String REST_URL = ReferenceController.REST_URL + "/";
 

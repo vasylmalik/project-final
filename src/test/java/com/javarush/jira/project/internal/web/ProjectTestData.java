@@ -3,7 +3,9 @@ package com.javarush.jira.project.internal.web;
 import com.javarush.jira.MatcherFactory;
 import com.javarush.jira.bugtracking.project.Project;
 import com.javarush.jira.bugtracking.project.to.ProjectTo;
+import org.junit.jupiter.api.TestInstance;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ProjectTestData {
     public static final MatcherFactory.Matcher<Project> PROJECT_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Project.class, "id", "startpoint", "endpoint");
     public static final MatcherFactory.Matcher<ProjectTo> PROJECT_TO_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(ProjectTo.class, "id");

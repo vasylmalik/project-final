@@ -7,13 +7,14 @@ import com.javarush.jira.bugtracking.task.to.TaskTo;
 import com.javarush.jira.bugtracking.task.to.TaskToExt;
 import com.javarush.jira.bugtracking.task.to.TaskToFull;
 import com.javarush.jira.common.to.CodeTo;
+import org.junit.jupiter.api.TestInstance;
 
 import java.util.List;
 
 import static com.javarush.jira.bugtracking.ObjectType.TASK;
 import static com.javarush.jira.login.internal.web.UserTestData.ADMIN_ID;
 import static com.javarush.jira.login.internal.web.UserTestData.USER_ID;
-
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class TaskTestData {
     public static final MatcherFactory.Matcher<Task> TASK_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Task.class, "id", "startpoint", "endpoint", "activities", "project", "sprint", "parent", "tags");
     public static final MatcherFactory.Matcher<TaskTo> TASK_TO_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(TaskTo.class, "id", "startpoint", "endpoint");

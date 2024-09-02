@@ -5,6 +5,7 @@ import com.javarush.jira.bugtracking.project.Project;
 import com.javarush.jira.bugtracking.project.ProjectRepository;
 import com.javarush.jira.common.BaseHandler;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
@@ -18,7 +19,7 @@ import static com.javarush.jira.project.internal.web.ProjectTestData.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ProjectControllerTest extends AbstractControllerTest {
     private static final String REST_URL_PROJECT = BaseHandler.REST_URL + "/projects";
     private static final String REST_URL_MNGR_PROJECT = BaseHandler.REST_URL + "/mngr/projects";

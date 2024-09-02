@@ -4,7 +4,9 @@ import com.javarush.jira.MatcherFactory;
 import com.javarush.jira.ref.RefTo;
 import com.javarush.jira.ref.RefType;
 import com.javarush.jira.ref.internal.Reference;
+import org.junit.jupiter.api.TestInstance;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ReferenceTestData {
     public static final MatcherFactory.Matcher<Reference> REFERENCE_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Reference.class, "id", "startpoint", "endpoint");
     public static final MatcherFactory.Matcher<RefTo> REFTO_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(RefTo.class, "id");

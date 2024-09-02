@@ -2,6 +2,7 @@ package com.javarush.jira.profile.internal.web;
 
 import com.javarush.jira.AbstractControllerTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithUserDetails;
@@ -13,7 +14,7 @@ import static com.javarush.jira.profile.internal.web.ProfileTestData.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ProfileRestControllerTest extends AbstractControllerTest {
 
     @Test

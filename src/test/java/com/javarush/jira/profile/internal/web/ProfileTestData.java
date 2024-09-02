@@ -5,10 +5,11 @@ import com.javarush.jira.profile.ContactTo;
 import com.javarush.jira.profile.ProfileTo;
 import com.javarush.jira.profile.internal.model.Contact;
 import com.javarush.jira.profile.internal.model.Profile;
+import org.junit.jupiter.api.TestInstance;
 
 import java.util.Collections;
 import java.util.Set;
-
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ProfileTestData {
     public static MatcherFactory.Matcher<Profile> PROFILE_MATCHER =
             MatcherFactory.usingIgnoringFieldsComparator(Profile.class, "user");
