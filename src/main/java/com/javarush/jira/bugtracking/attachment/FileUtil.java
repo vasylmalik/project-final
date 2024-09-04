@@ -24,17 +24,18 @@ public class FileUtil {
         if (multipartFile.isEmpty()) {
             throw new IllegalRequestDataException("Select a file to upload.");
         }
-
-        File dir = new File(directoryPath);
-        if (dir.exists() || dir.mkdirs()) {
-            File file = new File(directoryPath + fileName);
-            try (OutputStream outStream = new FileOutputStream(file)) {
-                outStream.write(multipartFile.getBytes());
-            } catch (IOException ex) {
-                throw new IllegalRequestDataException("Failed to upload file" + multipartFile.getOriginalFilename());
+        Path directory = Paths.get(directoryPath);
+        Path file = directory.resolve(fileName);
+        try  {
+            if (!Files.exists(directory)) {
+                Files.createDirectories(directory);
             }
+            Files.write(file, multipartFile.getBytes());
+        } catch (IOException ex) {
+            throw new IllegalRequestDataException("Failed to upload file" + multipartFile.getOriginalFilename());
         }
     }
+
 
     public static Resource download(String fileLink) {
         Path path = Paths.get(fileLink);
