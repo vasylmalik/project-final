@@ -44,14 +44,4 @@ public abstract class AbstractControllerTest extends BaseTests {
         return mockMvc.perform(builder);
     }
 
-
-//    static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
-//        public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
-//            TestPropertyValues.of(
-//                    "CONTAINER.USERNAME=" + postgreSQLContainer.getUsername(),
-//                    "CONTAINER.PASSWORD=" + postgreSQLContainer.getPassword(),
-//                    "CONTAINER.URL=" + postgreSQLContainer.getJdbcUrl()
-//            ).applyTo(configurableApplicationContext.getEnvironment());
-//        }
-//    }
 }

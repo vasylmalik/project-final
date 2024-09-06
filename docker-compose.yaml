@@ -13,7 +13,7 @@ services:
       - postgres
    # Контейнер с базой данных
    postgres:
-    image: 'postgres'
+    image: 'postgres:16-alpine'
     container_name: 'postgres-db-1'
     ports:
       - '5432:5432'

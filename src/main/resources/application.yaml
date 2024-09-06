@@ -46,8 +46,9 @@ spring:
 
   # https://docs.spring.io/spring-boot/docs/current/reference/html/appendix-application-properties.html#common-application-properties-cache
   cache:
+
     cache-names: users
-    caffeine.spec: maximumSize=10000,expireAfterAccess=5m
+    caffeine.spec: maximumSize=1000,expireAfterAccess=5m
 
   security:
     oauth2:
@@ -114,5 +115,6 @@ server:
       enabled: true # Enable http encoding support
       force: true
 springdoc.swagger-ui.path: /doc
+JWT_Secret: SECRETSTRING
 
 
