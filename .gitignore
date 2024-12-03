@@ -6,4 +6,5 @@ logs
 attachments
 *.patch
 
-
+src/main/resources/application.properties
+src/test/resources/application-test.properties

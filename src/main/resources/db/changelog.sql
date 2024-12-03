@@ -107,7 +107,7 @@ create table CONTACT
 (
     ID    bigint       not null,
     CODE  varchar(32)  not null,
-    VALUE varchar(256) not null,
+    VAL varchar(256) not null,
     primary key (ID, CODE),
     constraint FK_CONTACT_PROFILE foreign key (ID) references PROFILE (ID) on delete cascade
 );
@@ -326,6 +326,11 @@ values ('todo', 'ToDo', 3, 'in_progress,canceled|'),
        ('canceled', 'Canceled', 3, null);
 
 --changeset ishlyakhtenkov:change_UK_USER_BELONG
+
+insert into ACTIVITY ( ID, AUTHOR_ID, TASK_ID, UPDATED, STATUS_CODE )
+values (2, 5, 1, '2023-05-15 12:25:10', 'in_progress'),
+       (3, 6, 1, '2023-05-15 14:05:10', 'ready_for_review'),
+       (4, 11, 118, '2023-05-16 10:05:10', 'done');
 
 drop index UK_USER_BELONG;
 create unique index UK_USER_BELONG on USER_BELONG (OBJECT_ID, OBJECT_TYPE, USER_ID, USER_TYPE_CODE) where ENDPOINT is null;

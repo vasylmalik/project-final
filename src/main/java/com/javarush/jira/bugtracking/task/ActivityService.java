@@ -5,9 +5,12 @@ import com.javarush.jira.bugtracking.task.to.ActivityTo;
 import com.javarush.jira.common.error.DataConflictException;
 import com.javarush.jira.login.AuthUser;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.javarush.jira.bugtracking.task.TaskUtil.getLatestValue;
@@ -18,6 +21,10 @@ public class ActivityService {
     private final TaskRepository taskRepository;
 
     private final Handlers.ActivityHandler handler;
+
+    public static final String IN_PROGRESS = "in_progress";
+    public static final String READY_FOR_REVIEW = "ready_for_review";
+    public static final String DONE = "done";
 
     private static void checkBelong(HasAuthorId activity) {
         if (activity.getAuthorId() != AuthUser.authId()) {
@@ -72,5 +79,29 @@ public class ActivityService {
                 task.setTypeCode(latestType);
             }
         }
+    }
+
+    private LocalDateTime getUpdatedTimeForStatus(long taskId, String statusCode) {
+        handler.getRepository().getExisted(taskId);
+        List<Activity> activities = handler.getRepository().findAllByTaskIdOrderByUpdatedDesc(taskId);
+        if (activities.isEmpty()) {
+            throw new DataConflictException(String.format("No activities found for task '%d'", taskId));
+        }
+
+        for (Activity activity : activities) {
+            if (statusCode.equals(activity.getStatusCode())) {
+                return activity.getUpdated();
+            }
+        }
+        throw new DataConflictException(String.format("No updated time found for status '%s' on task '%d'", statusCode, taskId));
+    }
+
+    public String calculateTaskDuration(long taskId, String startStatusCode, String endStatusCode) {
+        LocalDateTime startTime = getUpdatedTimeForStatus(taskId, startStatusCode);
+        LocalDateTime endTime = getUpdatedTimeForStatus(taskId, endStatusCode);
+
+        Duration duration = Duration.between(startTime, endTime);
+
+        return DurationFormatUtils.formatDuration(duration.toMillis(), "H:mm:ss", true);
     }
 }

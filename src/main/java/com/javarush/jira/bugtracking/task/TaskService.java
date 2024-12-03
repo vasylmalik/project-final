@@ -140,4 +140,19 @@ public class TaskService {
             throw new DataConflictException(String.format(assign ? CANNOT_ASSIGN : CANNOT_UN_ASSIGN, userType, task.getStatusCode()));
         }
     }
+
+    @Transactional
+    public void addTag(long id, String tagName) {
+        if (id < 0) {
+            throw new IllegalArgumentException("Tag id cannot be negative");
+        }
+
+        Assert.hasText(tagName, "Tag name must not be empty");
+        Assert.notNull(tagName, "Tag name must not be null");
+
+        Task task = handler.getRepository().getExisted(id);
+        task.getTags().add(tagName);
+
+        handler.getRepository().saveAndFlush(task);
+    }
 }

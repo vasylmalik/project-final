@@ -49,7 +49,7 @@ insert into PROFILE (ID, LAST_FAILED_LOGIN, LAST_LOGIN, MAIL_NOTIFICATIONS)
 values (1, null, null, 49),
        (2, null, null, 14);
 
-insert into CONTACT (ID, CODE, VALUE)
+insert into CONTACT (ID, CODE, VAL)
 values (1, 'skype', 'userSkype'),
        (1, 'mobile', '+01234567890'),
        (1, 'website', 'user.com'),
