@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<html th:lang="${#locale}" lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <th:block
         th:replace="~{layout/main::page(title='JiraRush: mini bugtracking system',appMainFluid=~{::appMain}, activeMenuItem='dashboard')}">
     <appMain>
-        <h1>Dashboard</h1>
+        <h1 th:text="#{dashboard.title.main}">Dashboard</h1>
         <div class="card">
             <div class="card-body">
                 <div class="row align-items-center">
@@ -12,7 +12,7 @@
                         <div class="input-group">
                             <span class="input-group-text" title="Project">Project</span>
                             <select class="form-select" id="project-selector" th:disabled="${projects.isEmpty()}">
-                                <option th:if="${projects.isEmpty()}" value="-1">No projects</option>
+                                <option th:text="#{dashboard.option.no.projects}" th:if="${projects.isEmpty()}" value="-1">No projects</option>
                                 <option th:each="project : ${projects}" th:if="${!projects.isEmpty()}"
                                         th:text="${project.title}" th:value="${project.id}"></option>
                             </select>
@@ -29,7 +29,7 @@
             <div class="col mb-3 pe-xxl-0 d-flex align-items-stretch">
                 <div class="card w-100">
                     <div class="card-body text-center px-1">
-                        <h5 class="card-title">TO DO</h5>
+                        <h5 th:text="#{dashboard.status.todo}" class="card-title">TO DO</h5>
                         <div id="todo-task-column"></div>
                     </div>
                 </div>
@@ -37,7 +37,7 @@
             <div class="col mb-3 pe-xxl-0 d-flex align-items-stretch">
                 <div class="card w-100">
                     <div class="card-body text-center px-1">
-                        <h5 class="card-title">IN PROGRESS</h5>
+                        <h5 th:text="#{dashboard.status.progress}" class="card-title">IN PROGRESS</h5>
                         <div id="in-progress-task-column"></div>
                     </div>
                 </div>
@@ -45,7 +45,7 @@
             <div class="col mb-3 pe-xxl-0 d-flex align-items-stretch">
                 <div class="card w-100">
                     <div class="card-body text-center px-1">
-                        <h5 class="card-title">REVIEW</h5>
+                        <h5 th:text="#{dashboard.status.review}" class="card-title">REVIEW</h5>
                         <div id="review-task-column"></div>
                     </div>
                 </div>
@@ -53,7 +53,7 @@
             <div class="col mb-3 pe-xxl-0 d-flex align-items-stretch">
                 <div class="card w-100">
                     <div class="card-body text-center px-1">
-                        <h5 class="card-title">TEST</h5>
+                        <h5 th:text="#{dashboard.status.test}" class="card-title">TEST</h5>
                         <div id="test-task-column"></div>
                     </div>
                 </div>
@@ -61,13 +61,12 @@
             <div class="col mb-3 d-flex align-items-stretch">
                 <div class="card w-100">
                     <div class="card-body text-center px-1">
-                        <h5 class="card-title">DONE</h5>
+                        <h5 th:text="#{dashboard.status.done}" class="card-title">DONE</h5>
                         <div id="done-task-column"></div>
                     </div>
                 </div>
             </div>
         </div>
-
         <!--Task info modal-->
         <div class="modal" id="task-info-modal" tabindex="-1">
             <div class="modal-dialog" style="max-width: 900px !important;">
@@ -79,7 +78,6 @@
                 </div>
             </div>
         </div>
-
         <!--Context menu-->
         <nav class="context-menu" id="context-menu">
             <ul class="context-menu-items" id="context-menu-items">

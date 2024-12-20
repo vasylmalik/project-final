@@ -1,7 +1,7 @@
 package com.javarush.jira.profile.internal.web;
 
 import com.javarush.jira.common.util.validation.ValidationUtil;
-import com.javarush.jira.profile.ProfileTo;
+import com.javarush.jira.profile.ProfileDTO;
 import com.javarush.jira.profile.internal.ProfileMapper;
 import com.javarush.jira.profile.internal.ProfileRepository;
 import com.javarush.jira.profile.internal.ProfileUtil;
@@ -16,17 +16,17 @@ public abstract class AbstractProfileController {
     @Autowired
     private ProfileRepository profileRepository;
 
-    public ProfileTo get(long id) {
+    public ProfileDTO get(long id) {
         log.info("get {}", id);
-        return profileMapper.toTo(profileRepository.getOrCreate(id));
+        return profileMapper.toDTO(profileRepository.getOrCreate(id));
     }
 
-    public void update(ProfileTo profileTo, long id) {
-        log.info("update {}, user {}", profileTo, id);
-        ValidationUtil.assureIdConsistent(profileTo, id);
-        ValidationUtil.assureIdConsistent(profileTo.getContacts(), id);
-        ProfileUtil.checkContactsExist(profileTo.getContacts());
-        Profile profile = profileMapper.updateFromTo(profileRepository.getOrCreate(profileTo.id()), profileTo);
+    public void update(ProfileDTO profileDTO, long id) {
+        log.info("update {}, user {}", profileDTO, id);
+        ValidationUtil.assureIdConsistent(profileDTO, id);
+        ValidationUtil.assureIdConsistent(profileDTO.getContacts(), id);
+        ProfileUtil.checkContactsExist(profileDTO.getContacts());
+        Profile profile = profileMapper.updateFromDTO(profileRepository.getOrCreate(profileDTO.id()), profileDTO);
         profileRepository.save(profile);
     }
 }

@@ -1,7 +1,7 @@
 package com.javarush.jira.profile;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.javarush.jira.common.to.BaseTo;
+import com.javarush.jira.common.to.BaseDTO;
 import com.javarush.jira.common.util.validation.Code;
 import com.javarush.jira.common.util.validation.NoHtml;
 import jakarta.validation.constraints.NotBlank;
@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(value = "id", allowSetters = true)
-public class ContactTo extends BaseTo {
+public class ContactDTO extends BaseDTO {
     @Code
     private String code;
     @NotBlank

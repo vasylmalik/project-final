@@ -2,7 +2,7 @@ package com.javarush.jira.bugtracking.sprint;
 
 import com.javarush.jira.bugtracking.Handlers;
 import com.javarush.jira.bugtracking.project.ProjectRepository;
-import com.javarush.jira.bugtracking.sprint.to.SprintTo;
+import com.javarush.jira.bugtracking.sprint.to.SprintDTO;
 import com.javarush.jira.common.BaseHandler;
 import com.javarush.jira.common.util.Util;
 import jakarta.validation.Valid;
@@ -32,7 +32,7 @@ public class SprintUIController {
     @GetMapping("/sprints/{id}")
     public String get(@PathVariable long id, @RequestParam(required = false) boolean fragment, Model model) {
         log.info("get {}", id);
-        model.addAttribute("sprint", mapperFull.toTo(Util.checkExist(id, handler.getRepository().findFullById(id))));
+        model.addAttribute("sprint", mapperFull.toDTO(Util.checkExist(id, handler.getRepository().findFullById(id))));
         model.addAttribute("fragment", fragment);
         model.addAttribute("attachs", attachmentHandler.getRepository().getAllForObject(id, SPRINT));
         model.addAttribute("belongs", handler.getAllBelongs(id));
@@ -53,25 +53,25 @@ public class SprintUIController {
         log.info("editFormNew for sprint with project {}", projectId);
         Sprint newSprint = new Sprint();
         newSprint.setProjectId(projectId);
-        model.addAttribute("sprint", handler.getMapper().toTo(newSprint));
+        model.addAttribute("sprint", handler.getMapper().toDTO(newSprint));
         model.addAttribute("statuses", getRefs(SPRINT_STATUS));
         return "sprint-edit";
     }
 
     @PostMapping("/mngr/sprints")
-    public String createOrUpdate(@Valid @ModelAttribute("sprint") SprintTo sprintTo, BindingResult result, Model model) {
+    public String createOrUpdate(@Valid @ModelAttribute("sprint") SprintDTO sprintDTO, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("statuses", getRefs(SPRINT_STATUS));
-            if (!sprintTo.isNew()) {
-                model.addAttribute("attachs", attachmentHandler.getRepository().getAllForObject(sprintTo.id(), SPRINT));
+            if (!sprintDTO.isNew()) {
+                model.addAttribute("attachs", attachmentHandler.getRepository().getAllForObject(sprintDTO.id(), SPRINT));
             }
             return "sprint-edit";
         }
-        Long id = sprintTo.getId();
-        if (sprintTo.isNew()) {
-            id = handler.createWithBelong(sprintTo, SPRINT, "sprint_author").id();
+        Long id = sprintDTO.getId();
+        if (sprintDTO.isNew()) {
+            id = handler.createWithBelong(sprintDTO, SPRINT, "sprint_author").id();
         } else {
-            handler.updateFromTo(sprintTo, sprintTo.id());
+            handler.updateFromDTO(sprintDTO, sprintDTO.id());
         }
         return "redirect:/ui/sprints/" + id;
     }

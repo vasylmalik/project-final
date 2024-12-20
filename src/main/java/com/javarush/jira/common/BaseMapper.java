@@ -1,20 +1,20 @@
 package com.javarush.jira.common;
 
-import com.javarush.jira.common.to.BaseTo;
+import com.javarush.jira.common.to.BaseDTO;
 import org.mapstruct.MappingTarget;
 
 import java.util.Collection;
 import java.util.List;
 
-public interface BaseMapper<E, T extends BaseTo> {
+public interface BaseMapper<E, T extends BaseDTO> {
 
     E toEntity(T to);
 
-    List<E> toEntityList(Collection<T> tos);
+    List<E> toEntityList(Collection<T> dtos);
 
-    E updateFromTo(T to, @MappingTarget E entity);
+    E updateFromDTO(T to, @MappingTarget E entity);
 
-    T toTo(E entity);
+    T toDTO(E entity);
 
-    List<T> toToList(Collection<E> entities);
+    List<T> toDTOList(Collection<E> entities);
 }

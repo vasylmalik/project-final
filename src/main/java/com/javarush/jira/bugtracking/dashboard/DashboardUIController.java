@@ -23,7 +23,7 @@ public class DashboardUIController {
     @GetMapping
     public String showDashboard(Model model) {
         log.info("show dashboard");
-        model.addAttribute("projects", handler.getAllTos(TimestampRepository.NEWEST_FIRST));
+        model.addAttribute("projects", handler.getAllDTOs(TimestampRepository.NEWEST_FIRST));
         model.addAttribute("taskStatusRefs", ReferenceService.getRefs(RefType.TASK_STATUS));
         return "dashboard";
     }

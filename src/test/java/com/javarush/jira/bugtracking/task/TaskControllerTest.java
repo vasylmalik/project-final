@@ -2,9 +2,9 @@ package com.javarush.jira.bugtracking.task;
 
 import com.javarush.jira.AbstractControllerTest;
 import com.javarush.jira.bugtracking.UserBelongRepository;
-import com.javarush.jira.bugtracking.task.to.ActivityTo;
-import com.javarush.jira.bugtracking.task.to.TaskToExt;
-import com.javarush.jira.bugtracking.task.to.TaskToFull;
+import com.javarush.jira.bugtracking.task.to.ActivityDTO;
+import com.javarush.jira.bugtracking.task.to.TaskDTOExt;
+import com.javarush.jira.bugtracking.task.to.TaskDTOFull;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -49,15 +49,15 @@ class TaskControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = USER_MAIL)
     void get() throws Exception {
-        get(TASK1_ID, taskToFull1);
+        get(TASK1_ID, taskDTOFull1);
     }
 
-    private void get(long taskId, TaskToFull taskToFull) throws Exception {
+    private void get(long taskId, TaskDTOFull taskDTOFull) throws Exception {
         perform(MockMvcRequestBuilders.get(TASKS_REST_URL_SLASH + taskId))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(TASK_TO_FULL_MATCHER.contentJson(taskToFull));
+                .andExpect(TASK_TO_FULL_MATCHER.contentJson(taskDTOFull));
     }
 
     @Test
@@ -81,7 +81,7 @@ class TaskControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(TASK_TO_MATCHER.contentJson(taskTo2, taskTo1));
+                .andExpect(TASK_TO_MATCHER.contentJson(TASK_DTO_2, TASK_DTO_1));
     }
 
     @Test
@@ -92,7 +92,7 @@ class TaskControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(TASK_TO_MATCHER.contentJson(taskTo2, taskTo1));
+                .andExpect(TASK_TO_MATCHER.contentJson(TASK_DTO_2, TASK_DTO_1));
     }
 
     @Test
@@ -105,7 +105,7 @@ class TaskControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = USER_MAIL)
     void updateTask() throws Exception {
-        TaskToExt updatedTo = TaskTestData.getUpdatedTaskTo();
+        TaskDTOExt updatedTo = TaskTestData.getUpdatedTaskDTO();
         perform(MockMvcRequestBuilders.put(TASKS_REST_URL_SLASH + TASK2_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(updatedTo)))
@@ -114,15 +114,15 @@ class TaskControllerTest extends AbstractControllerTest {
 
         Task updated = new Task(updatedTo.getId(), updatedTo.getTitle(), updatedTo.getTypeCode(), updatedTo.getStatusCode(), updatedTo.getParentId(), updatedTo.getProjectId(), updatedTo.getSprintId());
         TASK_MATCHER.assertMatch(taskRepository.getExisted(TASK2_ID), updated);
-        get(TASK2_ID, taskToFull2);
+        get(TASK2_ID, taskDTOFull2);
     }
 
     @Test
     @WithUserDetails(value = USER_MAIL)
     void updateTaskWhenStateNotChanged() throws Exception {
         int activitiesCount = activityRepository.findAllByTaskIdOrderByUpdatedDesc(TASK2_ID).size();
-        TaskToExt sameStateTo = new TaskToExt(TASK2_ID, taskTo2.getCode(), taskTo2.getTitle(), "Trees desc", taskTo2.getTypeCode(),
-                taskTo2.getStatusCode(), "normal", null, 4, taskTo2.getParentId(), taskTo2.getProjectId(), taskTo2.getSprintId());
+        TaskDTOExt sameStateTo = new TaskDTOExt(TASK2_ID, TASK_DTO_2.getCode(), TASK_DTO_2.getTitle(), "Trees desc", TASK_DTO_2.getTypeCode(),
+                TASK_DTO_2.getStatusCode(), "normal", null, 4, TASK_DTO_2.getParentId(), TASK_DTO_2.getProjectId(), TASK_DTO_2.getSprintId());
         perform(MockMvcRequestBuilders.put(TASKS_REST_URL_SLASH + TASK2_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(sameStateTo)))
@@ -135,14 +135,14 @@ class TaskControllerTest extends AbstractControllerTest {
     void updateTaskUnauthorized() throws Exception {
         perform(MockMvcRequestBuilders.put(TASKS_REST_URL_SLASH + TASK2_ID)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(writeValue(getUpdatedTaskTo())))
+                .content(writeValue(getUpdatedTaskDTO())))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void updateTaskWhenProjectNotExists() throws Exception {
-        TaskToExt notExistsProjectTo = new TaskToExt(TASK2_ID, "epic-2", "Trees UPD", "task UPD", "epic", "in_progress", "high", null, 4, null, NOT_FOUND, SPRINT1_ID);
+        TaskDTOExt notExistsProjectTo = new TaskDTOExt(TASK2_ID, "epic-2", "Trees UPD", "task UPD", "epic", "in_progress", "high", null, 4, null, NOT_FOUND, SPRINT1_ID);
         perform(MockMvcRequestBuilders.put(TASKS_REST_URL_SLASH + TASK2_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(notExistsProjectTo)))
@@ -155,7 +155,7 @@ class TaskControllerTest extends AbstractControllerTest {
     void updateTaskIdNotConsistent() throws Exception {
         perform(MockMvcRequestBuilders.put(TASKS_REST_URL_SLASH + (TASK2_ID + 1))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(writeValue(getUpdatedTaskTo())))
+                .content(writeValue(getUpdatedTaskDTO())))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
     }
@@ -163,7 +163,7 @@ class TaskControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void updateTaskWhenChangeProject() throws Exception {
-        TaskToExt changedProjectTo = new TaskToExt(TASK2_ID, "epic-2", "Trees UPD", "task UPD", "epic", "in_progress", "high", null, 4, null, PROJECT1_ID + 1, SPRINT1_ID);
+        TaskDTOExt changedProjectTo = new TaskDTOExt(TASK2_ID, "epic-2", "Trees UPD", "task UPD", "epic", "in_progress", "high", null, 4, null, PROJECT1_ID + 1, SPRINT1_ID);
         perform(MockMvcRequestBuilders.put(TASKS_REST_URL_SLASH + TASK2_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(changedProjectTo)))
@@ -174,10 +174,10 @@ class TaskControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = USER_MAIL)
     void updateSprintIdWhenDev() throws Exception {
-        TaskToExt changedSprintTo = new TaskToExt(TASK2_ID, "epic-2", "Trees UPD", "task UPD", "epic", "in_progress", "high", null, 4, null, PROJECT1_ID, SPRINT1_ID + 1);
+        TaskDTOExt changedSprintDTO = new TaskDTOExt(TASK2_ID, "epic-2", "Trees UPD", "task UPD", "epic", "in_progress", "high", null, 4, null, PROJECT1_ID, SPRINT1_ID + 1);
         perform(MockMvcRequestBuilders.put(TASKS_REST_URL_SLASH + TASK2_ID)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(writeValue(changedSprintTo)))
+                .content(writeValue(changedSprintDTO)))
                 .andDo(print())
                 .andExpect(status().isConflict());
     }
@@ -185,10 +185,10 @@ class TaskControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void updateSprintIdWhenAdmin() throws Exception {
-        TaskToExt changedSprintTo = new TaskToExt(TASK2_ID, "epic-2", "Trees UPD", "task UPD", "epic", "in_progress", "high", null, 4, null, PROJECT1_ID, SPRINT1_ID + 1);
+        TaskDTOExt changedSprintDTO = new TaskDTOExt(TASK2_ID, "epic-2", "Trees UPD", "task UPD", "epic", "in_progress", "high", null, 4, null, PROJECT1_ID, SPRINT1_ID + 1);
         perform(MockMvcRequestBuilders.put(TASKS_REST_URL_SLASH + TASK2_ID)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(writeValue(changedSprintTo)))
+                .content(writeValue(changedSprintDTO)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
         assertEquals(SPRINT1_ID + 1, taskRepository.getExisted(TASK2_ID).getSprintId());
@@ -197,10 +197,10 @@ class TaskControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = MANAGER_MAIL)
     void updateSprintIdWhenManager() throws Exception {
-        TaskToExt changedSprintTo = new TaskToExt(TASK2_ID, "epic-2", "Trees UPD", "task UPD", "epic", "in_progress", "high", null, 4, null, PROJECT1_ID, SPRINT1_ID + 1);
+        TaskDTOExt changedSprintDTO = new TaskDTOExt(TASK2_ID, "epic-2", "Trees UPD", "task UPD", "epic", "in_progress", "high", null, 4, null, PROJECT1_ID, SPRINT1_ID + 1);
         perform(MockMvcRequestBuilders.put(TASKS_REST_URL_SLASH + TASK2_ID)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(writeValue(changedSprintTo)))
+                .content(writeValue(changedSprintDTO)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
         assertEquals(SPRINT1_ID + 1, taskRepository.getExisted(TASK2_ID).getSprintId());
@@ -209,7 +209,7 @@ class TaskControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = USER_MAIL)
     void updateActivity() throws Exception {
-        ActivityTo updatedTo = getUpdatedActivityTo();
+        ActivityDTO updatedTo = getUpdatedActivityDTO();
         perform(MockMvcRequestBuilders.put(ACTIVITIES_REST_URL_SLASH + ACTIVITY1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(updatedTo)))
@@ -235,18 +235,18 @@ class TaskControllerTest extends AbstractControllerTest {
     void updateActivityUnauthorized() throws Exception {
         perform(MockMvcRequestBuilders.put(ACTIVITIES_REST_URL_SLASH + ACTIVITY1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(writeValue(getUpdatedTaskTo())))
+                .content(writeValue(getUpdatedTaskDTO())))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void updateWhenTaskNotExists() throws Exception {
-        ActivityTo notExistsActivityTo = new ActivityTo(ACTIVITY1_ID, NOT_FOUND, USER_ID, null, null,
+        ActivityDTO notExistsActivityDTO = new ActivityDTO(ACTIVITY1_ID, NOT_FOUND, USER_ID, null, null,
                 "in_progress", "low", "epic", null, null, 3, null);
         perform(MockMvcRequestBuilders.put(ACTIVITIES_REST_URL_SLASH + ACTIVITY1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(writeValue(notExistsActivityTo)))
+                .content(writeValue(notExistsActivityDTO)))
                 .andDo(print())
                 .andExpect(status().isConflict());
     }
@@ -256,7 +256,7 @@ class TaskControllerTest extends AbstractControllerTest {
     void updateActivityIdNotConsistent() throws Exception {
         perform(MockMvcRequestBuilders.put(ACTIVITIES_REST_URL_SLASH + (ACTIVITY1_ID + 1))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(writeValue(getUpdatedActivityTo())))
+                .content(writeValue(getUpdatedActivityDTO())))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
     }
@@ -264,11 +264,11 @@ class TaskControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void updateActivityWhenChangeTask() throws Exception {
-        ActivityTo changedTaskTo = new ActivityTo(ACTIVITY1_ID, TASK1_ID + 1, USER_ID, null, null,
+        ActivityDTO changedTaskDTO = new ActivityDTO(ACTIVITY1_ID, TASK1_ID + 1, USER_ID, null, null,
                 "in_progress", "low", "epic", null, null, 3, null);
         perform(MockMvcRequestBuilders.put(ACTIVITIES_REST_URL_SLASH + ACTIVITY1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(writeValue(changedTaskTo)))
+                .content(writeValue(changedTaskDTO)))
                 .andDo(print())
                 .andExpect(status().isConflict());
     }
@@ -297,7 +297,7 @@ class TaskControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void disable() throws Exception {
-        assertFalse(enable(taskTo2.getId(), false));
+        assertFalse(enable(TASK_DTO_2.getId(), false));
     }
 
     @Test
@@ -352,7 +352,7 @@ class TaskControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void createTaskWithLocation() throws Exception {
-        TaskToExt newTo = getNewTaskTo();
+        TaskDTOExt newTo = getNewTaskDTO();
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(newTo)))
@@ -369,14 +369,14 @@ class TaskControllerTest extends AbstractControllerTest {
     void createTaskUnauthorized() throws Exception {
         perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(writeValue(getNewTaskTo())))
+                .content(writeValue(getNewTaskDTO())))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void createTaskInvalid() throws Exception {
-        TaskToExt invalidTo = new TaskToExt(null, "", null, null, "epic", null, null, null, 3, null, PROJECT1_ID, SPRINT1_ID);
+        TaskDTOExt invalidTo = new TaskDTOExt(null, "", null, null, "epic", null, null, null, 3, null, PROJECT1_ID, SPRINT1_ID);
         perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(invalidTo)))
@@ -387,7 +387,7 @@ class TaskControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void createTaskWhenProjectNotExists() throws Exception {
-        TaskToExt notExistsProjectTo = new TaskToExt(null, "epic-1", "Data New", "task NEW", "epic", "in_progress", "low", null, 3, null, NOT_FOUND, SPRINT1_ID);
+        TaskDTOExt notExistsProjectTo = new TaskDTOExt(null, "epic-1", "Data New", "task NEW", "epic", "in_progress", "low", null, 3, null, NOT_FOUND, SPRINT1_ID);
         perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(notExistsProjectTo)))
@@ -398,7 +398,7 @@ class TaskControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = USER_MAIL)
     void createActivityWithLocation() throws Exception {
-        ActivityTo newTo = getNewActivityTo();
+        ActivityDTO newTo = getNewActivityDTO();
         ResultActions action = perform(MockMvcRequestBuilders.post(ACTIVITIES_REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(newTo)))
@@ -417,18 +417,18 @@ class TaskControllerTest extends AbstractControllerTest {
     void createActivityUnauthorized() throws Exception {
         perform(MockMvcRequestBuilders.post(ACTIVITIES_REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(writeValue(getNewTaskTo())))
+                .content(writeValue(getNewTaskDTO())))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void createActivityWhenTaskNotExists() throws Exception {
-        ActivityTo notExistsTaskTo = new ActivityTo(null, NOT_FOUND, ADMIN_ID, null, null, null,
+        ActivityDTO notExistsTaskDTO = new ActivityDTO(null, NOT_FOUND, ADMIN_ID, null, null, null,
                 null, "epic", null, null, 4, null);
         perform(MockMvcRequestBuilders.post(ACTIVITIES_REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(writeValue(notExistsTaskTo)))
+                .content(writeValue(notExistsTaskDTO)))
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }

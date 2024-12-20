@@ -3,7 +3,7 @@ package com.javarush.jira.login.internal.web;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.javarush.jira.common.util.validation.View;
 import com.javarush.jira.login.User;
-import com.javarush.jira.login.UserTo;
+import com.javarush.jira.login.UserDTO;
 import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.validation.constraints.Size;
 import org.springframework.cache.annotation.CacheEvict;
@@ -77,11 +77,11 @@ public class AdminUserController extends AbstractUserController {
     @PostMapping("/form")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Hidden
-    public void createOrUpdate(@Validated(View.OnUpdate.class) UserTo userTo) {
-        if (userTo.isNew()) {
-            handler.createFromTo(userTo);
+    public void createOrUpdate(@Validated(View.OnUpdate.class) UserDTO userDTO) {
+        if (userDTO.isNew()) {
+            handler.createFromDTO(userDTO);
         } else {
-            handler.updateFromTo(userTo, userTo.id());
+            handler.updateFromDTO(userDTO, userDTO.id());
         }
     }
 }

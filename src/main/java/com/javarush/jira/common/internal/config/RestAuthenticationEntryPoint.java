@@ -13,7 +13,7 @@ import org.springframework.web.servlet.HandlerExecutionChain;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 @Component
-@AllArgsConstructor
+//@AllArgsConstructor
 public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Qualifier("handlerExceptionResolver")
     private final HandlerExceptionResolver resolver;
@@ -27,5 +27,10 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
         } catch (Exception e) {
             throw new ServletException(e);
         }
+    }
+
+    public RestAuthenticationEntryPoint(@Qualifier("handlerExceptionResolver") HandlerExceptionResolver resolver, RequestMappingHandlerMapping mapping) {
+        this.resolver = resolver;
+        this.mapping = mapping;
     }
 }

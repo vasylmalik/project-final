@@ -3,10 +3,10 @@ package com.javarush.jira.bugtracking.task;
 import com.javarush.jira.bugtracking.Handlers;
 import com.javarush.jira.bugtracking.UserBelong;
 import com.javarush.jira.bugtracking.UserBelongRepository;
-import com.javarush.jira.bugtracking.task.to.ActivityTo;
-import com.javarush.jira.bugtracking.task.to.TaskTo;
-import com.javarush.jira.bugtracking.task.to.TaskToExt;
-import com.javarush.jira.bugtracking.task.to.TaskToFull;
+import com.javarush.jira.bugtracking.task.to.ActivityDTO;
+import com.javarush.jira.bugtracking.task.to.TaskDTO;
+import com.javarush.jira.bugtracking.task.to.TaskDTOExt;
+import com.javarush.jira.bugtracking.task.to.TaskDTOFull;
 import com.javarush.jira.bugtracking.tree.ITreeNode;
 import com.javarush.jira.common.util.Util;
 import com.javarush.jira.login.AuthUser;
@@ -42,27 +42,27 @@ public class TaskController {
 
 
     @GetMapping("/{id}")
-    public TaskToFull get(@PathVariable long id) {
+    public TaskDTOFull get(@PathVariable long id) {
         log.info("get task by id={}", id);
         return taskService.get(id);
     }
 
     @GetMapping("/by-sprint")
-    public List<TaskTo> getAllBySprint(@RequestParam long sprintId) {
+    public List<TaskDTO> getAllBySprint(@RequestParam long sprintId) {
         log.info("get all for sprint {}", sprintId);
-        return sortTasksAsTree(handler.getMapper().toToList(handler.getRepository().findAllBySprintId(sprintId)));
+        return sortTasksAsTree(handler.getMapper().toDTOList(handler.getRepository().findAllBySprintId(sprintId)));
     }
 
-    private List<TaskTo> sortTasksAsTree(List<TaskTo> tasks) {
+    private List<TaskDTO> sortTasksAsTree(List<TaskDTO> tasks) {
         List<TaskTreeNode> roots = Util.makeTree(tasks, TaskTreeNode::new);
-        List<TaskTo> sortedTasks = new ArrayList<>();
+        List<TaskDTO> sortedTasks = new ArrayList<>();
         roots.forEach(root -> {
-            sortedTasks.add(root.taskTo);
+            sortedTasks.add(root.taskDTO);
             List<TaskTreeNode> subNodes = root.subNodes();
             LinkedList<TaskTreeNode> stack = new LinkedList<>(subNodes);
             while (!stack.isEmpty()) {
                 TaskTreeNode node = stack.poll();
-                sortedTasks.add(node.taskTo);
+                sortedTasks.add(node.taskDTO);
                 node.subNodes().forEach(stack::addFirst);
             }
         });
@@ -70,21 +70,21 @@ public class TaskController {
     }
 
     @GetMapping("/by-project")
-    public List<TaskTo> getAllByProject(@RequestParam long projectId) {
+    public List<TaskDTO> getAllByProject(@RequestParam long projectId) {
         log.info("get all for project {}", projectId);
-        return handler.getMapper().toToList(handler.getRepository().findAllByProjectId(projectId));
+        return handler.getMapper().toDTOList(handler.getRepository().findAllByProjectId(projectId));
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Task> createWithLocation(@Valid @RequestBody TaskToExt taskTo) {
-        return createdResponse(REST_URL, taskService.create(taskTo));
+    public ResponseEntity<Task> createWithLocation(@Valid @RequestBody TaskDTOExt taskDTO) {
+        return createdResponse(REST_URL, taskService.create(taskDTO));
     }
 
     @PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@Valid @RequestBody TaskToExt taskTo, @PathVariable long id) {
-        taskService.update(taskTo, id);
+    public void update(@Valid @RequestBody TaskDTOExt taskDTOExt, @PathVariable long id) {
+        taskService.update(taskDTOExt, id);
     }
 
     @PatchMapping("/{id}")
@@ -128,21 +128,21 @@ public class TaskController {
     }
 
     @GetMapping("/{id}/comments")
-    public List<ActivityTo> getComments(@PathVariable long id) {
+    public List<ActivityDTO> getComments(@PathVariable long id) {
         log.info("get comments for task with id={}", id);
-        return activityHandler.getMapper().toToList(activityHandler.getRepository().findAllComments(id));
+        return activityHandler.getMapper().toDTOList(activityHandler.getRepository().findAllComments(id));
     }
 
     @PostMapping(value = "/activities", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public Activity create(@Valid @RequestBody ActivityTo activityTo) {
-        return activityService.create(activityTo);
+    public Activity create(@Valid @RequestBody ActivityDTO activityDTO) {
+        return activityService.create(activityDTO);
     }
 
     @PutMapping(path = "/activities/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@Valid @RequestBody ActivityTo activityTo, @PathVariable long id) {
-        activityService.update(activityTo, id);
+    public void update(@Valid @RequestBody ActivityDTO activityDTO, @PathVariable long id) {
+        activityService.update(activityDTO, id);
     }
 
     @DeleteMapping("/activities/{id}")
@@ -151,9 +151,9 @@ public class TaskController {
         activityService.delete(id);
     }
 
-    private record TaskTreeNode(TaskTo taskTo, List<TaskTreeNode> subNodes) implements ITreeNode<TaskTo, TaskTreeNode> {
-        public TaskTreeNode(TaskTo taskTo) {
-            this(taskTo, new LinkedList<>());
+    private record TaskTreeNode(TaskDTO taskDTO, List<TaskTreeNode> subNodes) implements ITreeNode<TaskDTO, TaskTreeNode> {
+        public TaskTreeNode(TaskDTO taskDTO) {
+            this(taskDTO, new LinkedList<>());
         }
     }
 }

@@ -3,7 +3,7 @@ package com.javarush.jira.login;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.javarush.jira.common.HasIdAndEmail;
-import com.javarush.jira.common.to.BaseTo;
+import com.javarush.jira.common.to.BaseDTO;
 import com.javarush.jira.common.util.validation.NoHtml;
 import com.javarush.jira.common.util.validation.View;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -19,7 +19,7 @@ import java.io.Serializable;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class UserTo extends BaseTo implements HasIdAndEmail, Serializable {
+public class UserDTO extends BaseDTO implements HasIdAndEmail, Serializable {
 
     @Email
     @NotBlank
@@ -47,7 +47,7 @@ public class UserTo extends BaseTo implements HasIdAndEmail, Serializable {
     @NoHtml
     private String displayName;
 
-    public UserTo(Long id, String email, String password, String firstName, String lastName, String displayName) {
+    public UserDTO(Long id, String email, String password, String firstName, String lastName, String displayName) {
         super(id);
         this.email = email;
         this.password = password;
@@ -58,6 +58,6 @@ public class UserTo extends BaseTo implements HasIdAndEmail, Serializable {
 
     @Override
     public String toString() {
-        return "UserTo:" + id + '[' + email + ']';
+        return "UserDTO:" + id + '[' + email + ']';
     }
 }

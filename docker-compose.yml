@@ -1,0 +1,62 @@
+services:
+  jira-app:
+    container_name: app
+    build: .
+    ports:
+      - "8080:8080"
+    env_file:
+      - properties.env
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/jira
+      SPRING_DATASOURCE_USERNAME: jira
+      SPRING_DATASOURCE_PASSWORD: JiraRush
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - jira-spring
+    volumes:
+      - ~/jira/logs/app:/app/logs
+
+  db:
+    container_name: jira-db
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_DB: jira
+      POSTGRES_USER: jira
+      POSTGRES_PASSWORD: JiraRush
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}" ]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+    networks:
+      - jira-spring
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+      - ~/jira/logs/postgres:/var/log/postgresql
+
+  nginx:
+    container_name: nginx
+    image: nginx:latest
+    restart: always
+    volumes:
+      - ~/jira/logs/nginx:/var/log/nginx
+      - ./config/nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - "80:80"
+    depends_on:
+      - jira-app
+    networks:
+      - jira-spring
+
+networks:
+  jira-spring:
+    driver: bridge
+
+volumes:
+  postgres_data:

@@ -1,7 +1,7 @@
 package com.javarush.jira.common;
 
 import com.javarush.jira.common.model.TimestampEntry;
-import com.javarush.jira.common.to.BaseTo;
+import com.javarush.jira.common.to.BaseDTO;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +18,7 @@ import java.util.function.Function;
 import static com.javarush.jira.common.util.validation.ValidationUtil.assureIdConsistent;
 import static com.javarush.jira.common.util.validation.ValidationUtil.checkNew;
 
-public class BaseHandler<E extends HasId, T extends BaseTo, R extends BaseRepository<E>, M extends BaseMapper<E, T>> {
+public class BaseHandler<E extends HasId, T extends BaseDTO, R extends BaseRepository<E>, M extends BaseMapper<E, T>> {
     public static final String REST_URL = "/api";
     public static final String UI_URL = "/ui";
 
@@ -52,7 +52,7 @@ public class BaseHandler<E extends HasId, T extends BaseTo, R extends BaseReposi
 
     public T getTo(long id) {
         log.info("get by id={}", id);
-        return mapper.toTo(repository.getExisted(id));
+        return mapper.toDTO(repository.getExisted(id));
     }
 
     public E get(long id) {
@@ -69,17 +69,17 @@ public class BaseHandler<E extends HasId, T extends BaseTo, R extends BaseReposi
         return repository.findAll(sort);
     }
 
-    public List<T> getAllTos() {
-        return getAllTos(Sort.unsorted());
+    public List<T> getAllDTOs() {
+        return getAllDTOs(Sort.unsorted());
     }
 
-    public List<T> getAllTos(Sort sort) {
-        log.info("get all TOs");
-        return mapper.toToList(repository.findAll(sort));
+    public List<T> getAllDTOs(Sort sort) {
+        log.info("get all DTOs");
+        return mapper.toDTOList(repository.findAll(sort));
     }
 
-    public E createFromTo(T to) {
-        log.info("createFromTo {}", to);
+    public E createFromDTO(T to) {
+        log.info("createFromDTO {}", to);
         checkNew(to);
         E entity = mapper.toEntity(to);
         if (prepareForSave != null) entity = prepareForSave.apply(entity);
@@ -110,11 +110,11 @@ public class BaseHandler<E extends HasId, T extends BaseTo, R extends BaseReposi
     }
 
     @Transactional
-    public E updateFromTo(T to, long id) {
-        log.info("updateFromTo {} with id={}", to, id);
+    public E updateFromDTO(T to, long id) {
+        log.info("updateFromDTO {} with id={}", to, id);
         assureIdConsistent(to, id);
         E dbEntity = repository.getExisted(to.id());
-        return repository.save(mapper.updateFromTo(to, dbEntity));
+        return repository.save(mapper.updateFromDTO(to, dbEntity));
     }
 
     @Transactional

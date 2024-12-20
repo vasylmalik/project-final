@@ -2,7 +2,7 @@ package com.javarush.jira.login.internal.web;
 
 import com.javarush.jira.common.error.DataConflictException;
 import com.javarush.jira.common.util.validation.View;
-import com.javarush.jira.login.UserTo;
+import com.javarush.jira.login.UserDTO;
 import com.javarush.jira.login.internal.verification.ConfirmData;
 import com.javarush.jira.login.internal.verification.RegistrationConfirmEvent;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,20 +30,20 @@ public class RegisterController extends AbstractUserController {
 
     @GetMapping
     public String register(Model model) {
-        model.addAttribute("userTo", new UserTo());
+        model.addAttribute("userDTO", new UserDTO());
         return "unauth/register";
     }
 
     @PostMapping
-    public String register(@Validated(View.OnCreate.class) UserTo userTo, BindingResult result, HttpServletRequest request) {
+    public String register(@Validated(View.OnCreate.class) UserDTO userDTO, BindingResult result, HttpServletRequest request) {
         if (result.hasErrors()) {
             return "unauth/register";
         }
-        log.info("register {}", userTo);
-        checkNew(userTo);
-        ConfirmData confirmData = new ConfirmData(userTo);
+        log.info("register {}", userDTO);
+        checkNew(userDTO);
+        ConfirmData confirmData = new ConfirmData(userDTO);
         request.getSession().setAttribute("token", confirmData);
-        eventPublisher.publishEvent(new RegistrationConfirmEvent(userTo, confirmData.getToken()));
+        eventPublisher.publishEvent(new RegistrationConfirmEvent(userDTO, confirmData.getToken()));
         return "redirect:/view/login";
     }
 
@@ -52,7 +52,7 @@ public class RegisterController extends AbstractUserController {
                                       @SessionAttribute("token") ConfirmData confirmData) {
         log.info("confirm registration {}", confirmData);
         if (token.equals(confirmData.getToken())) {
-            handler.createFromTo(confirmData.getUserTo());
+            handler.createFromDTO(confirmData.getUserDTO());
             session.invalidate();
             status.setComplete();
             return "login";

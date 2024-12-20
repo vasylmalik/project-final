@@ -8,13 +8,13 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class NamedTo extends BaseTo {
+public class NamedDTO extends BaseDTO {
     @NotBlank
     @Size(min = 2, max = 128)
     @NoHtml
     protected String name;
 
-    public NamedTo(Long id, String name) {
+    public NamedDTO(Long id, String name) {
         super(id);
         this.name = name;
     }

@@ -1,7 +1,7 @@
 package com.javarush.jira.login.internal.verification;
 
 import com.javarush.jira.common.AppEvent;
-import com.javarush.jira.login.UserTo;
+import com.javarush.jira.login.UserDTO;
 
-public record RegistrationConfirmEvent(UserTo userto, String token) implements AppEvent {
+public record RegistrationConfirmEvent(UserDTO userDTO, String token) implements AppEvent {
 }

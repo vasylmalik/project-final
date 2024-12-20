@@ -1,7 +1,7 @@
 package com.javarush.jira.bugtracking.project;
 
 import com.javarush.jira.bugtracking.Handlers;
-import com.javarush.jira.bugtracking.project.to.ProjectTo;
+import com.javarush.jira.bugtracking.project.to.ProjectDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,25 +22,25 @@ public class ProjectController {
     private final Handlers.ProjectHandler handler;
 
     @GetMapping("/projects")
-    public List<ProjectTo> getAll() {
-        return handler.getAllTos(ProjectRepository.NEWEST_FIRST);
+    public List<ProjectDTO> getAll() {
+        return handler.getAllDTOs(ProjectRepository.NEWEST_FIRST);
     }
 
     @GetMapping("/projects/{id}")
-    public ProjectTo getById(@PathVariable Long id) {
+    public ProjectDTO getById(@PathVariable Long id) {
         return handler.getTo(id);
     }
 
     @PostMapping(path = "/mngr/projects", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Project> create(@Valid @RequestBody ProjectTo projectTo) {
-        Project created = handler.createWithBelong(projectTo, PROJECT, "project_author");
+    public ResponseEntity<Project> create(@Valid @RequestBody ProjectDTO projectDTO) {
+        Project created = handler.createWithBelong(projectDTO, PROJECT, "project_author");
         return createdResponse(REST_URL + "/projects", created);
     }
 
     @PutMapping("/mngr/projects/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@Valid @RequestBody ProjectTo projectTo, @PathVariable Long id) {
-        handler.updateFromTo(projectTo, id);
+    public void update(@Valid @RequestBody ProjectDTO projectDTO, @PathVariable Long id) {
+        handler.updateFromDTO(projectDTO, id);
     }
 
     @PatchMapping("/mngr/projects/{id}")

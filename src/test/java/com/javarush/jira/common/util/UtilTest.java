@@ -8,12 +8,12 @@ class UtilTest {
     @Test
     void makeTree() {
 /*
-        NodeTo a = new NodeTo(1L, "A", true, "A", "A", "A", null);
-        NodeTo b = new NodeTo(1L, "B", true, "B", "B", "B", a);
-        NodeTo c = new NodeTo(1L, "C", true, "C", "C", "C", a);
-        NodeTo d = new NodeTo(1L, "D", true, "D", "D", "D", b);
-        NodeTo e = new NodeTo(1L, "E", true, "E", "E", "E", d);
-        List<NodeTo> projects = List.of(e, b, c, d, a);
+        NodeDTO a = new NodeDTO(1L, "A", true, "A", "A", "A", null);
+        NodeDTO b = new NodeDTO(1L, "B", true, "B", "B", "B", a);
+        NodeDTO c = new NodeDTO(1L, "C", true, "C", "C", "C", a);
+        NodeDTO d = new NodeDTO(1L, "D", true, "D", "D", "D", b);
+        NodeDTO e = new NodeDTO(1L, "E", true, "E", "E", "E", d);
+        List<NodeDTO> projects = List.of(e, b, c, d, a);
 
         List<TreeNode> nodes = Util.makeTree(projects);
         for (TreeNode treeNode : nodes) {

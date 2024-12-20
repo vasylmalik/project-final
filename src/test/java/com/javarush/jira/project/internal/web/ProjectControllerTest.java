@@ -33,7 +33,7 @@ public class ProjectControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(PROJECT_TO_MATCHER.contentJson(projectTo1));
+                .andExpect(PROJECT_TO_MATCHER.contentJson(PROJECT_DTO_1));
     }
 
     @Test
@@ -45,13 +45,13 @@ public class ProjectControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = MANAGER_MAIL)
     void update() throws Exception {
-        projectTo2.setTitle("PROJECT-2 UPD");
+        PROJECT_DTO_2.setTitle("PROJECT-2 UPD");
         perform(MockMvcRequestBuilders.put(REST_URL_MNGR_PROJECT + "/" + PROJECT_ID)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(writeValue(projectTo2)))
+                .content(writeValue(PROJECT_DTO_2)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        PROJECT_TO_MATCHER.assertMatch(projectTo2, ProjectTestData.getUpdated());
+        PROJECT_TO_MATCHER.assertMatch(PROJECT_DTO_2, ProjectTestData.getUpdated());
     }
 
     @Test
@@ -79,13 +79,13 @@ public class ProjectControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = MANAGER_MAIL)
     void disable() throws Exception {
-        projectTo2.setEnabled(false);
+        PROJECT_DTO_2.setEnabled(false);
         perform(MockMvcRequestBuilders.put(REST_URL_MNGR_PROJECT + "/" + PROJECT_ID)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(writeValue(projectTo2)))
+                .content(writeValue(PROJECT_DTO_2)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        PROJECT_TO_MATCHER.assertMatch(projectTo2, ProjectTestData.getDisabled());
+        PROJECT_TO_MATCHER.assertMatch(PROJECT_DTO_2, ProjectTestData.getDisabled());
     }
 }
 

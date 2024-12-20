@@ -3,10 +3,10 @@ package com.javarush.jira.bugtracking.task;
 import com.javarush.jira.bugtracking.Handlers;
 import com.javarush.jira.bugtracking.ObjectType;
 import com.javarush.jira.bugtracking.attachment.AttachmentRepository;
-import com.javarush.jira.bugtracking.task.to.ActivityTo;
-import com.javarush.jira.bugtracking.task.to.TaskToExt;
-import com.javarush.jira.bugtracking.task.to.TaskToFull;
-import com.javarush.jira.ref.RefTo;
+import com.javarush.jira.bugtracking.task.to.ActivityDTO;
+import com.javarush.jira.bugtracking.task.to.TaskDTOExt;
+import com.javarush.jira.bugtracking.task.to.TaskDTOFull;
+import com.javarush.jira.ref.RefDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,8 +37,8 @@ public class TaskUIController {
     @GetMapping("/{id}")
     public String get(@PathVariable long id, @RequestParam(required = false) boolean fragment, Model model) {
         log.info("get {}", id);
-        TaskToFull taskTo = service.get(id);
-        addTaskInfo(model, taskTo);
+        TaskDTOFull taskDTOFull = service.get(id);
+        addTaskInfo(model, taskDTOFull);
         model.addAttribute("fragment", fragment);
         model.addAttribute("belongs", taskHandler.getAllBelongs(id));
         return "task";
@@ -47,16 +47,16 @@ public class TaskUIController {
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable long id, Model model) {
         log.info("show edit form for task {}", id);
-        TaskToFull taskTo = service.get(id);
-        addTaskInfo(model, taskTo);
-        addRefs(model, taskTo.getStatusCode());
+        TaskDTOFull taskDTOFull = service.get(id);
+        addTaskInfo(model, taskDTOFull);
+        addRefs(model, taskDTOFull.getStatusCode());
         return "task-edit";
     }
 
     @GetMapping(value = "/new", params = "sprintId")
     public String editFormNew(@RequestParam long sprintId, Model model) {
         log.info("show edit form for new task with sprint {}", sprintId);
-        TaskToExt newTask = service.getNewWithSprint(sprintId);
+        TaskDTOExt newTask = service.getNewWithSprint(sprintId);
         addNewTaskInfoAndRefs(newTask, model);
         return "task-edit";
     }
@@ -64,7 +64,7 @@ public class TaskUIController {
     @GetMapping(value = "/new", params = "projectId")
     public String editFormNewInBacklog(@RequestParam long projectId, Model model) {
         log.info("show edit form for new task with project {}", projectId);
-        TaskToExt newTask = service.getNewWithProject(projectId);
+        TaskDTOExt newTask = service.getNewWithProject(projectId);
         addNewTaskInfoAndRefs(newTask, model);
         return "task-edit";
     }
@@ -72,45 +72,45 @@ public class TaskUIController {
     @GetMapping(value = "/new", params = "parentId")
     public String editFormNewSubTask(@RequestParam long parentId, Model model) {
         log.info("show edit form for new subtask of {}", parentId);
-        TaskToExt newTask = service.getNewWithParent(parentId);
+        TaskDTOExt newTask = service.getNewWithParent(parentId);
         addNewTaskInfoAndRefs(newTask, model);
         return "task-edit";
     }
 
     @PostMapping
-    public String createOrUpdate(@Valid @ModelAttribute("task") TaskToExt taskTo, BindingResult result, Model model) {
+    public String createOrUpdate(@Valid @ModelAttribute("task") TaskDTOExt taskDTOExt, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            addRefs(model, taskTo.getStatusCode());
-            List<ActivityTo> activityTos = taskTo.isNew() ? Collections.emptyList() :
-                    activityHandler.getMapper().toToList(activityHandler.getRepository().findAllByTaskIdOrderByUpdatedDesc(taskTo.getId()));
-            List<ActivityTo> comments = getComments(activityTos);
-            activityTos.removeAll(comments);
+            addRefs(model, taskDTOExt.getStatusCode());
+            List<ActivityDTO> activityDTOs = taskDTOExt.isNew() ? Collections.emptyList() :
+                    activityHandler.getMapper().toDTOList(activityHandler.getRepository().findAllByTaskIdOrderByUpdatedDesc(taskDTOExt.getId()));
+            List<ActivityDTO> comments = getComments(activityDTOs);
+            activityDTOs.removeAll(comments);
             model.addAttribute("comments", comments);
-            model.addAttribute("activities", activityTos);
-            if (!taskTo.isNew()) {
-                model.addAttribute("attachs", attachmentHandler.getRepository().getAllForObject(taskTo.id(), ObjectType.TASK));
+            model.addAttribute("activities", activityDTOs);
+            if (!taskDTOExt.isNew()) {
+                model.addAttribute("attachs", attachmentHandler.getRepository().getAllForObject(taskDTOExt.id(), ObjectType.TASK));
             }
             return "task-edit";
         }
-        Long taskId = taskTo.getId();
-        if (taskTo.isNew()) {
-            log.info("create {}", taskTo);
-            Task created = service.create(taskTo);
+        Long taskId = taskDTOExt.getId();
+        if (taskDTOExt.isNew()) {
+            log.info("create {}", taskDTOExt);
+            Task created = service.create(taskDTOExt);
             taskId = created.id();
         } else {
-            log.info("update {} with id={}", taskTo, taskTo.id());
-            service.update(taskTo, taskTo.id());
+            log.info("update {} with id={}", taskDTOExt, taskDTOExt.id());
+            service.update(taskDTOExt, taskDTOExt.id());
         }
         return "redirect:/ui/tasks/" + taskId;
     }
 
-    private void addTaskInfo(Model model, TaskToFull taskTo) {
-        List<ActivityTo> comments = getComments(taskTo.getActivityTos());
-        taskTo.getActivityTos().removeAll(comments);
-        model.addAttribute("task", taskTo);
+    private void addTaskInfo(Model model, TaskDTOFull taskDTOFull) {
+        List<ActivityDTO> comments = getComments(taskDTOFull.getActivityDTOs());
+        taskDTOFull.getActivityDTOs().removeAll(comments);
+        model.addAttribute("task", taskDTOFull);
         model.addAttribute("comments", comments);
-        model.addAttribute("attachs", attachmentHandler.getRepository().getAllForObject(taskTo.id(), ObjectType.TASK));
-        model.addAttribute("activities", taskTo.getActivityTos());
+        model.addAttribute("attachs", attachmentHandler.getRepository().getAllForObject(taskDTOFull.id(), ObjectType.TASK));
+        model.addAttribute("activities", taskDTOFull.getActivityDTOs());
     }
 
     private void addRefs(Model model, String currentStatus) {
@@ -119,7 +119,7 @@ public class TaskUIController {
         model.addAttribute("priorities", getRefs(PRIORITY));
     }
 
-    private void addNewTaskInfoAndRefs(TaskToExt newTask, Model model) {
+    private void addNewTaskInfoAndRefs(TaskDTOExt newTask, Model model) {
         model.addAttribute("task", newTask);
         model.addAttribute("types", getRefs(TASK));
         model.addAttribute("statuses", getRefs(TASK_STATUS));
@@ -127,10 +127,10 @@ public class TaskUIController {
 
     }
 
-    private Map<String, RefTo> getPossibleStatusRefs(String currentStatus) {
+    private Map<String, RefDTO> getPossibleStatusRefs(String currentStatus) {
         Set<String> possibleStatuses = new HashSet<>();
         possibleStatuses.add(currentStatus);
-        Map<String, RefTo> taskStatusRefs = getRefs(TASK_STATUS);
+        Map<String, RefDTO> taskStatusRefs = getRefs(TASK_STATUS);
         String possibleStatusesAux = taskStatusRefs.get(currentStatus).getAux(0);
         if (possibleStatusesAux != null) {
             possibleStatuses.addAll(Set.of(possibleStatusesAux.split(",")));
@@ -140,8 +140,8 @@ public class TaskUIController {
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (ref1, ref2) -> ref1, LinkedHashMap::new));
     }
 
-    private List<ActivityTo> getComments(List<ActivityTo> activityTos) {
-        return activityTos.stream()
+    private List<ActivityDTO> getComments(List<ActivityDTO> activityDTOs) {
+        return activityDTOs.stream()
                 .filter(activity -> activity.getComment() != null)
                 .toList();
     }

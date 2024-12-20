@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.javarush.jira.common.util.validation.View;
 import com.javarush.jira.login.AuthUser;
 import com.javarush.jira.login.User;
-import com.javarush.jira.login.UserTo;
+import com.javarush.jira.login.UserDTO;
 import jakarta.validation.constraints.Size;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -26,16 +26,16 @@ public class UserController extends AbstractUserController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<User> createWithLocation(@Validated(View.OnCreate.class) @RequestBody UserTo userTo) {
-        User created = handler.createFromTo(userTo);
+    public ResponseEntity<User> createWithLocation(@Validated(View.OnCreate.class) @RequestBody UserDTO userDTO) {
+        User created = handler.createFromDTO(userDTO);
         return createdResponse(REST_URL, created);
     }
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @JsonView(View.OnUpdate.class)
-    public void update(@Validated(View.OnUpdate.class) @RequestBody UserTo userTo, @AuthenticationPrincipal AuthUser authUser) {
-        authUser.setUser(handler.updateFromTo(userTo, authUser.id()));
+    public void update(@Validated(View.OnUpdate.class) @RequestBody UserDTO userDTO, @AuthenticationPrincipal AuthUser authUser) {
+        authUser.setUser(handler.updateFromDTO(userDTO, authUser.id()));
     }
 
     @GetMapping

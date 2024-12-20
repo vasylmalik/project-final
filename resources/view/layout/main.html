@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html th:lang="${#locale}" lang="en" xmlns:th="http://www.thymeleaf.org">
 <th:block th:fragment="page"
           th:with="img=${img}?: 'https://javarush.com/assets/images/site/homepage/og-image-jr.jpg', descr=${descr}?: ${title}">
     <head>

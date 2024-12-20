@@ -1,7 +1,7 @@
 package com.javarush.jira.profile;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.javarush.jira.common.to.BaseTo;
+import com.javarush.jira.common.to.BaseDTO;
 import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -15,7 +15,7 @@ import java.util.Set;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class ProfileTo extends BaseTo {
+public class ProfileDTO extends BaseDTO {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime lastLogin;
 
@@ -23,9 +23,9 @@ public class ProfileTo extends BaseTo {
     private Set<@NotBlank String> mailNotifications;
 
     @NotNull
-    private Set<@Valid ContactTo> contacts;
+    private Set<@Valid ContactDTO> contacts;
 
-    public ProfileTo(Long id, @Nullable Set<String> mailNotifications, @Nullable Set<@Valid ContactTo> contacts) {
+    public ProfileDTO(Long id, @Nullable Set<String> mailNotifications, @Nullable Set<@Valid ContactDTO> contacts) {
         super(id);
         this.mailNotifications = mailNotifications == null ? Collections.emptySet() : Set.copyOf(mailNotifications);
         this.contacts = contacts == null ? Collections.emptySet() : Set.copyOf(contacts);
@@ -34,7 +34,7 @@ public class ProfileTo extends BaseTo {
 
     public boolean isContactTypePresent(String type) {
         return contacts.stream()
-                .map(ContactTo::getCode)
+                .map(ContactDTO::getCode)
                 .anyMatch(s -> s.equals(type));
     }
 }

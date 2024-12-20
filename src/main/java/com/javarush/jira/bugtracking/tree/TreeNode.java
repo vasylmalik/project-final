@@ -8,8 +8,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 public record TreeNode(@NonNull String code, @NonNull Long id, @NonNull ObjectType nodeType,
-                       List<TreeNode> subNodes) implements ITreeNode<NodeTo, TreeNode> {
-    public TreeNode(NodeTo node) {
+                       List<TreeNode> subNodes) implements ITreeNode<NodeDTO, TreeNode> {
+    public TreeNode(NodeDTO node) {
         this(node.getCode(), node.getId(), node.getType(), new LinkedList<>());
     }
 

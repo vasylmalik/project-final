@@ -1,7 +1,7 @@
 package com.javarush.jira.bugtracking.task;
 
 import com.javarush.jira.bugtracking.Handlers;
-import com.javarush.jira.bugtracking.task.to.ActivityTo;
+import com.javarush.jira.bugtracking.task.to.ActivityDTO;
 import com.javarush.jira.common.error.DataConflictException;
 import com.javarush.jira.login.AuthUser;
 import lombok.RequiredArgsConstructor;
@@ -26,23 +26,23 @@ public class ActivityService {
     }
 
     @Transactional
-    public Activity create(ActivityTo activityTo) {
-        checkBelong(activityTo);
-        Task task = taskRepository.getExisted(activityTo.getTaskId());
-        if (activityTo.getStatusCode() != null) {
-            task.checkAndSetStatusCode(activityTo.getStatusCode());
+    public Activity create(ActivityDTO activityDTO) {
+        checkBelong(activityDTO);
+        Task task = taskRepository.getExisted(activityDTO.getTaskId());
+        if (activityDTO.getStatusCode() != null) {
+            task.checkAndSetStatusCode(activityDTO.getStatusCode());
         }
-        if (activityTo.getTypeCode() != null) {
-            task.setTypeCode(activityTo.getTypeCode());
+        if (activityDTO.getTypeCode() != null) {
+            task.setTypeCode(activityDTO.getTypeCode());
         }
-        return handler.createFromTo(activityTo);
+        return handler.createFromDTO(activityDTO);
     }
 
     @Transactional
-    public void update(ActivityTo activityTo, long id) {
-        checkBelong(handler.getRepository().getExisted(activityTo.getId()));
-        handler.updateFromTo(activityTo, id);
-        updateTaskIfRequired(activityTo.getTaskId(), activityTo.getStatusCode(), activityTo.getTypeCode());
+    public void update(ActivityDTO activityDTO, long id) {
+        checkBelong(handler.getRepository().getExisted(activityDTO.getId()));
+        handler.updateFromDTO(activityDTO, id);
+        updateTaskIfRequired(activityDTO.getTaskId(), activityDTO.getStatusCode(), activityDTO.getTypeCode());
     }
 
     @Transactional

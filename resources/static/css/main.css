@@ -72,6 +72,11 @@
     }
 }
 
+/*.nav-link {*/
+/*    padding: 0.1rem 1rem;*/
+/*    font-size: 1rem;*/
+/*}*/
+
 .sidebar-nav, .accordion-body, .accordion-button, .accordion-button:not(.collapsed) {
     background-color: var(--nav);
     color: darkgray;

@@ -3,7 +3,7 @@ package com.javarush.jira.login.internal.web;
 import com.javarush.jira.common.error.ErrorMessageHandler;
 import com.javarush.jira.common.error.IllegalRequestDataException;
 import com.javarush.jira.login.AuthUser;
-import com.javarush.jira.login.UserTo;
+import com.javarush.jira.login.UserDTO;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
@@ -26,13 +26,13 @@ public class UserUIController extends AbstractUserController {
     private final ErrorMessageHandler errorMessageHandler;
 
     @PostMapping
-    public String update(@Valid UserTo user, BindingResult result, @AuthenticationPrincipal AuthUser authUser,
+    public String update(@Valid UserDTO user, BindingResult result, @AuthenticationPrincipal AuthUser authUser,
                          RedirectAttributes redirectAttrs) {
         if (result.hasErrors()) {
             redirectAttrs.addFlashAttribute(USER_ERROR_ATTRIBUTE, errorMessageHandler.getErrorList(result));
             return "redirect:" + REDIRECT_PROFILE;
         }
-        authUser.setUser(handler.updateFromTo(user, authUser.id()));
+        authUser.setUser(handler.updateFromDTO(user, authUser.id()));
         redirectAttrs.addFlashAttribute(USER_SUCCESS_ATTRIBUTE, "Successfully changed");
         return "redirect:" + REDIRECT_PROFILE;
     }

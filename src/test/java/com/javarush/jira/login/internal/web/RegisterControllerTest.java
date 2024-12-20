@@ -1,7 +1,7 @@
 package com.javarush.jira.login.internal.web;
 
 import com.javarush.jira.AbstractControllerTest;
-import com.javarush.jira.login.UserTo;
+import com.javarush.jira.login.UserDTO;
 import com.javarush.jira.login.internal.verification.ConfirmData;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.test.context.support.WithUserDetails;
@@ -35,7 +35,7 @@ class RegisterControllerTest extends AbstractControllerTest {
 
     @Test
     void register() throws Exception {
-        UserTo newTo = new UserTo(null, "newemail@gmail.com", "newPassword", "newName", "newLastName", "newDisplayName");
+        UserDTO newTo = new UserDTO(null, "newemail@gmail.com", "newPassword", "newName", "newLastName", "newDisplayName");
 
         Object sessionToken = Objects.requireNonNull(perform(MockMvcRequestBuilders.post(REGISTER_URL)
                         .param("email", "newemail@gmail.com")
@@ -53,7 +53,7 @@ class RegisterControllerTest extends AbstractControllerTest {
 
         assertNotNull(sessionToken);
         assertInstanceOf(ConfirmData.class, sessionToken);
-        UserTo sessionTo = ((ConfirmData) sessionToken).getUserTo();
+        UserDTO sessionTo = ((ConfirmData) sessionToken).getUserDTO();
         TO_MATCHER.assertMatch(sessionTo, newTo);
     }
 
@@ -77,7 +77,7 @@ class RegisterControllerTest extends AbstractControllerTest {
                 .param("firstName", "newName")
                 .param("lastName", "newLastName")
                 .with(csrf()))
-                .andExpect(model().attributeHasFieldErrors("userTo", "email", "password"))
+                .andExpect(model().attributeHasFieldErrors("userDTO", "email", "password"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("unauth/register"));
     }
@@ -90,7 +90,7 @@ class RegisterControllerTest extends AbstractControllerTest {
                 .param("firstName", "newName")
                 .param("lastName", "newLastName")
                 .with(csrf()))
-                .andExpect(model().attributeHasFieldErrorCode("userTo", "email", "Duplicate"))
+                .andExpect(model().attributeHasFieldErrorCode("userDTO", "email", "Duplicate"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("unauth/register"));
     }

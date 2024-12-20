@@ -1,10 +1,10 @@
 package com.javarush.jira.bugtracking.task;
 
-import com.javarush.jira.bugtracking.task.to.TaskToExt;
-import com.javarush.jira.bugtracking.task.to.TaskToFull;
+import com.javarush.jira.bugtracking.task.to.TaskDTOExt;
+import com.javarush.jira.bugtracking.task.to.TaskDTOFull;
 import com.javarush.jira.common.error.DataConflictException;
 import com.javarush.jira.login.AuthUser;
-import com.javarush.jira.ref.RefTo;
+import com.javarush.jira.ref.RefDTO;
 
 import java.util.*;
 import java.util.function.Function;
@@ -15,7 +15,7 @@ import static com.javarush.jira.ref.ReferenceService.getRefs;
 
 public class TaskUtil {
 
-    static Map<String, RefTo> getPossibleStatusRefs(String currentStatus) {
+    static Map<String, RefDTO> getPossibleStatusRefs(String currentStatus) {
         Set<String> possibleStatuses = getPossibleStatuses(currentStatus);
         return getRefs(TASK_STATUS).entrySet().stream()
                 .filter(ref -> possibleStatuses.contains(ref.getKey()))
@@ -31,26 +31,26 @@ public class TaskUtil {
     private static Set<String> getPossibleStatuses(String currentStatus) {
         Set<String> possibleStatuses = new HashSet<>();
         possibleStatuses.add(currentStatus);
-        Map<String, RefTo> taskStatusRefs = getRefs(TASK_STATUS);
+        Map<String, RefDTO> taskStatusRefs = getRefs(TASK_STATUS);
         String aux = taskStatusRefs.get(currentStatus).getAux(0);
         possibleStatuses.addAll(aux == null ? Set.of() : Set.of(aux.split(",")));
         return possibleStatuses;
     }
 
-    static void fillExtraFields(TaskToFull taskToFull, List<Activity> activities) {
+    static void fillExtraFields(TaskDTOFull taskDTOFull, List<Activity> activities) {
         if (!activities.isEmpty()) {
-            taskToFull.setUpdated(activities.get(0).getUpdated());
+            taskDTOFull.setUpdated(activities.get(0).getUpdated());
             for (Activity latest : activities) {
-                if (taskToFull.getDescription() == null && latest.getDescription() != null) {
-                    taskToFull.setDescription(latest.getDescription());
+                if (taskDTOFull.getDescription() == null && latest.getDescription() != null) {
+                    taskDTOFull.setDescription(latest.getDescription());
                 }
-                if (taskToFull.getPriorityCode() == null && latest.getPriorityCode() != null) {
-                    taskToFull.setPriorityCode(latest.getPriorityCode());
+                if (taskDTOFull.getPriorityCode() == null && latest.getPriorityCode() != null) {
+                    taskDTOFull.setPriorityCode(latest.getPriorityCode());
                 }
-                if (taskToFull.getEstimate() == null && latest.getEstimate() != null) {
-                    taskToFull.setEstimate(latest.getEstimate());
+                if (taskDTOFull.getEstimate() == null && latest.getEstimate() != null) {
+                    taskDTOFull.setEstimate(latest.getEstimate());
                 }
-                if (taskToFull.getDescription() != null && taskToFull.getPriorityCode() != null && taskToFull.getEstimate() != null)
+                if (taskDTOFull.getDescription() != null && taskDTOFull.getPriorityCode() != null && taskDTOFull.getEstimate() != null)
                     break;
             }
         }
@@ -66,8 +66,8 @@ public class TaskUtil {
         return null;
     }
 
-    static Activity makeActivity(long taskId, TaskToExt taskTo) {
-        return new Activity(null, taskId, AuthUser.authId(), null, null, taskTo.getStatusCode(), taskTo.getPriorityCode(),
-                taskTo.getTypeCode(), taskTo.getTitle(), taskTo.getDescription(), taskTo.getEstimate());
+    static Activity makeActivity(long taskId, TaskDTOExt taskDTOExt) {
+        return new Activity(null, taskId, AuthUser.authId(), null, null, taskDTOExt.getStatusCode(), taskDTOExt.getPriorityCode(),
+                taskDTOExt.getTypeCode(), taskDTOExt.getTitle(), taskDTOExt.getDescription(), taskDTOExt.getEstimate());
     }
 }

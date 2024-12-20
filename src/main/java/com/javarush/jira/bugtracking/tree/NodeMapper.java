@@ -1,20 +1,20 @@
 package com.javarush.jira.bugtracking.tree;
 
-import com.javarush.jira.bugtracking.project.to.ProjectTo;
-import com.javarush.jira.bugtracking.sprint.to.SprintTo;
-import com.javarush.jira.bugtracking.task.to.TaskTo;
+import com.javarush.jira.bugtracking.project.to.ProjectDTO;
+import com.javarush.jira.bugtracking.sprint.to.SprintDTO;
+import com.javarush.jira.bugtracking.task.to.TaskDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface NodeMapper {
     @Mapping(target = "type", expression = "java(ObjectType.PROJECT)")
-    NodeTo fromProject(ProjectTo project);
+    NodeDTO fromProject(ProjectDTO project);
 
     @Mapping(target = "type", expression = "java(ObjectType.SPRINT)")
     @Mapping(target = "parentId", expression = "java(null)")
-    NodeTo fromSprint(SprintTo sprint);
+    NodeDTO fromSprint(SprintDTO sprint);
 
     @Mapping(target = "type", expression = "java(ObjectType.TASK)")
-    NodeTo fromTask(TaskTo task);
+    NodeDTO fromTask(TaskDTO task);
 }

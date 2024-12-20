@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<html th:lang="${#locale}" lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <th:block th:replace="~{layout/main::page(title='Tree',appMainFluid=~{::appMain}, activeMenuItem='tree')}">
     <appMain>
         <div class="row">
             <div class="card col-auto tree tree-color min-vh-100" id="treeElement">
-                <a class="btn btn-secondary mt-1 btn-sm tree-button" href="/ui/mngr/projects/new" role="button">Create
-                    new Project</a>
+                <a th:text="#{tree.create}" class="btn btn-secondary mt-1 btn-sm tree-button" href="/ui/mngr/projects/new" role="button">
+                    Create new Project</a>
             </div>
 
             <div class="col w-50" style="padding-right: 0">

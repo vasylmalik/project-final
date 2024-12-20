@@ -2,7 +2,7 @@ package com.javarush.jira.bugtracking.sprint;
 
 import com.javarush.jira.bugtracking.Handlers;
 import com.javarush.jira.bugtracking.project.ProjectRepository;
-import com.javarush.jira.bugtracking.sprint.to.SprintTo;
+import com.javarush.jira.bugtracking.sprint.to.SprintDTO;
 import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -32,15 +32,15 @@ public class SprintController {
     private final Handlers.SprintHandler handler;
 
     @GetMapping("/sprints/{id}")
-    public SprintTo get(@PathVariable long id) {
+    public SprintDTO get(@PathVariable long id) {
         return handler.getTo(id);
     }
 
     @GetMapping("/sprints/by-project")
-    public List<SprintTo> getAllByProject(@RequestParam long projectId, @RequestParam @Nullable Boolean enabled) {
+    public List<SprintDTO> getAllByProject(@RequestParam long projectId, @RequestParam @Nullable Boolean enabled) {
         log.info("get all for project {} and enabled {}", projectId, enabled);
         checkProjectExists(projectId);
-        return handler.getMapper().toToList(
+        return handler.getMapper().toDTOList(
                 enabled != Boolean.TRUE ?
                         handler.getRepository().getAllByProject(projectId) :
                         handler.getRepository().getAllEnabledByProject(projectId)
@@ -60,15 +60,15 @@ public class SprintController {
 
     @PostMapping(path = "/mngr/sprints", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Sprint> createWithLocation(@Valid @RequestBody SprintTo sprintTo) {
-        Sprint created = handler.createWithBelong(sprintTo, SPRINT, "sprint_author");
+    public ResponseEntity<Sprint> createWithLocation(@Valid @RequestBody SprintDTO sprintDTO) {
+        Sprint created = handler.createWithBelong(sprintDTO, SPRINT, "sprint_author");
         return createdResponse(REST_URL + "/sprints", created);
     }
 
     @PutMapping(path = "/mngr/sprints/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@Validated @RequestBody SprintTo sprintTo, @PathVariable long id) {
-        handler.updateFromTo(sprintTo, id);
+    public void update(@Validated @RequestBody SprintDTO sprintDTO, @PathVariable long id) {
+        handler.updateFromDTO(sprintDTO, id);
     }
 
     @Transactional

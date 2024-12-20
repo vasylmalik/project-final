@@ -2,9 +2,9 @@ package com.javarush.jira.bugtracking.task.to;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.javarush.jira.bugtracking.task.HasAuthorId;
-import com.javarush.jira.common.to.BaseTo;
+import com.javarush.jira.common.to.BaseDTO;
 import com.javarush.jira.common.util.validation.NoHtml;
-import com.javarush.jira.login.UserTo;
+import com.javarush.jira.login.UserDTO;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -16,13 +16,13 @@ import java.time.LocalDateTime;
 
 @Value
 @EqualsAndHashCode(callSuper = true)
-public class ActivityTo extends BaseTo implements HasAuthorId {
+public class ActivityDTO extends BaseDTO implements HasAuthorId {
     @NotNull
     Long taskId;
 
     @Nullable
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    UserTo author;
+    UserDTO author;
 
     @NotNull
     Long authorId;
@@ -65,8 +65,8 @@ public class ActivityTo extends BaseTo implements HasAuthorId {
     @Nullable
     Integer estimate;
 
-    public ActivityTo(Long id, Long taskId, Long authorId, LocalDateTime updated, String comment, String statusCode,
-                      String priorityCode, String typeCode, String title, String description, Integer estimate, UserTo author) {
+    public ActivityDTO(Long id, Long taskId, Long authorId, LocalDateTime updated, String comment, String statusCode,
+                       String priorityCode, String typeCode, String title, String description, Integer estimate, UserDTO author) {
         super(id);
         this.taskId = taskId;
         this.authorId = authorId;

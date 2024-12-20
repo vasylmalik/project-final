@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!-- view/edit layouts for Task, Sprint, Project -->
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<!--/*@thymesVar id="codeTo" type="com.javarush.jira.common.to.CodeTo"*/-->
+<html th:lang="${#locale}" lang="en" xmlns:th="http://www.thymeleaf.org">
+<!--/*@thymesVar id="codeTo" type="com.javarush.jira.common.to.CodeDTO"*/-->
 <!--/*@thymesVar id="attachs" type="java.util.List<com.javarush.jira.bugtracking.attachment.Attachment>"*/-->
 <!--/*@thymesVar id="belongs" type="java.util.List<com.javarush.jira.bugtracking.UserBelong>"*/-->
 
@@ -12,18 +12,18 @@
             <div class="card mb-3">
                 <div class="card-body">
                     <h4 class="data-enabled" th:attr="enabled=${codeTo.enabled}" th:text="${codeTo.code}"/>
-                    <h2 th:if="${codeTo instanceof T(com.javarush.jira.common.to.TitleTo)}"
+                    <h2 th:if="${codeTo instanceof T(com.javarush.jira.common.to.TitleDTO)}"
                         th:text="${codeTo.title}"></h2>
                     <div th:if="${!belongs.isEmpty()}">
                         <hr>
-                        <h5>Assigned:</h5>
+                        <h5 th:text="#{bugtrack.assigned.title}">Assigned:</h5>
                         <table class="table table-striped" id="datatable">
                             <thead class="sticky-top bg-white">
                             <tr>
-                                <th>User ID</th>
-                                <th>Role</th>
-                                <th>Assigned</th>
-                                <th>Endpoint</th>
+                                <th th:text="#{bugtrack.assigned.user}">User ID</th>
+                                <th th:text="#{bugtrack.assigned.role}">Role</th>
+                                <th th:text="#{bugtrack.assigned.action}">Assigned</th>
+                                <th th:text="#{bugtrack.assigned.endpoint}">Endpoint</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -40,16 +40,16 @@
                     <th:block th:insert="${content}"/>
                     <div th:if="${!attachs.isEmpty()}">
                         <hr>
-                        <h5>Attachments:</h5>
+                        <h5 th:text="#{bugtrack.attachments.title}">Attachments:</h5>
                         <h6 th:each="att : ${attachs}">
-                            <a download th:href="@{'/api/attachments/download/' + ${att.id}}">[[${att.name}]]</a> (<a
+                            <a th:text="#{bugtrack.attachments.open}" download th:href="@{'/api/attachments/download/' + ${att.id}}">[[${att.name}]]</a> (<a
                                 target="_blank" th:href="@{'/api/attachments/download/' + ${att.id}}">open</a>)
                         </h6>
                     </div>
                     <div th:if="${urlEdit!=null}">
                         <hr>
                         <div class="mb-3">
-                            <a class="btn btn-primary" th:href="${urlEdit + codeTo.id}">Edit</a>
+                            <a th:text="#{bugtrack.edit.title}" class="btn btn-primary" th:href="${urlEdit + codeTo.id}">Edit</a>
                         </div>
                     </div>
                 </div>
@@ -66,24 +66,24 @@
                 <div class="card-body">
                     <form method="post" th:action="@{${urlSave}}" th:object="${__${objectName}__}">
                         <input hidden th:field="*{id}">
-                        <div th:if="${codeTo instanceof T(com.javarush.jira.common.to.TitleTo)}">
+                        <div th:if="${codeTo instanceof T(com.javarush.jira.common.to.TitleDTO)}">
                             <div th:replace="~{::inputField('Title', 'title')}"></div>
                         </div>
-                        <div th:hidden="${codeTo instanceof T(com.javarush.jira.bugtracking.task.to.TaskTo)}">
+                        <div th:hidden="${codeTo instanceof T(com.javarush.jira.bugtracking.task.to.TaskDTO)}">
                             <div th:replace="~{::inputField(labelText='Code', fieldName='code')}"></div>
                         </div>
                         <br>
                         <div class="form-check" th:hidden="${codeTo.isNew()}">
                             <input class="form-check-input" id="enabled" th:checked="${codeTo.enabled}"
                                    th:onclick="enable(this, [[${urlEnable}]])" type="checkbox">
-                            <label class="form-check-label w-25" for="enabled">Enabled</label>
+                            <label th:text="#{bugtrack.enabled.title}" class="form-check-label w-25" for="enabled">Enabled</label>
                         </div>
                         <hr>
                         <th:block th:insert="${content}"/>
                         <attachments th:hidden="${codeTo.isNew()}">
                             <hr>
                             <div class="col-auto me-auto" id="alert"></div>
-                            <h5 class="fw-bold text-secondary ms-1">Attachments</h5>
+                            <h5 th:text="#{bugtrack.attachments.title}" class="fw-bold text-secondary ms-1">Attachments</h5>
                             <div class="scroll-area table-responsive text-nowrap">
                                 <table class="table table-striped">
                                     <thead>
@@ -95,7 +95,7 @@
                                     <tbody id="table-body">
                                     <tr th:each="att : ${attachs}">
                                         <th><a download th:href="@{'/api/attachments/download/' + ${att.id}}">[[${att.name}]]</a>
-                                            (<a target="_blank"
+                                            (<a th:text="#{bugtrack.attachments.open}" target="_blank"
                                                 th:href="@{'/api/attachments/download/' + ${att.id}}">open</a>)
                                         </th>
                                         <th><a href="#" th:data-att-id="${att.id}"
@@ -106,14 +106,14 @@
                                 </table>
                             </div>
                             <input id="att-upload" name="file" type="file">
-                            <button class="btn btn-primary" disabled id="upload-btn" type="button">+ Upload attachment
+                            <button th:text="#{bugtrack.attachments.upload}" class="btn btn-primary" disabled id="upload-btn" type="button">+ Upload attachment
                             </button>
                             <hr>
                         </attachments>
                         <br>
                         <div class="mb-3">
-                            <a class="btn btn-secondary" th:href="|/ui/${objectName}s/*{id}|" th:if="*{id != null}">Cancel</a>
-                            <button class="btn btn-primary" type="submit">Save</button>
+                            <a th:text="#{bugtrack.cancel.button}" class="btn btn-secondary" th:href="|/ui/${objectName}s/*{id}|" th:if="*{id != null}">Cancel</a>
+                            <button th:text="#{bugtrack.save.button}" class="btn btn-primary" type="submit">Save</button>
                         </div>
                     </form>
                 </div>

@@ -1,7 +1,7 @@
 package com.javarush.jira.ref.internal.web;
 
 import com.javarush.jira.AbstractControllerTest;
-import com.javarush.jira.ref.RefTo;
+import com.javarush.jira.ref.RefDTO;
 import com.javarush.jira.ref.RefType;
 import com.javarush.jira.ref.ReferenceService;
 import com.javarush.jira.ref.internal.Reference;
@@ -53,7 +53,7 @@ public class ReferenceControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(REFTO_MATCHER.contentJson(refTo));
+                .andExpect(REF_DTO_MATCHER.contentJson(REF_DTO));
     }
 
     @Test
@@ -62,7 +62,7 @@ public class ReferenceControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.delete(REST_URL + RefType.TASK + "/" + TASK_CODE))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        assertThrows(IllegalArgumentException.class, this::getRefTo);
+        assertThrows(IllegalArgumentException.class, this::getRefDTO);
         assertFalse(referenceRepository.getByTypeAndCode(RefType.TASK, TASK_CODE).isPresent());
     }
 
@@ -89,7 +89,7 @@ public class ReferenceControllerTest extends AbstractControllerTest {
         Reference newRef = getNew();
         ResultActions action = perform(MockMvcRequestBuilders.post(ReferenceController.REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(writeValue(new RefTo(null, RefType.TASK, "enhancement", "Enhancement", null))))
+                .content(writeValue(new RefDTO(null, RefType.TASK, "enhancement", "Enhancement", null))))
                 .andExpect(status().isCreated());
         Reference created = REFERENCE_MATCHER.readFromJson(action);
         REFERENCE_MATCHER.assertMatch(created, newRef);
@@ -114,7 +114,7 @@ public class ReferenceControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isNoContent());
         assertFalse(getRef().isEnabled());
-        assertFalse(getRefTo().isEnabled());
+        assertFalse(getRefDTO().isEnabled());
 
         perform(MockMvcRequestBuilders.patch(REST_URL + RefType.TASK + "/" + TASK_CODE)
                 .param("enabled", "true")
@@ -122,12 +122,12 @@ public class ReferenceControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isNoContent());
         assertTrue(getRef().isEnabled());
-        assertTrue(getRefTo().isEnabled());
+        assertTrue(getRefDTO().isEnabled());
     }
 
     @NonNull
-    private RefTo getRefTo() {
-        return ReferenceService.getRefTo(RefType.TASK, TASK_CODE);
+    private RefDTO getRefDTO() {
+        return ReferenceService.getRefDTO(RefType.TASK, TASK_CODE);
     }
 
     @NonNull

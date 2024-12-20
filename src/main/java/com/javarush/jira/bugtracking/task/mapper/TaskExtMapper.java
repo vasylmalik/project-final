@@ -3,7 +3,7 @@ package com.javarush.jira.bugtracking.task.mapper;
 import com.javarush.jira.bugtracking.project.ProjectMapper;
 import com.javarush.jira.bugtracking.sprint.SprintMapper;
 import com.javarush.jira.bugtracking.task.Task;
-import com.javarush.jira.bugtracking.task.to.TaskToExt;
+import com.javarush.jira.bugtracking.task.to.TaskDTOExt;
 import com.javarush.jira.common.BaseMapper;
 import com.javarush.jira.common.TimestampMapper;
 import com.javarush.jira.common.error.DataConflictException;
@@ -13,7 +13,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
 @Mapper(config = TimestampMapper.class, uses = {SprintMapper.class, ProjectMapper.class})
-public interface TaskExtMapper extends BaseMapper<Task, TaskToExt> {
+public interface TaskExtMapper extends BaseMapper<Task, TaskDTOExt> {
 
     static long checkProjectBelong(long projectId, Task dbTask) {
         if (projectId != dbTask.getProjectId())
@@ -28,10 +28,10 @@ public interface TaskExtMapper extends BaseMapper<Task, TaskToExt> {
     }
 
     @Override
-    TaskToExt toTo(Task task);
+    TaskDTOExt toDTO(Task task);
 
     @Override
-    @Mapping(target = "projectId", expression = "java(TaskExtMapper.checkProjectBelong(taskToExt.getProjectId(), task))")
-    @Mapping(target = "sprintId", expression = "java(TaskExtMapper.checkUserAuthorities(taskToExt.getSprintId(), task))")
-    Task updateFromTo(TaskToExt taskToExt, @MappingTarget Task task);
+    @Mapping(target = "projectId", expression = "java(TaskExtMapper.checkProjectBelong(taskDTOExt.getProjectId(), task))")
+    @Mapping(target = "sprintId", expression = "java(TaskExtMapper.checkUserAuthorities(taskDTOExt.getSprintId(), task))")
+    Task updateFromDTO(TaskDTOExt taskDTOExt, @MappingTarget Task task);
 }

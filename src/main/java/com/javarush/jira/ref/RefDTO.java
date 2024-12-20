@@ -1,7 +1,7 @@
 package com.javarush.jira.ref;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.javarush.jira.common.to.TitleTo;
+import com.javarush.jira.common.to.TitleDTO;
 import com.javarush.jira.common.util.Util;
 import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -10,7 +10,7 @@ import org.springframework.lang.Nullable;
 
 @Value
 @EqualsAndHashCode(of = {"refType", "code"})
-public class RefTo extends TitleTo {
+public class RefDTO extends TitleDTO {
     @NotNull
     RefType refType;
     @Nullable
@@ -19,7 +19,7 @@ public class RefTo extends TitleTo {
     @JsonIgnore
     String[] splittedAux;
 
-    public RefTo(Long id, RefType refType, String code, String title, @Nullable String aux) {
+    public RefDTO(Long id, RefType refType, String code, String title, @Nullable String aux) {
         super(id, code, title);
         this.refType = refType;
         this.aux = aux;

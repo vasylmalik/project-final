@@ -2,7 +2,7 @@ package com.javarush.jira.login.internal.web;
 
 import com.javarush.jira.AbstractControllerTest;
 import com.javarush.jira.login.User;
-import com.javarush.jira.login.UserTo;
+import com.javarush.jira.login.UserDTO;
 import com.javarush.jira.login.internal.UserMapper;
 import com.javarush.jira.login.internal.UserRepository;
 import org.junit.jupiter.api.Test;
@@ -58,7 +58,7 @@ class UserControllerTest extends AbstractControllerTest {
 
     @Test
     void createWithLocation() throws Exception {
-        UserTo newTo = mapper.toTo(getNew());
+        UserDTO newTo = mapper.toDTO(getNew());
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonWithPassword(newTo, newTo.getPassword())))
@@ -74,7 +74,7 @@ class UserControllerTest extends AbstractControllerTest {
 
     @Test
     void createInvalid() throws Exception {
-        UserTo invalid = new UserTo(null, "", null, "Aa", "", "");
+        UserDTO invalid = new UserDTO(null, "", null, "Aa", "", "");
         perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonWithPassword(invalid, invalid.getPassword())))
@@ -84,7 +84,7 @@ class UserControllerTest extends AbstractControllerTest {
 
     @Test
     void createDuplicateEmail() throws Exception {
-        UserTo expected = new UserTo(null, USER_MAIL, "newPass", "duplicateFirstName", "duplicateLastName", "duplicateDisplayName");
+        UserDTO expected = new UserDTO(null, USER_MAIL, "newPass", "duplicateFirstName", "duplicateLastName", "duplicateDisplayName");
         perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonWithPassword(expected, expected.getPassword())))
@@ -97,7 +97,7 @@ class UserControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = USER_MAIL)
     void update() throws Exception {
         User dbUserBefore = repository.getExistedByEmail(USER_MAIL);
-        UserTo updatedTo = mapper.toTo(getUpdated());
+        UserDTO updatedTo = mapper.toDTO(getUpdated());
         updatedTo.setPassword(null);
         perform(MockMvcRequestBuilders.put(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -115,7 +115,7 @@ class UserControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = USER_MAIL)
     void updateDuplicate() throws Exception {
-        UserTo updatedTo = mapper.toTo(getUpdated());
+        UserDTO updatedTo = mapper.toDTO(getUpdated());
         updatedTo.setEmail(ADMIN_MAIL);
         perform(MockMvcRequestBuilders.put(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -128,7 +128,7 @@ class UserControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = USER_MAIL)
     void updateInvalid() throws Exception {
-        UserTo invalid = mapper.toTo(getUpdated());
+        UserDTO invalid = mapper.toDTO(getUpdated());
         invalid.setFirstName("");
         perform(MockMvcRequestBuilders.put(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)

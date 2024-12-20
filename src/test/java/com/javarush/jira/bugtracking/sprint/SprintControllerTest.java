@@ -1,7 +1,7 @@
 package com.javarush.jira.bugtracking.sprint;
 
 import com.javarush.jira.AbstractControllerTest;
-import com.javarush.jira.bugtracking.sprint.to.SprintTo;
+import com.javarush.jira.bugtracking.sprint.to.SprintDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -40,7 +40,7 @@ class SprintControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(SPRINT_TO_MATCHER.contentJson(sprintTo1))
+                .andExpect(SPRINT_TO_MATCHER.contentJson(SPRINT_DTO_1))
                 .andExpect(jsonPath("$.enabled", is(false)));
     }
 
@@ -65,7 +65,7 @@ class SprintControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(SPRINT_TO_MATCHER.contentJson(sprintTo4, sprintTo3, sprintTo2, sprintTo1));
+                .andExpect(SPRINT_TO_MATCHER.contentJson(SPRINT_DTO_4, SPRINT_DTO_3, SPRINT_DTO_2, SPRINT_DTO_1));
     }
 
     @Test
@@ -77,7 +77,7 @@ class SprintControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(SPRINT_TO_MATCHER.contentJson(sprintTo4, sprintTo3, sprintTo2));
+                .andExpect(SPRINT_TO_MATCHER.contentJson(SPRINT_DTO_4, SPRINT_DTO_3, SPRINT_DTO_2));
     }
 
     @Test
@@ -104,7 +104,7 @@ class SprintControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(SPRINT_TO_MATCHER.contentJson(sprintTo3, sprintTo2));
+                .andExpect(SPRINT_TO_MATCHER.contentJson(SPRINT_DTO_3, SPRINT_DTO_2));
     }
 
     @Test
@@ -137,7 +137,7 @@ class SprintControllerTest extends AbstractControllerTest {
     }
 
     private void createWithLocation() throws Exception {
-        SprintTo newTo = getNewTo();
+        SprintDTO newTo = getNewTo();
         ResultActions action = perform(MockMvcRequestBuilders.post(MNGR_SPRINTS_REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(newTo)))
@@ -171,7 +171,7 @@ class SprintControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void createInvalid() throws Exception {
-        SprintTo invalidTo = new SprintTo(null, "", null, PROJECT1_ID);
+        SprintDTO invalidTo = new SprintDTO(null, "", null, PROJECT1_ID);
         perform(MockMvcRequestBuilders.post(MNGR_SPRINTS_REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(invalidTo)))
@@ -182,7 +182,7 @@ class SprintControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void createDuplicateCode() throws Exception {
-        SprintTo duplicateCodeTo = new SprintTo(null, sprintTo1.getCode(), ACTIVE, PROJECT1_ID);
+        SprintDTO duplicateCodeTo = new SprintDTO(null, SPRINT_DTO_1.getCode(), ACTIVE, PROJECT1_ID);
         perform(MockMvcRequestBuilders.post(MNGR_SPRINTS_REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(duplicateCodeTo)))
@@ -193,7 +193,7 @@ class SprintControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void createWhenProjectNotExists() throws Exception {
-        SprintTo notExistsProjectTo = new SprintTo(null, "new code", ACTIVE, NOT_FOUND);
+        SprintDTO notExistsProjectTo = new SprintDTO(null, "new code", ACTIVE, NOT_FOUND);
         perform(MockMvcRequestBuilders.post(MNGR_SPRINTS_REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(notExistsProjectTo)))
@@ -214,7 +214,7 @@ class SprintControllerTest extends AbstractControllerTest {
     }
 
     private void update() throws Exception {
-        SprintTo updatedTo = getUpdatedTo();
+        SprintDTO updatedTo = getUpdatedTo();
         perform(MockMvcRequestBuilders.put(MNGR_SPRINTS_REST_URL_SLASH + SPRINT1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(updatedTo)))
@@ -245,7 +245,7 @@ class SprintControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void updateWhenProjectNotExists() throws Exception {
-        SprintTo notExistsProjectTo = new SprintTo(SPRINT1_ID, "updated code", ACTIVE, NOT_FOUND);
+        SprintDTO notExistsProjectTo = new SprintDTO(SPRINT1_ID, "updated code", ACTIVE, NOT_FOUND);
         perform(MockMvcRequestBuilders.put(MNGR_SPRINTS_REST_URL_SLASH + SPRINT1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(notExistsProjectTo)))
@@ -256,7 +256,7 @@ class SprintControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void updateInvalid() throws Exception {
-        SprintTo invalidTo = new SprintTo(SPRINT1_ID, "", null, PROJECT1_ID);
+        SprintDTO invalidTo = new SprintDTO(SPRINT1_ID, "", null, PROJECT1_ID);
         perform(MockMvcRequestBuilders.put(MNGR_SPRINTS_REST_URL_SLASH + SPRINT1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(invalidTo)))
@@ -277,7 +277,7 @@ class SprintControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void updateDuplicateCode() throws Exception {
-        SprintTo duplicateCodeTo = new SprintTo(SPRINT1_ID, sprintTo2.getCode(), ACTIVE, PROJECT1_ID);
+        SprintDTO duplicateCodeTo = new SprintDTO(SPRINT1_ID, SPRINT_DTO_2.getCode(), ACTIVE, PROJECT1_ID);
         perform(MockMvcRequestBuilders.put(MNGR_SPRINTS_REST_URL_SLASH + SPRINT1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(duplicateCodeTo)))
@@ -288,7 +288,7 @@ class SprintControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void updateWhenChangeProject() throws Exception {
-        SprintTo changedProjectTo = new SprintTo(SPRINT1_ID, "updated code", ACTIVE, PROJECT1_ID + 1);
+        SprintDTO changedProjectTo = new SprintDTO(SPRINT1_ID, "updated code", ACTIVE, PROJECT1_ID + 1);
         perform(MockMvcRequestBuilders.put(MNGR_SPRINTS_REST_URL_SLASH + SPRINT1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(changedProjectTo)))
@@ -391,6 +391,6 @@ class SprintControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void disable() throws Exception {
-        assertFalse(enable(sprintTo2.getId(), false));
+        assertFalse(enable(SPRINT_DTO_2.getId(), false));
     }
 }

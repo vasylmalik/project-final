@@ -4,13 +4,13 @@ import com.javarush.jira.MatcherFactory;
 import com.javarush.jira.common.util.JsonUtil;
 import com.javarush.jira.login.Role;
 import com.javarush.jira.login.User;
-import com.javarush.jira.login.UserTo;
+import com.javarush.jira.login.UserDTO;
 
 public class UserTestData {
     public static final MatcherFactory.Matcher<User> USER_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(
             User.class, "startpoint", "endpoint", "password");
 
-    public static final MatcherFactory.Matcher<UserTo> TO_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(UserTo.class);
+    public static final MatcherFactory.Matcher<UserDTO> TO_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(UserDTO.class);
 
     public static final long USER_ID = 1;
     public static final long ADMIN_ID = 2;

@@ -41,7 +41,7 @@ public class ProfileUIController extends AbstractProfileController {
             return "redirect:" + PROFILE_URL;
         }
         redirectAttrs.addFlashAttribute("profileSuccess", "Saved successfully");
-        super.update(profileMapper.fromPostToTo(profile), authUser.id());
+        super.update(profileMapper.fromPostToDTO(profile), authUser.id());
         return "redirect:" + PROFILE_URL;
     }
 }

@@ -3,6 +3,7 @@ package com.javarush.jira.bugtracking.task;
 import com.javarush.jira.common.BaseRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -11,16 +12,16 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public interface TaskRepository extends BaseRepository<Task> {
     @Query("SELECT t FROM Task t WHERE t.sprintId =:sprintId ORDER BY t.startpoint DESC")
-    List<Task> findAllBySprintId(long sprintId);
+    List<Task> findAllBySprintId(@Param("sprintId") long sprintId);
 
     @Query("SELECT t FROM Task t WHERE t.projectId =:projectId AND t.sprintId IS NULL")
-    List<Task> findAllByProjectIdAndSprintIsNull(long projectId);
+    List<Task> findAllByProjectIdAndSprintIsNull(@Param("projectId") long projectId);
 
     @Query("SELECT t FROM Task t WHERE t.projectId =:projectId ORDER BY t.startpoint DESC")
-    List<Task> findAllByProjectId(long projectId);
+    List<Task> findAllByProjectId(@Param("projectId") long projectId);
 
-    @Query("SELECT t FROM Task t JOIN FETCH t.project LEFT JOIN FETCH t.sprint LEFT JOIN FETCH t.parent WHERE t.id =:id")
-    Optional<Task> findFullById(long id);
+    @Query("SELECT t FROM Task t JOIN FETCH t.project LEFT JOIN FETCH t.sprint LEFT JOIN FETCH t.parent LEFT JOIN FETCH t.tags WHERE t.id =:id")
+    Optional<Task> findFullById(@Param("id") long id);
 
     @Modifying
     @Query(value = """
@@ -37,4 +38,8 @@ public interface TaskRepository extends BaseRepository<Task> {
             WHERE id IN (SELECT child FROM task_with_subtasks)
             """, nativeQuery = true)
     void setTaskAndSubTasksSprint(long taskId, Long sprintId);
+
+    @Query(value = "SELECT t FROM Task t LEFT JOIN FETCH t.tags WHERE t.id = :id")
+    Task getTaskByIdWithTags(@Param("id") long id);
+
 }

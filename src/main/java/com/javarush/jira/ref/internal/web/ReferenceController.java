@@ -1,6 +1,6 @@
 package com.javarush.jira.ref.internal.web;
 
-import com.javarush.jira.ref.RefTo;
+import com.javarush.jira.ref.RefDTO;
 import com.javarush.jira.ref.RefType;
 import com.javarush.jira.ref.ReferenceService;
 import com.javarush.jira.ref.internal.Reference;
@@ -32,33 +32,33 @@ public class ReferenceController {
     private ReferenceRepository repository;
 
     @GetMapping("/{type}")
-    public Map<String, RefTo> getRefsByType(@PathVariable RefType type) {
+    public Map<String, RefDTO> getRefsByType(@PathVariable RefType type) {
         return ReferenceService.getRefs(type);
     }
 
     @GetMapping("/{type}/{code}")
-    public RefTo getRefByTypeByCode(@PathVariable RefType type, @PathVariable String code) {
-        return ReferenceService.getRefTo(type, code);
+    public RefDTO getRefByTypeByCode(@PathVariable RefType type, @PathVariable String code) {
+        return ReferenceService.getRefDTO(type, code);
     }
 
     @DeleteMapping("/{type}/{code}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable RefType type, @PathVariable String code) {
         log.debug("delete with type {}, code {}", type, code);
-        RefTo ref = ReferenceService.getRefTo(type, code);
+        RefDTO ref = ReferenceService.getRefDTO(type, code);
         repository.deleteExisted(ref.id());
         service.updateRefs(type);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RefTo> create(@Valid @RequestBody RefTo refTo) {
-        log.debug("create {}", refTo);
-        checkNew(refTo);
-        Reference ref = repository.save(mapper.toEntity(refTo));
-        refTo.setId(ref.id());
-        RefType refType = refTo.getRefType();
+    public ResponseEntity<RefDTO> create(@Valid @RequestBody RefDTO refDTO) {
+        log.debug("create {}", refDTO);
+        checkNew(refDTO);
+        Reference ref = repository.save(mapper.toEntity(refDTO));
+        refDTO.setId(ref.id());
+        RefType refType = refDTO.getRefType();
         service.updateRefs(refType);
-        return createdResponse(REST_URL + "/{type}/{code}", refTo, refType, refTo.getCode());
+        return createdResponse(REST_URL + "/{type}/{code}", refDTO, refType, refDTO.getCode());
     }
 
     @PutMapping("/{type}/{code}")
@@ -69,7 +69,7 @@ public class ReferenceController {
         Reference ref = getExisted(type, code);
         ref.setTitle(title);
         repository.save(ref);
-        ReferenceService.getRefTo(type, code).setTitle(title);
+        ReferenceService.getRefDTO(type, code).setTitle(title);
     }
 
     @PatchMapping("/{type}/{code}")
@@ -80,7 +80,7 @@ public class ReferenceController {
         Reference ref = getExisted(type, code);
         ref.setEnabled(enabled);
         repository.save(ref);
-        ReferenceService.getRefTo(type, code).setEnabled(enabled);
+        ReferenceService.getRefDTO(type, code).setEnabled(enabled);
     }
 
     private Reference getExisted(RefType type, String code) {

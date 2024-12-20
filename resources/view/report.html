@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="ru" th:with="activeMenuItem='Reports'" xmlns:th="http://www.thymeleaf.org">
+<html th:lang="${#locale}" th:with="activeMenuItem='Reports'" xmlns:th="http://www.thymeleaf.org">
 
 <th:block
         th:replace="~{layout/main::page(title='JiraRush: mini bugtracking system',appMain=~{::appMain}, activeMenuItem='reports')}">
     <appMain>
-        <h1>Reports</h1>
+        <h1 th:text="#{report.main.title}">Reports</h1>
         <div class="table-responsive-lg mt-4 text-nowrap text-center">
             <table class="table table-bordered">
                 <thead class="table-secondary">
@@ -13,10 +13,10 @@
                         <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 align-items-center">
                             <div class="col">
                                 <div class="input-group">
-                                    <span class="input-group-text fw-bold" title="Project">Project</span>
+                                    <span th:text="#{report.title.project}" class="input-group-text fw-bold" title="Project">Project</span>
                                     <select class="form-select" id="project-selector"
                                             th:disabled="${projects.isEmpty()}">
-                                        <option th:if="${projects.isEmpty()}" value="-1">No projects</option>
+                                        <option th:text="#{report.project.no}" th:if="${projects.isEmpty()}" value="-1">No projects</option>
                                         <option th:each="project : ${projects}" th:if="${!projects.isEmpty()}"
                                                 th:text="${project.title}" th:value="${project.id}"></option>
                                     </select>
@@ -24,7 +24,7 @@
                             </div>
                             <div class="col mt-2 mt-md-0">
                                 <div class="input-group" id="sprint-selector-group" th:if="${!projects.isEmpty()}">
-                                    <span class="input-group-text fw-bold" title="Sprint">Sprint</span>
+                                    <span th:text="#{reports.title.sprint}" class="input-group-text fw-bold" title="Sprint">Sprint</span>
                                     <select class="form-select" id="sprint-selector"></select>
                                 </div>
                             </div>
@@ -32,10 +32,10 @@
                     </th>
                 </tr>
                 <tr hidden id="sprint-header-row">
-                    <th>Status</th>
-                    <th>Started</th>
-                    <th>Completed</th>
-                    <th>Duration</th>
+                    <th th:text="#{reports.sprint.table.status}">Status</th>
+                    <th th:text="#{reports.sprint.table.started}">Started</th>
+                    <th th:text="#{reports.sprint.table.completed}">Completed</th>
+                    <th th:text="#{reports.sprint.table.duration}">Duration</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -47,7 +47,7 @@
                 </tr>
                 <tr hidden id="task-summaries-row">
                     <td colspan="4">
-                        <h5 class="fw-bold text-secondary text-start mt-1">Task summaries</h5>
+                        <h5 th:text="#{reports.task.sum}" class="fw-bold text-secondary text-start mt-1">Task summaries</h5>
                         <table class="table table-bordered">
                             <thead class="table-secondary">
                             <tr id="task-status-row"></tr>

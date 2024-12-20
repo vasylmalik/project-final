@@ -1,7 +1,7 @@
 package com.javarush.jira.profile.internal.web;
 
 import com.javarush.jira.login.AuthUser;
-import com.javarush.jira.profile.ProfileTo;
+import com.javarush.jira.profile.ProfileDTO;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,14 +14,14 @@ public class ProfileRestController extends AbstractProfileController {
     public static final String REST_URL = "/api/profile";
 
     @GetMapping
-    public ProfileTo get(@AuthenticationPrincipal AuthUser authUser) {
+    public ProfileDTO get(@AuthenticationPrincipal AuthUser authUser) {
         return super.get(authUser.id());
     }
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@Valid @RequestBody ProfileTo profileTo, @AuthenticationPrincipal AuthUser authUser) {
-        super.update(profileTo, authUser.id());
+    public void update(@Valid @RequestBody ProfileDTO profileDTO, @AuthenticationPrincipal AuthUser authUser) {
+        super.update(profileDTO, authUser.id());
     }
 }
 

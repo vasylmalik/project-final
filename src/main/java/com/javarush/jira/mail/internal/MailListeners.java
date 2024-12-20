@@ -22,7 +22,7 @@ public class MailListeners {
     @EventListener
     public void confirmRegistration(RegistrationConfirmEvent event) {
         String confirmationUrl = appProperties.getHostUrl() + "/ui/register/confirm?token=" + event.token();
-        User user = userMapper.toEntity(event.userto());
+        User user = userMapper.toEntity(event.userDTO());
         mailService.sendToUserAsync("email-confirmation.html", user, Map.of("confirmationUrl", confirmationUrl));
     }
 

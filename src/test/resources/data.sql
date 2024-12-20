@@ -79,6 +79,10 @@ values ('Data', 'epic', 'in_progress', 1, 1, '2023-05-15 09:05:10'),
        ('task-6', 'task', 'done', 2, 5, '2023-06-14 09:28:10'),
        ('task-7', 'task', 'canceled', 2, 5, '2023-06-14 09:28:10');
 
+insert into TASK_TAG (TASK_ID, TAG)
+values (1, 'tag1'),
+       (1, 'tag2'),
+       (1, 'tag3');
 
 insert into ACTIVITY(AUTHOR_ID, TASK_ID, UPDATED, COMMENT, TITLE, DESCRIPTION, ESTIMATE, TYPE_CODE, STATUS_CODE,
                      PRIORITY_CODE)
