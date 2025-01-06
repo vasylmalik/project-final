@@ -10,6 +10,7 @@ import com.javarush.jira.bugtracking.task.mapper.TaskFullMapper;
 import com.javarush.jira.bugtracking.task.to.TaskToExt;
 import com.javarush.jira.bugtracking.task.to.TaskToFull;
 import com.javarush.jira.common.error.DataConflictException;
+import com.javarush.jira.common.error.IllegalRequestDataException;
 import com.javarush.jira.common.error.NotFoundException;
 import com.javarush.jira.common.util.Util;
 import com.javarush.jira.login.AuthUser;
@@ -139,5 +140,20 @@ public class TaskService {
         if (!userType.equals(possibleUserType)) {
             throw new DataConflictException(String.format(assign ? CANNOT_ASSIGN : CANNOT_UN_ASSIGN, userType, task.getStatusCode()));
         }
+    }
+
+    @Transactional
+    public void addTag(long taskId, String tag) {
+        if (tag == null || tag.isEmpty()) {
+            throw new IllegalRequestDataException("Tag must not be null or empty");
+        }
+        if (tag.length() > 32) {
+            throw new IllegalRequestDataException("Tag must not exceed 32 characters");
+        }
+
+        Task task = handler.getRepository().getExisted(taskId);
+        task.getTags().add(tag);
+
+        handler.getRepository().saveAndFlush(task);
     }
 }

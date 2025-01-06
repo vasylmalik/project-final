@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.javarush.jira.bugtracking.task.TaskUtil.getLatestValue;
@@ -18,6 +20,10 @@ public class ActivityService {
     private final TaskRepository taskRepository;
 
     private final Handlers.ActivityHandler handler;
+
+    public static final String IN_PROGRESS = "in_progress";
+    public static final String READY_FOR_REVIEW = "ready_for_review";
+    public static final String DONE = "done";
 
     private static void checkBelong(HasAuthorId activity) {
         if (activity.getAuthorId() != AuthUser.authId()) {
@@ -72,5 +78,34 @@ public class ActivityService {
                 task.setTypeCode(latestType);
             }
         }
+    }
+
+    public Duration progressTaskDuration(Task task) {
+        LocalDateTime readyForReview = getActivityUpdatedTime(task.id(), READY_FOR_REVIEW);
+        LocalDateTime inProgress = getActivityUpdatedTime(task.id(), IN_PROGRESS);
+
+        if (readyForReview == null || inProgress == null) {
+            return Duration.ZERO;
+        }
+
+        return Duration.between(inProgress, readyForReview);
+    }
+
+    public Duration testingTaskDuration(Task task) {
+        LocalDateTime done = getActivityUpdatedTime(task.id(), DONE);
+        LocalDateTime readyForReview = getActivityUpdatedTime(task.id(), READY_FOR_REVIEW);
+
+        if (readyForReview == null || done == null) {
+            return Duration.ZERO;
+        }
+
+        return Duration.between(done, readyForReview);
+    }
+
+    private LocalDateTime getActivityUpdatedTime(long taskId, String statusCode) {
+        return handler.getRepository()
+                .findActivityByTaskIdAndStatusCode(taskId, statusCode)
+                .map(Activity::getUpdated)
+                .orElse(null);
     }
 }
