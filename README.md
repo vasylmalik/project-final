@@ -27,4 +27,7 @@
 - https://habr.com/ru/articles/259055/
 
 Список выполненных задач:
-...
+
+1. Done;
+2. Done;
+3. 
