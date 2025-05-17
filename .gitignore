@@ -7,3 +7,5 @@ attachments
 *.patch
 
 
+/.env
+/secrets.properties
