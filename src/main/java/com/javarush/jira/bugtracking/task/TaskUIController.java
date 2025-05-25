@@ -34,6 +34,11 @@ public class TaskUIController {
     private final Handlers.AttachmentHandler attachmentHandler;
     private final Handlers.TaskHandler taskHandler;
 
+    @PostMapping("/{id}/tags")
+    public void addTagsForTask(@RequestParam long id, @RequestParam Set<String> tag) {
+        service.addTag(id, tag);
+    }
+
     @GetMapping("/{id}")
     public String get(@PathVariable long id, @RequestParam(required = false) boolean fragment, Model model) {
         log.info("get {}", id);

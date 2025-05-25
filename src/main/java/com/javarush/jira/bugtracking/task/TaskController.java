@@ -18,11 +18,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import static com.javarush.jira.common.BaseHandler.createdResponse;
 
@@ -40,6 +42,10 @@ public class TaskController {
     private final Handlers.ActivityHandler activityHandler;
     private final UserBelongRepository userBelongRepository;
 
+    @Transactional
+    public void addTag(long taskId, Set<String> tags) {
+        handler.get(taskId).setTags(tags);
+    }
 
     @GetMapping("/{id}")
     public TaskToFull get(@PathVariable long id) {
