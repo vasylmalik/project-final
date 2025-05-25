@@ -32,4 +32,5 @@
 - Вынес чувствительную информацию в отдельный properties файл.
 - Добавил для тестов контроллеров Testcontainers и H2 для теста контекста.
 - Написал тесты для публичных методов ProfileRestController
+- Сделал рефакторинг метода com.javarush.jira.bugtracking.attachment.FileUtil#upload
 - ...
