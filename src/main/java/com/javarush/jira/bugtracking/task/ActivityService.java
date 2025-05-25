@@ -8,6 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.javarush.jira.bugtracking.task.TaskUtil.getLatestValue;
@@ -72,5 +75,71 @@ public class ActivityService {
                 task.setTypeCode(latestType);
             }
         }
+    }
+
+    public Duration timeSpentOnTask(Task task) {
+        if (task == null) {
+            throw new IllegalArgumentException("Task cannot be null");
+        }
+
+        List<Activity> activities = task.getActivities();
+        if (activities == null || activities.isEmpty()) {
+            return Duration.ZERO;
+        }
+
+        List<Activity> sortedActivities = activities.stream()
+                .filter(activity -> activity.getStatusCode() != null && activity.getUpdated() != null)
+                .sorted(Comparator.comparing(Activity::getUpdated))
+                .toList();
+
+        Duration totalDuration = Duration.ZERO;
+        LocalDateTime inProgressTime = null;
+
+        for (Activity activity : sortedActivities) {
+            String statusCode = activity.getStatusCode();
+            LocalDateTime updated = activity.getUpdated();
+
+            if ("in_progress".equals(statusCode)) {
+                inProgressTime = updated;
+            } else if ("ready_for_review".equals(statusCode) && inProgressTime != null) {
+                totalDuration = totalDuration.plus(Duration.between(inProgressTime, updated));
+                inProgressTime = null;
+            }
+        }
+
+        return totalDuration;
+    }
+
+    public Duration timeSpentOnTest(Task task) {
+        if (task == null) {
+            throw new IllegalArgumentException("Task cannot be null");
+        }
+
+        List<Activity> activities = task.getActivities();
+        if (activities == null || activities.isEmpty()) {
+            return Duration.ZERO;
+        }
+
+        List<Activity> sortedActivities = activities.stream()
+                .filter(activity -> activity.getStatusCode() != null && activity.getUpdated() != null)
+                .sorted(Comparator.comparing(Activity::getUpdated))
+                .toList();
+
+        Duration totalDuration = Duration.ZERO;
+        LocalDateTime readyForReviewTime = null;
+
+        for (Activity activity : sortedActivities) {
+            String statusCode = activity.getStatusCode();
+            LocalDateTime updated = activity.getUpdated();
+
+            if ("ready_for_review".equals(statusCode)) {
+                readyForReviewTime = updated;
+            } else if ("done".equals(statusCode) && readyForReviewTime != null) {
+                totalDuration = totalDuration.plus(Duration.between(readyForReviewTime, updated));
+                readyForReviewTime = null;
+            }
+        }
+
+        return totalDuration;
     }
 }
