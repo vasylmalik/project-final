@@ -1,5 +1,6 @@
 package com.javarush.jira.bugtracking.report;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -20,6 +21,10 @@ public class ReportRestController {
     private final ReportRepository reportRepository;
 
     @GetMapping
+    @Operation(
+            summary = "Отримати звіт по задачах спринту",
+            description = "Повертає список зведеної інформації про задачі у межах вказаного спринту, включаючи кількість, статуси та інші ключові метрики"
+    )
     public List<TaskSummary> getTaskSummaries(@PathVariable long sprintId) {
         log.info("get task summaries for sprint with id={}", sprintId);
         return reportRepository.getTaskSummaries(sprintId);

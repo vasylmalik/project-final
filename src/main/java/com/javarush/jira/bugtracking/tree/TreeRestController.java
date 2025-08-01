@@ -9,6 +9,7 @@ import com.javarush.jira.bugtracking.sprint.to.SprintTo;
 import com.javarush.jira.bugtracking.task.TaskRepository;
 import com.javarush.jira.bugtracking.task.mapper.TaskMapper;
 import com.javarush.jira.common.util.Util;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -44,12 +45,20 @@ public class TreeRestController {
     }
 
     @GetMapping("/projects")
+    @Operation(
+            summary = "Отримати дерево проєктів",
+            description = "Повертає всі проєкти у вигляді ієрархічного дерева NodeTo"
+    )
     public List<TreeNode> getProjects() {
         log.info("get projects tree");
         return toTree(projectMapper.toToList(projectRepository.getAll()), mapper::fromProject);
     }
 
     @GetMapping("/projects/{projectId}/sprints")
+    @Operation(
+            summary = "Отримати спринти проєкту та беклог",
+            description = "Повертає список спринтів проєкту у вигляді дерева, включаючи окремий вузол 'Backlog'"
+    )
     public List<TreeNode> getSprintsAndBacklog(@PathVariable long projectId) {
         log.info("get project {} sprints", projectId);
         List<SprintTo> sprintTos = new ArrayList<>(sprintMapper.toToList(sprintRepository.getAllByProject(projectId)));
@@ -58,12 +67,20 @@ public class TreeRestController {
     }
 
     @GetMapping("/sprints/{sprintId}/tasks")
+    @Operation(
+            summary = "Отримати задачі для спринту",
+            description = "Повертає задачі, прикріплені до певного спринту, у вигляді дерева"
+    )
     public List<TreeNode> getSprintTasks(@PathVariable long sprintId) {
         log.info("get sprint {} tasks", sprintId);
         return toTree(taskMapper.toToList(taskRepository.findAllBySprintId(sprintId)), mapper::fromTask);
     }
 
     @GetMapping("/projects/{projectId}/backlog/tasks")
+    @Operation(
+            summary = "Отримати задачі беклогу проєкту",
+            description = "Повертає задачі проєкту, які ще не додані до жодного спринту, у вигляді дерева"
+    )
     public List<TreeNode> getBacklogTasks(@PathVariable long projectId) {
         log.info("get project {} backlog tasks", projectId);
         return toTree(taskMapper.toToList(taskRepository.findAllByProjectIdAndSprintIsNull(projectId)), mapper::fromTask);
