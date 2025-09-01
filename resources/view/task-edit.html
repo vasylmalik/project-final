@@ -7,57 +7,75 @@
 <!--/*@thymesVar id="comments" type="java.util.List<com.javarush.jira.bugtracking.task.to.ActivityTo>"*/-->
 <!--/*@thymesVar id="authUser" type="com.javarush.jira.login.AuthUser"*/-->
 
-<th:block
-        th:replace="~{layout/bugtrackLayout::edit(${task}, '/ui/tasks', '/api/tasks/' + ${task.id}, ~{::appEdit}, 'task')}">
-    <appEdit>
+<th:block th:replace="~{layout/bugtrackLayout::edit(${task}, '/ui/tasks', '/api/tasks/' + ${task.id}, ~{::appEdit}, 'task')}">
+    <appEdit th:with="
+        typeKeyPrefix=${'task.type.'},
+        statusKeyPrefix=${'task.status.'},
+        prioKeyPrefix=${'task.priority.'},
+        dateLong=${#{datetime.pattern.long}},
+        dateShort=${#{datetime.pattern.short}}
+  ">
         <input hidden id="parentId" th:field="*{parentId}">
         <input hidden id="projectId" th:field="*{projectId}">
         <input hidden id="sprintId" th:field="*{sprintId}">
+
         <div class="form-group">
-            <label class="col-form-label" for="typeCode">Type</label>
+            <label class="col-form-label" for="typeCode" th:text="#{task.type.label}">Type</label>
             <select class="form-select w-25" id="typeCode" th:field="*{typeCode}">
                 <option th:each="type : ${types}"
+                        th:value="${type.key}"
                         th:selected="${!task.isNew() && task.typeCode.equals(type.key)}"
-                        th:text="${type.value.title}"
-                        th:value="${type.key}">
+                        th:text="#{${typeKeyPrefix + type.key}}">
+                    Task
                 </option>
             </select>
         </div>
+
         <div class="form-group">
-            <label class="col-form-label" for="statusCode">Status</label>
+            <label class="col-form-label" for="statusCode" th:text="#{task.status.label}">Status</label>
             <select class="form-select w-25" id="statusCode" th:field="*{statusCode}">
                 <option th:each="status : ${statuses}"
+                        th:value="${status.key}"
                         th:selected="${!task.isNew() && task.statusCode.equals(status.key)}"
-                        th:text="${status.value.title}"
-                        th:value="${status.key}">
+                        th:text="#{${statusKeyPrefix + status.key}}">
+                    Open
                 </option>
             </select>
         </div>
-        <div th:replace="~{::inputField('Description', 'description')}"></div>
+
+        <!-- inputField фрагмент: передаємо локалізований текст як перший параметр -->
+        <div th:replace="~{::inputField(#{task.description.label}, 'description')}"></div>
+
         <div class="form-group">
-            <label class="col-form-label" for="priorityCode">Priority</label>
+            <label class="col-form-label" for="priorityCode" th:text="#{task.priority.label}">Priority</label>
             <select class="form-select w-25" id="priorityCode" th:field="*{priorityCode}">
                 <option th:each="priority : ${priorities}"
+                        th:value="${priority.key}"
                         th:selected="${!task.isNew() && priority.key.equals(task.priorityCode)}"
-                        th:text="${priority.value.title}"
-                        th:value="${priority.key}">
+                        th:text="#{${prioKeyPrefix + priority.key}}">
+                    Medium
                 </option>
             </select>
         </div>
-        <div th:replace="~{::inputField(labelText='Estimate', fieldName='estimate', inputType='number')}"></div>
+
+        <div th:replace="~{::inputField(labelText=#{task.estimate.label}, fieldName='estimate', inputType='number')}"></div>
+
         <hr>
 
-        <!--Comments-->
+        <!-- Comments -->
         <div class="row d-flex align-items-center mb-2" th:if="${!task.isNew()}">
             <div class="col">
-                <span class="h5 fw-bold text-secondary ms-1">Comments</span>
+                <span class="h5 fw-bold text-secondary ms-1" th:text="#{task.comments.title}">Comments</span>
             </div>
             <div class="col text-end">
-                <button class="btn btn-primary" data-bs-target="#comment-modal" data-bs-toggle="modal" type="button">Add
-                    comment
+                <button class="btn btn-primary" type="button"
+                        data-bs-toggle="modal" data-bs-target="#comment-modal"
+                        th:text="#{task.comments.add}">
+                    Add comment
                 </button>
             </div>
         </div>
+
         <div class="scroll-area" id="comments-area" th:hidden="${task.isNew()}">
             <div th:each="comment : ${comments}">
                 <div class="card bg-light mb-2 me-1">
@@ -67,37 +85,46 @@
                                 <span class="fw-bold" th:text="${comment.author.displayName}"></span>
                             </div>
                             <div class="col text-end" th:if="${comment.authorId == authUser.id}">
-                                <a class="text-success" data-bs-target="#comment-modal" data-bs-toggle="modal"
+                                <a class="text-success" type="button"
+                                   data-bs-toggle="modal" data-bs-target="#comment-modal"
+                                   th:data-id="${comment.id}"
                                    th:data-author_id="${comment.authorId}"
-                                   th:data-comment="${comment.comment}" th:data-id="${comment.id}"
-                                   type="button">
+                                   th:data-comment="${comment.comment}"
+                                   th:aria-label="#{task.comments.edit}">
                                     <i class="fa fa-pencil"></i>
                                 </a>
-                                <a class="text-danger ms-1" th:onclick="deleteComment([[${comment.id}]])" type="button">
+                                <a class="text-danger ms-1" type="button"
+                                   th:onclick="deleteComment([[${comment.id}]])"
+                                   th:aria-label="#{task.comments.delete}">
                                     <i class="fa fa-trash"></i>
                                 </a>
                             </div>
                         </div>
-                        <small th:text="${#temporals.format(comment.updated, 'dd.MM.yyyy, HH:mm:ss')}"></small>
+                        <small th:text="${#temporals.format(comment.updated, dateLong)}"></small>
                         <div class="mt-1" style="white-space: pre-wrap" th:text="${comment.comment}">Comment</div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!--History log-->
+        <!-- History log -->
         <history th:if="${!task.isNew()}">
             <div th:replace="~{/task :: history-log}"></div>
         </history>
 
-        <!--Comment modal-->
+        <!-- Comment modal -->
         <div class="modal" id="comment-modal" tabindex="-1">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-body text-end">
-                        <textarea class="form-control mb-2" id="comment-field" rows="5"></textarea>
-                        <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Close</button>
-                        <button class="btn btn-primary" id="save-comment-button" onclick="saveComment()" type="button">
+            <textarea class="form-control mb-2" id="comment-field" rows="5"
+                      th:placeholder="#{task.comments.placeholder}"></textarea>
+                        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal"
+                                th:text="#{common.close}">
+                            Close
+                        </button>
+                        <button class="btn btn-primary" id="save-comment-button" type="button" onclick="saveComment()"
+                                th:text="#{task.comments.save}">
                             Save comment
                         </button>
                     </div>
@@ -106,6 +133,7 @@
         </div>
     </appEdit>
 </th:block>
+
 <script>
     const taskId = [[${task.id}]];
     const objectId = [[${task.id}]];

@@ -7,6 +7,9 @@ import com.javarush.jira.login.AuthUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.Comparator;
 
 import java.util.List;
 
@@ -72,5 +75,50 @@ public class ActivityService {
                 task.setTypeCode(latestType);
             }
         }
+    }
+
+    private List<Activity> loadActivitiesAsc(long taskId) {
+        List<Activity> list = handler.getRepository().findAllByTaskIdOrderByUpdatedDesc(taskId);
+        list.removeIf(a -> a.getUpdated() == null);
+        list.sort(Comparator.comparing(Activity::getUpdated));
+        return list;
+    }
+
+    public Duration getTimeInWork(Task task) {
+        List<Activity> acts = loadActivitiesAsc(task.getId());
+        Duration total = Duration.ZERO;
+        LocalDateTime started = null;
+
+        for (Activity a : acts) {
+            String st = a.getStatusCode();
+            if (st == null) continue;
+
+            if ("in_progress".equals(st)) {
+                started = a.getUpdated();
+            } else if ("ready_for_review".equals(st) && started != null) {
+                total = total.plus(Duration.between(started, a.getUpdated()));
+                started = null;
+            }
+        }
+        return total;
+    }
+
+    public Duration getTimeInTesting(Task task) {
+        List<Activity> acts = loadActivitiesAsc(task.getId());
+        Duration total = Duration.ZERO;
+        LocalDateTime started = null;
+
+        for (Activity a : acts) {
+            String st = a.getStatusCode();
+            if (st == null) continue;
+
+            if ("ready_for_review".equals(st)) {
+                started = a.getUpdated();
+            } else if ("done".equals(st) && started != null) {
+                total = total.plus(Duration.between(started, a.getUpdated()));
+                started = null;
+            }
+        }
+        return total;
     }
 }

@@ -1,17 +1,31 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="uk" xmlns:th="http://www.thymeleaf.org">
 <!--/*@thymesVar id="sprint" type="com.javarush.jira.bugtracking.sprint.to.SprintToFull"*/-->
 <!--/*@thymesVar id="fragment" type="boolean"*/-->
 <!--/*@thymesVar id="authUser" type="com.javarush.jira.login.AuthUser"*/-->
 <th:block
         th:replace="~{layout/bugtrackLayout::view(${sprint}, ${authUser.isManager()}?'/ui/mngr/sprints/edit/':null, ~{::sprint}, ${fragment})}">
     <sprint>
-        <h5>Status: [[${sprint.statusCode}]]</h5>
+        <h5>
+            <span th:text="#{sprint.status.label}">Status:</span>
+            <span th:text="#{'sprint.status.' + ${sprint.statusCode}}">active</span>
+        </h5>
         <hr>
-        <h6>Project: <a th:href="@{'/ui/projects/' + ${sprint.projectId}}">[[${sprint.project.code}]]</a></h6>
-        <h6><a href="#"
-               th:if="${sprint.statusCode == 'finished'}" th:onclick="|showReport('${sprint.projectId}', '${sprint.id}')|">Report</a></h6>
-        <h6><a href="#" th:if="${sprint.statusCode == 'active'}" th:onclick="|showDashboard('${sprint.projectId}')|">Dashboard</a>
+        <h6>
+            <span th:text="#{sprint.project.label}">Project:</span>
+            <a th:href="@{'/ui/projects/' + ${sprint.projectId}}">[[${sprint.project.code}]]</a>
+        </h6>
+        <h6>
+            <a href="#"
+               th:if="${sprint.statusCode == 'finished'}"
+               th:onclick="|showReport('${sprint.projectId}', '${sprint.id}')|"
+               th:text="#{sprint.report}">Report</a>
+        </h6>
+        <h6>
+            <a href="#"
+               th:if="${sprint.statusCode == 'active'}"
+               th:onclick="|showDashboard('${sprint.projectId}')|"
+               th:text="#{sprint.dashboard}">Dashboard</a>
         </h6>
     </sprint>
 </th:block>

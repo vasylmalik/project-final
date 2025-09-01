@@ -3,10 +3,12 @@ package com.javarush.jira.bugtracking.task;
 import com.javarush.jira.common.BaseRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Transactional(readOnly = true)
 public interface TaskRepository extends BaseRepository<Task> {
@@ -21,6 +23,9 @@ public interface TaskRepository extends BaseRepository<Task> {
 
     @Query("SELECT t FROM Task t JOIN FETCH t.project LEFT JOIN FETCH t.sprint LEFT JOIN FETCH t.parent WHERE t.id =:id")
     Optional<Task> findFullById(long id);
+
+    @Query("select distinct tag from Task t join t.tags tag where t.id = :taskId")
+    Set<String> findTagsByTaskId(@Param("taskId") long taskId);
 
     @Modifying
     @Query(value = """

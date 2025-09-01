@@ -5,10 +5,13 @@ import com.javarush.jira.bugtracking.task.to.TaskToFull;
 import com.javarush.jira.common.BaseMapper;
 import com.javarush.jira.common.TimestampMapper;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 @Mapper(config = TimestampMapper.class)
 public interface TaskFullMapper extends BaseMapper<Task, TaskToFull> {
 
     @Override
+    @Mapping(target = "tags", source = "tags")
     TaskToFull toTo(Task task);
 }
+

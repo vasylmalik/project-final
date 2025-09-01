@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import static com.javarush.jira.common.BaseHandler.createdResponse;
 
@@ -75,11 +76,19 @@ public class TaskController {
         return handler.getMapper().toToList(handler.getRepository().findAllByProjectId(projectId));
     }
 
+    @GetMapping("/{taskId}/tags")
+    public Set<String> listTags(@PathVariable long taskId) {
+        return taskService.getTaskTags(taskId);
+    }
+
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Task> createWithLocation(@Valid @RequestBody TaskToExt taskTo) {
-        return createdResponse(REST_URL, taskService.create(taskTo));
+    public ResponseEntity<TaskToFull> createWithLocation(@Valid @RequestBody TaskToExt taskTo) {
+        Task created = taskService.create(taskTo);
+        TaskToFull dto = taskService.get(created.id());
+        return createdResponse(REST_URL, dto);
     }
+
 
     @PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)

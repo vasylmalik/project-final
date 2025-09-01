@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="uk" xmlns:th="http://www.thymeleaf.org">
 <!--/*@thymesVar id="project" type="com.javarush.jira.bugtracking.project.to.ProjectToFull"*/-->
 <!--/*@thymesVar id="fragment" type="boolean"*/-->
 <!--/*@thymesVar id="authUser" type="com.javarush.jira.login.AuthUser"*/-->
@@ -8,14 +8,17 @@
     <project>
         <div class="mb-2 row">
             <div class="col-md-3 col-10">
-                <p th:text="${project.description}"></p>
+                <p th:text="${#strings.isEmpty(project.description) ? #messages.msg('project.description.empty') : project.description}">
+                    No description
+                </p>
             </div>
         </div>
-        <div class="mb-2 row">
+        <div class="mb-2 row" th:if="${project.parentId != null}">
             <div class="col-md-3 col-10">
-                <p th:if="${project.parentId != null}">Parent project: <a
-                        th:href="@{'/ui/projects/' + ${project.parentId}}" th:text="${project.parent.code}">
-                </a></p>
+                <p>
+                    <span th:text="#{project.parent.label}">Parent project:</span>
+                    <a th:href="@{'/ui/projects/' + ${project.parentId}}" th:text="${project.parent.code}">PRJ</a>
+                </p>
             </div>
         </div>
     </project>

@@ -6,17 +6,23 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 public class TaskToFull extends TaskToExt {
     CodeTo parent;
     CodeTo project;
     CodeTo sprint;
+
     @Setter
     List<ActivityTo> activityTos;
 
+    @Setter
+    Set<String> tags;
+
     public TaskToFull(Long id, String code, String title, String description, String typeCode, String statusCode, String priorityCode,
-                      LocalDateTime updated, Integer estimate, CodeTo parent, CodeTo project, CodeTo sprint, List<ActivityTo> activityTos) {
+                      LocalDateTime updated, Integer estimate, CodeTo parent, CodeTo project, CodeTo sprint,
+                      List<ActivityTo> activityTos) {
         super(id, code, title, description, typeCode, statusCode, priorityCode, updated, estimate,
                 parent == null ? null : parent.getId(), project.getId(), sprint == null ? null : sprint.getId());
         this.parent = parent;

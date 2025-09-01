@@ -1,69 +1,86 @@
 <!DOCTYPE html>
-<html lang="ru" xmlns:th="http://www.thymeleaf.org">
-
-<th:block th:replace="~{layout/main::page(title='Login',appMain=~{::appMain})}">
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
+<th:block th:replace="~{layout/main::page(title=#{login.title},appMain=~{::appMain})}">
     <appMain>
         <div class="row d-flex justify-content-center align-items-center">
             <div class="col-12 col-md-8 col-xl-5">
                 <div class="card shadow-2-strong" style="border-radius: 1rem;">
                     <div class="card-body p-3 p-md-5 text-center">
-                        <h3 class="mb-3">Sign in</h3>
+                        <!-- Заголовок -->
+                        <h3 class="mb-3" th:text="#{login.title}">Sign in</h3>
+
                         <div th:if="${param.error}">
-                            <p class="alert alert-danger col-12 p-2 text-center">
+                            <p class="alert alert-danger col-12 p-2 text-center" th:text="#{login.error}">
                                 Bad credentials
                             </p>
                         </div>
+
+                        <!-- Форма логіну -->
                         <form action="/view/login" method="post">
-                            <div class="form-outline mb-4">
-                                <input class="form-control" name="username" placeholder="E-mail" required type="text"/>
+                            <!-- Перемикач мови -->
+                            <div class="mb-3" style="text-align: right;">
+                                <a class="btn btn-sm btn-outline-secondary me-2"
+                                   th:href="@{/i18n/set(lang='uk')}" rel="nofollow">Українська</a>
+                                <a class="btn btn-sm btn-outline-secondary"
+                                   th:href="@{/i18n/set(lang='en')}" rel="nofollow">English</a>
                             </div>
+
                             <div class="form-outline mb-4">
-                                <input class="form-control" name="password" placeholder="Password" required
-                                       type="password"/>
+                                <input class="form-control" name="username" type="text" required
+                                       th:placeholder="#{login.username}"
+                                       aria-label="Email"
+                                       placeholder="E-mail"/>
                             </div>
+
+                            <div class="form-outline mb-4">
+                                <input class="form-control" name="password" type="password" required
+                                       th:placeholder="#{login.password}"
+                                       aria-label="Password"
+                                       placeholder="Password"/>
+                            </div>
+
                             <div class="row">
                                 <div class="col-7 col-md-6 my-auto">
-                                    <a href="/view/unauth/forgot-password">Forgot your password?</a>
+                                    <a th:href="@{/view/unauth/forgot-password}" th:text="#{login.forgot}">
+                                        Forgot your password?
+                                    </a>
                                 </div>
                                 <div class="col-5 col-md-6 d-grid gap-2">
-                                    <button class="btn btn-success btn-lg" type="submit">Sign in</button>
+                                    <button class="btn btn-success btn-lg" type="submit" th:text="#{login.button}">
+                                        Sign in
+                                    </button>
                                 </div>
                             </div>
                         </form>
+
+                        <!-- Соцмережі -->
                         <div class="row mt-4">
-                            <div class="col-5">
-                                <hr>
-                            </div>
-                            <div class="col-2">
-                                OR
-                            </div>
-                            <div class="col-5">
-                                <hr>
-                            </div>
+                            <div class="col-5"><hr></div>
+                            <div class="col-2" th:text="#{login.or}">OR</div>
+                            <div class="col-5"><hr></div>
                         </div>
-                        <p class="mt-3 mb-4">
+
+                        <p class="mt-3 mb-4" th:text="#{login.social.title}">
                             Sign in with social networks
                         </p>
-                        <a class="btn btn-secondary btn-lg me-2" href="/oauth2/authorization/google"
-                           type="button">
+
+                        <a class="btn btn-secondary btn-lg me-2" href="/oauth2/authorization/google" type="button"
+                           th:aria-label="#{login.social.google}">
                             <i class="fa-brands fa-google"></i>
                         </a>
-                        <a class="btn btn-primary btn-lg me-2" href="/oauth2/authorization/vk" style="padding-left: 17px; padding-right: 17px;"
-                           type="button">
-                            <i class="fa-brands fa-vk"></i>
-                        </a>
-                        <a class="btn btn-danger btn-lg me-2" href="/oauth2/authorization/yandex" style="padding-left: 21px; padding-right: 21px;"
-                           type="button">
-                            <i class="fa-brands fa-yandex"></i>
-                        </a>
-                        <a class="btn btn-dark btn-lg me-2" href="/oauth2/authorization/github" type="button">
+                        <a class="btn btn-dark btn-lg me-2" href="/oauth2/authorization/github" type="button"
+                           th:aria-label="#{login.social.github}">
                             <i class="fa-brands fa-github"></i>
                         </a>
-                        <a class="btn btn-warning btn-lg" href="/oauth2/authorization/gitlab" type="button">
+                        <a class="btn btn-warning btn-lg" href="/oauth2/authorization/gitlab" type="button"
+                           th:aria-label="#{login.social.gitlab}">
                             <i class="fa-brands fa-gitlab"></i>
                         </a>
+
+                        <!-- Реєстрація -->
                         <p class="mt-3 mb-2 mb-md-0" style="font-size:0.8em">
-                            New here? <a href="/ui/register">Create account</a>
+                            <span th:text="#{login.newhere}">New here?</span>
+                            <a th:href="@{/ui/register}" th:text="#{login.create}">Create account</a>
                         </p>
                     </div>
                 </div>
@@ -71,4 +88,3 @@
         </div>
     </appMain>
 </th:block>
-

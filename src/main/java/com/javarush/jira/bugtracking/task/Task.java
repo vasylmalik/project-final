@@ -1,5 +1,6 @@
 package com.javarush.jira.bugtracking.task;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.javarush.jira.bugtracking.project.Project;
 import com.javarush.jira.bugtracking.sprint.Sprint;
 import com.javarush.jira.common.HasCode;
@@ -25,14 +26,11 @@ import static com.javarush.jira.bugtracking.task.TaskUtil.checkStatusChangePossi
 @Setter
 @NoArgsConstructor
 public class Task extends TitleEntity implements HasCode {
-    // title, typeCode, statusCode duplicated here and in Activity for sql simplicity
 
-    // link to Reference.code with RefType.TASK
     @Code
     @Column(name = "type_code", nullable = false)
     private String typeCode;
 
-    // link to Reference.code with RefType.TASK_STATUS
     @Code
     @Column(name = "status_code", nullable = false)
     private String statusCode;
@@ -66,9 +64,8 @@ public class Task extends TitleEntity implements HasCode {
             uniqueConstraints = @UniqueConstraint(columnNames = {"task_id", "tag"}, name = "uk_task_tag"))
     @Column(name = "tag")
     @ElementCollection(fetch = FetchType.LAZY)
-    @JoinColumn()
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private Set<@Size(min = 2, max = 32) String> tags = Set.of();
+    @JsonIgnore
+    private Set<@Size(min = 2, max = 32) String> tags = new java.util.HashSet<>();
 
     //  history of comments and task fields changing
     @OneToMany(mappedBy = "taskId", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)

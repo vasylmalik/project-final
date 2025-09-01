@@ -5,8 +5,10 @@ import com.javarush.jira.login.Role;
 import com.javarush.jira.login.internal.UserRepository;
 import com.javarush.jira.login.internal.sociallogin.CustomOAuth2UserService;
 import com.javarush.jira.login.internal.sociallogin.CustomTokenResponseConverter;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -70,31 +72,40 @@ public class SecurityConfig {
 
     @Bean
     @Order(2)
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests()
-                .requestMatchers("/view/unauth/**", "/ui/register/**", "/ui/password/**").anonymous()
-                .requestMatchers("/", "/doc", "/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**", "/static/**").permitAll()
-                .requestMatchers("/ui/admin/**", "/view/admin/**").hasRole(Role.ADMIN.name())
-                .requestMatchers("/ui/mngr/**").hasAnyRole(Role.ADMIN.name(), Role.MANAGER.name())
-                .anyRequest().authenticated()
-                .and().formLogin().permitAll()
-                .loginPage("/view/login")
-                .defaultSuccessUrl("/", true)
-                .and().oauth2Login()
-                .loginPage("/view/login")
-                .defaultSuccessUrl("/", true)
-                .tokenEndpoint()
-                .accessTokenResponseClient(accessTokenResponseClient())
-                .and()
-                .userInfoEndpoint()
-                .userService(customOAuth2UserService)
-                .and().and().logout()
-                .logoutUrl("/ui/logout")
-                .logoutSuccessUrl("/")
-                .invalidateHttpSession(true)
-                .clearAuthentication(true)
-                .deleteCookies("JSESSIONID")
-                .and().csrf().disable();
+    public SecurityFilterChain filterChain(HttpSecurity http,
+                                           ObjectProvider<ClientRegistrationRepository> clientRegs) throws Exception {
+        http.authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/view/unauth/**", "/ui/register/**", "/ui/password/**").anonymous()
+                        .requestMatchers("/", "/doc", "/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**", "/static/**").permitAll()
+                        .requestMatchers("/i18n/**").permitAll()
+                        .requestMatchers("/ui/admin/**", "/view/admin/**").hasRole(Role.ADMIN.name())
+                        .requestMatchers("/ui/mngr/**").hasAnyRole(Role.ADMIN.name(), Role.MANAGER.name())
+                        .anyRequest().authenticated()
+                )
+                .formLogin(form -> form
+                        .loginPage("/view/login")
+                        .permitAll()
+                        .defaultSuccessUrl("/", true)
+                );
+
+        if (clientRegs.getIfAvailable() != null) {
+            http.oauth2Login(oauth -> oauth
+                    .loginPage("/view/login")
+                    .defaultSuccessUrl("/", true)
+                    .tokenEndpoint(token -> token.accessTokenResponseClient(accessTokenResponseClient()))
+                    .userInfoEndpoint(user -> user.userService(customOAuth2UserService))
+            );
+        }
+
+        http.logout(logout -> logout
+                        .logoutUrl("/ui/logout")
+                        .logoutSuccessUrl("/")
+                        .invalidateHttpSession(true)
+                        .clearAuthentication(true)
+                        .deleteCookies("JSESSIONID")
+                )
+                .csrf(csrf -> csrf.disable());
+
         return http.build();
     }
 

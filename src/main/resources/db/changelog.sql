@@ -329,3 +329,37 @@ values ('todo', 'ToDo', 3, 'in_progress,canceled|'),
 
 drop index UK_USER_BELONG;
 create unique index UK_USER_BELONG on USER_BELONG (OBJECT_ID, OBJECT_TYPE, USER_ID, USER_TYPE_CODE) where ENDPOINT is null;
+
+--changeset nastya:seed_duration_demo runOnChange:true
+
+-- seed: project, task, user
+insert into PROJECT (ID, CODE, TITLE, TYPE_CODE, DESCRIPTION, PARENT_ID)
+values (91001, 'PRJ_SEED', 'Seed Project', 'software', 'Project for duration demo', null)
+on conflict (id) do nothing;
+
+insert into TASK (ID, TITLE, TYPE_CODE, STATUS_CODE, PROJECT_ID)
+values (92001, 'Seed Task for duration', 'task', 'done', 91001)
+on conflict (id) do nothing;
+
+insert into USERS (ID, EMAIL, PASSWORD, FIRST_NAME, LAST_NAME, DISPLAY_NAME)
+values (93001, 'admin@gmail.com', '{noop}admin', 'Admin', 'Admin', 'admin')
+on conflict (id) do nothing;
+
+insert into USER_ROLE (USER_ID, ROLE)
+values (93001, 1)
+on conflict do nothing;
+
+insert into ACTIVITY (AUTHOR_ID, TASK_ID, UPDATED, TITLE, DESCRIPTION, ESTIMATE, TYPE_CODE, STATUS_CODE)
+values (93001, 92001, timestamp '2025-08-20 10:00:00','Status: In progress', null, null, 'task', 'in_progress');
+
+insert into ACTIVITY (AUTHOR_ID, TASK_ID, UPDATED, TITLE, DESCRIPTION, ESTIMATE, TYPE_CODE, STATUS_CODE)
+values (93001, 92001, timestamp '2025-08-21 16:30:00','Status: Ready for review', null, null, 'task', 'ready_for_review');
+
+insert into ACTIVITY (AUTHOR_ID, TASK_ID, UPDATED, TITLE, DESCRIPTION, ESTIMATE, TYPE_CODE, STATUS_CODE)
+values (93001, 92001, timestamp '2025-08-22 12:15:00','Status: Done', null, null, 'task', 'done');
+
+--rollback delete from ACTIVITY where TASK_ID=92001;
+--rollback delete from USER_ROLE where USER_ID=93001;
+--rollback delete from USERS where ID=93001;
+--rollback delete from TASK where ID=92001;
+--rollback delete from PROJECT where ID=91001;

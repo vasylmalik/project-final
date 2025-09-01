@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+ import java.util.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -39,6 +40,7 @@ public class TaskService {
     private final SprintRepository sprintRepository;
     private final TaskExtMapper extMapper;
     private final UserBelongRepository userBelongRepository;
+    private final TaskRepository taskRepository;
 
     @Transactional
     public void changeStatus(long taskId, String statusCode) {
@@ -86,8 +88,10 @@ public class TaskService {
         }
     }
 
+    @Transactional(readOnly = true)
     public TaskToFull get(long id) {
         Task task = Util.checkExist(id, handler.getRepository().findFullById(id));
+        task.getTags().size();
         TaskToFull taskToFull = fullMapper.toTo(task);
         List<Activity> activities = activityHandler.getRepository().findAllByTaskIdOrderByUpdatedDesc(id);
         fillExtraFields(taskToFull, activities);
@@ -139,5 +143,56 @@ public class TaskService {
         if (!userType.equals(possibleUserType)) {
             throw new DataConflictException(String.format(assign ? CANNOT_ASSIGN : CANNOT_UN_ASSIGN, userType, task.getStatusCode()));
         }
+    }
+
+    @Transactional
+    public void addTagsToTask(long taskId, java.util.Set<String> names) {
+        Task task = handler.getRepository().getExisted(taskId);
+        if (task.getTags() == null) {
+            task.setTags(new java.util.HashSet<>());
+        } else if (!(task.getTags() instanceof java.util.HashSet)) {
+            task.setTags(new java.util.HashSet<>(task.getTags()));
+        }
+        task.getTags().addAll(clean(names));
+    }
+
+    @Transactional(readOnly = true)
+    public Set<String> getTaskTags(long taskId) {
+        return taskRepository.findTagsByTaskId(taskId);
+    }
+
+
+    @Transactional
+    public void setTaskTags(long taskId, java.util.Set<String> names) {
+        Task task = handler.getRepository().getExisted(taskId);
+        java.util.Set<String> cleaned = clean(names);
+        if (task.getTags() == null) {
+            task.setTags(new java.util.HashSet<>(cleaned));
+        } else {
+            task.getTags().clear();
+            task.getTags().addAll(cleaned);
+        }
+    }
+
+    @Transactional
+    public void removeTagFromTask(long taskId, String tagName) {
+        Task task = handler.getRepository().getExisted(taskId);
+        if (task.getTags() == null || tagName == null) return;
+        String trimmed = tagName.trim();
+        if (trimmed.isEmpty()) return;
+
+        if (!(task.getTags() instanceof java.util.HashSet)) {
+            task.setTags(new java.util.HashSet<>(task.getTags()));
+        }
+        task.getTags().remove(trimmed);
+    }
+
+    private static java.util.Set<String> clean(java.util.Set<String> in) {
+        if (in == null) return java.util.Set.of();
+        return in.stream()
+                .filter(java.util.Objects::nonNull)
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .collect(java.util.stream.Collectors.toCollection(java.util.LinkedHashSet::new));
     }
 }

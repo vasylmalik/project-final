@@ -1,0 +1,44 @@
+services:
+  postgres-jira-prod:
+    image: postgres:16
+    container_name: postgres-jira-prod
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      POSTGRES_DB: jira
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "5434:5432"
+    volumes:
+      - pgprod_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d jira"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  postgres-jira-test:
+    image: postgres:16
+    container_name: postgres-jira-test
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      POSTGRES_DB: jira-test
+      POSTGRES_USER: ${TEST_DB_USER}
+      POSTGRES_PASSWORD: ${TEST_DB_PASSWORD}
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgtest_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${TEST_DB_USER} -d jira-test"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  pgprod_data:
+  pgtest_data:

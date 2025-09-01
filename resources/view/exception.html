@@ -1,5 +1,6 @@
-<html lang="ru" xmlns:th="http://www.thymeleaf.org">
-<th:block th:replace="~{layout/main::page(title='Application Error',appMain=~{::appMain})}">
+<!DOCTYPE html>
+<html lang="uk" xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{layout/main::page(title=#{error.page.title},appMain=~{::appMain})}">
     <appMain>
         <div class="text-center">
             <br>
@@ -9,3 +10,4 @@
         </div>
     </appMain>
 </th:block>
+</html>

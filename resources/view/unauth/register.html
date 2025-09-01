@@ -1,18 +1,19 @@
 <!DOCTYPE html>
-<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<html lang="uk" xmlns:th="http://www.thymeleaf.org">
 
-<th:block th:replace="~{layout/main::page(title='Register',appMain=~{::appMain})}">
+<th:block th:replace="~{layout/main::page(title=#{register.title},appMain=~{::appMain})}">
     <appMain>
         <div class="row d-flex justify-content-center align-items-center">
             <div class="col-12 col-md-8 col-xl-5">
                 <div class="card shadow-2-strong" style="border-radius: 1rem;">
                     <div class="card-body p-3 p-md-5 text-center">
-                        <h3 class="mb-3">Registration</h3>
+                        <h3 class="mb-3" th:text="#{register.title}">Реєстрація</h3>
                         <form action="/ui/register" method="post" th:object="${userTo}">
                             <div class="form-outline mb-4">
-                                <input placeholder="First name" required
+                                <input required type="text"
+                                       th:placeholder="#{register.firstName}"
                                        th:class="${#fields.hasErrors('firstName')} ? 'form-control is-invalid' : 'form-control'"
-                                       th:field="*{firstName}" type="text"/>
+                                       th:field="*{firstName}"/>
                                 <span class="help-block" th:if="${#fields.hasErrors('firstName')}">
 									<ul>
 										<li class="text-danger text-start"
@@ -21,9 +22,10 @@
 								</span>
                             </div>
                             <div class="form-outline mb-4">
-                                <input placeholder="Last name" th:class="${#fields.hasErrors('lastName')} ? 'form-control is-invalid' : 'form-control'"
-                                       th:field="*{lastName}"
-                                       type="text"/>
+                                <input type="text"
+                                       th:placeholder="#{register.lastName}"
+                                       th:class="${#fields.hasErrors('lastName')} ? 'form-control is-invalid' : 'form-control'"
+                                       th:field="*{lastName}"/>
                                 <span class="help-block" th:if="${#fields.hasErrors('lastName')}">
 									<ul>
 										<li class="text-danger text-start" th:each="err : ${#fields.errors('lastName')}"
@@ -32,9 +34,10 @@
 								</span>
                             </div>
                             <div class="form-outline mb-4">
-                                <input placeholder="E-mail" required
+                                <input required type="text"
+                                       th:placeholder="#{register.email}"
                                        th:class="${#fields.hasErrors('email')} ? 'form-control is-invalid' : 'form-control'"
-                                       th:field="*{email}" type="text"/>
+                                       th:field="*{email}"/>
                                 <span class="help-block" th:if="${#fields.hasErrors('email')}">
 									<ul>
 										<li class="text-danger text-start" th:each="err : ${#fields.errors('email')}"
@@ -43,9 +46,10 @@
 								</span>
                             </div>
                             <div class="form-outline mb-4">
-                                <input placeholder="Password" required
+                                <input required type="password"
+                                       th:placeholder="#{register.password}"
                                        th:class="${#fields.hasErrors('password')} ? 'form-control is-invalid' : 'form-control'"
-                                       th:field="*{password}" type="password"/>
+                                       th:field="*{password}"/>
                                 <span class="help-block" th:if="${#fields.hasErrors('password')}">
 									<ul>
 										<li class="text-danger text-start" th:each="err : ${#fields.errors('password')}"
@@ -55,7 +59,8 @@
                             </div>
                             <div class="row">
                                 <div class="d-grid gap-2">
-                                    <button class="btn btn-success btn-lg" type="submit">Create account</button>
+                                    <button class="btn btn-success btn-lg" type="submit"
+                                            th:text="#{register.button}">Створити обліковий запис</button>
                                 </div>
                             </div>
                         </form>
@@ -63,27 +68,16 @@
                             <div class="col-5">
                                 <hr>
                             </div>
-                            <div class="col-2">
-                                OR
-                            </div>
+                            <div class="col-2" th:text="#{register.or}">АБО</div>
                             <div class="col-5">
                                 <hr>
                             </div>
                         </div>
-                        <p class="mt-3 mb-4">
-                            Fast registration through social networks
+                        <p class="mt-3 mb-4" th:text="#{register.social}">
+                            Швидка реєстрація через соціальні мережі
                         </p>
-                        <a class="btn btn-secondary btn-lg me-2" href="/oauth2/authorization/google"
-                           type="button">
+                        <a class="btn btn-secondary btn-lg me-2" href="/oauth2/authorization/google" type="button">
                             <i class="fa-brands fa-google"></i>
-                        </a>
-                        <a class="btn btn-primary btn-lg me-2" href="/oauth2/authorization/vk" style="padding-left: 17px; padding-right: 17px;"
-                           type="button">
-                            <i class="fa-brands fa-vk"></i>
-                        </a>
-                        <a class="btn btn-danger btn-lg me-2" href="/oauth2/authorization/yandex" style="padding-left: 21px; padding-right: 21px;"
-                           type="button">
-                            <i class="fa-brands fa-yandex"></i>
                         </a>
                         <a class="btn btn-dark btn-lg me-2" href="/oauth2/authorization/github" type="button">
                             <i class="fa-brands fa-github"></i>
@@ -92,7 +86,8 @@
                             <i class="fa-brands fa-gitlab"></i>
                         </a>
                         <p class="mt-3 mb-2 mb-md-0" style="font-size:0.8em">
-                            Already have an account? <a href="/view/login">Sign in</a>
+                            <span th:text="#{register.haveAccount}">Вже маєте обліковий запис?</span>
+                            <a href="/view/login" th:text="#{register.signin}">Увійти</a>
                         </p>
                     </div>
                 </div>
