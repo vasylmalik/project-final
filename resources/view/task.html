@@ -13,6 +13,8 @@
         <h5>Type: [[${task.typeCode}]]</h5>
         <h5>Updated: [[${#temporals.format(task?.updated, 'MM/dd/yyyy, HH:mm:ss')} ?: '-' ]]</h5>
         <h5>Estimate: [[${task.estimate} ?: '-']]</h5>
+        <h5>TotalTimeInProgress: [[${task.developmentTime} ? (${task.developmentTime} >= 3600 ? ${task.developmentTime/3600} + ' ч ' : '') + (${task.developmentTime % 3600/60} >= 1 ? ${task.developmentTime % 3600/60} + ' мин ' : '') + (${task.developmentTime % 60} + ' сек') : '-']]</h5>
+        <h5>TotalTimeInTesting: [[${task.testingTime} ? (${task.testingTime} >= 3600 ? ${task.testingTime/3600} + ' ч ' : '') + (${task.testingTime % 3600/60} >= 1 ? ${task.testingTime % 3600/60} + ' мин ' : '') + (${task.testingTime % 60} + ' сек') : '-']]</h5>
         <hr>
         <h6 th:if="${task.parentId != null}">Parent: <a th:href="@{'/ui/tasks/' + ${task.parentId}}">[[${task.parent.code}]]</a>
         </h6>

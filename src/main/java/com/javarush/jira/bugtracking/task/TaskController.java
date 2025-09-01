@@ -13,6 +13,7 @@ import com.javarush.jira.login.AuthUser;
 import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import static com.javarush.jira.common.BaseHandler.createdResponse;
 
@@ -155,5 +157,32 @@ public class TaskController {
         public TaskTreeNode(TaskTo taskTo) {
             this(taskTo, new LinkedList<>());
         }
+    }
+
+    @GetMapping("/{id}/tags")
+    public Set<String> getTags(@PathVariable long id) {
+        log.info("get tags for task with id={}", id);
+        return taskService.getTags(id);
+    }
+
+    @PutMapping("/{id}/tags")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateTags(@PathVariable long id, @RequestBody Set<@Size(min = 2, max = 32) String> tags) {
+        log.info("update tags for task with id={}: {}", id, tags);
+        taskService.updateTags(id, tags);
+    }
+
+    @PostMapping("/{id}/tags")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void addTag(@PathVariable long id, @Size(min = 2, max = 32) @RequestParam String tag) {
+        log.info("add tag {} to task with id={}", tag, id);
+        taskService.addTag(id, tag);
+    }
+
+    @DeleteMapping("/{id}/tags/{tag}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void removeTag(@PathVariable long id, @PathVariable String tag) {
+        log.info("remove tag {} from task with id={}", tag, id);
+        taskService.removeTag(id, tag);
     }
 }

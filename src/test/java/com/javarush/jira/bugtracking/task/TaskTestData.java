@@ -17,7 +17,7 @@ import static com.javarush.jira.login.internal.web.UserTestData.USER_ID;
 public class TaskTestData {
     public static final MatcherFactory.Matcher<Task> TASK_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Task.class, "id", "startpoint", "endpoint", "activities", "project", "sprint", "parent", "tags");
     public static final MatcherFactory.Matcher<TaskTo> TASK_TO_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(TaskTo.class, "id", "startpoint", "endpoint");
-    public static final MatcherFactory.Matcher<TaskToFull> TASK_TO_FULL_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(TaskToFull.class, "id", "updated", "activityTos.id");
+    public static final MatcherFactory.Matcher<TaskToFull> TASK_TO_FULL_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(TaskToFull.class, "id", "updated", "activityTos.id", "developmentTime", "testingTime");
     public static final MatcherFactory.Matcher<Activity> ACTIVITY_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Activity.class, "title", "updated", "author");
     public static final MatcherFactory.Matcher<UserBelong> USER_BELONG_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(UserBelong.class, "id", "startpoint", "endpoint");
 

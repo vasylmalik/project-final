@@ -7,6 +7,7 @@ import com.javarush.jira.bugtracking.sprint.Sprint;
 import com.javarush.jira.bugtracking.sprint.SprintRepository;
 import com.javarush.jira.bugtracking.task.mapper.TaskExtMapper;
 import com.javarush.jira.bugtracking.task.mapper.TaskFullMapper;
+import com.javarush.jira.bugtracking.task.to.ActivityTo;
 import com.javarush.jira.bugtracking.task.to.TaskToExt;
 import com.javarush.jira.bugtracking.task.to.TaskToFull;
 import com.javarush.jira.common.error.DataConflictException;
@@ -18,9 +19,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 
 import static com.javarush.jira.bugtracking.ObjectType.TASK;
 import static com.javarush.jira.bugtracking.task.TaskUtil.fillExtraFields;
@@ -92,6 +95,8 @@ public class TaskService {
         List<Activity> activities = activityHandler.getRepository().findAllByTaskIdOrderByUpdatedDesc(id);
         fillExtraFields(taskToFull, activities);
         taskToFull.setActivityTos(activityHandler.getMapper().toToList(activities));
+        taskToFull.setDevelopmentTime(calculateTimeSpentInStatus(taskToFull, "in_progress"));
+        taskToFull.setTestingTime(calculateTimeSpentInStatus(taskToFull, "test"));
         return taskToFull;
     }
 
@@ -139,5 +144,80 @@ public class TaskService {
         if (!userType.equals(possibleUserType)) {
             throw new DataConflictException(String.format(assign ? CANNOT_ASSIGN : CANNOT_UN_ASSIGN, userType, task.getStatusCode()));
         }
+    }
+
+    @Transactional(readOnly = true)
+    public Set<String> getTags(long taskId) {
+        Task task = handler.getRepository().getExisted(taskId);
+        return new HashSet<>(task.getTags());
+    }
+
+    @Transactional
+    public void updateTags(long taskId, Set<String> tags) {
+        Assert.notNull(tags, "tags must not be null");
+        Task task = handler.getRepository().getExisted(taskId);
+        task.setTags(tags);
+    }
+
+    @Transactional
+    public void addTag(long taskId, String tag) {
+        Assert.notNull(tag, "tag must not be null");
+        Task task = handler.getRepository().getExisted(taskId);
+        Set<String> tags = new HashSet<>(task.getTags());
+        if (tags.add(tag)) {
+            task.setTags(tags);
+        }
+    }
+
+    @Transactional
+    public void removeTag(long taskId, String tag) {
+        Task task = handler.getRepository().getExisted(taskId);
+        Set<String> tags = new HashSet<>(task.getTags());
+        if (tags.remove(tag)) {
+            task.setTags(tags);
+        }
+    }
+    public long calculateTimeSpentInStatus(TaskToFull taskToFull, String targetStatus) {
+        List<ActivityTo> activities = taskToFull.getActivityTos().stream()
+                .sorted((o1, o2) -> {
+                    if (o1.getUpdated() == null || o2.getUpdated() == null) {
+                        return 0;
+                    }
+                    return o1.getUpdated().compareTo(o2.getUpdated());
+                })
+                .toList();
+
+        if (CollectionUtils.isEmpty(activities)) {
+            return 0;
+        }
+
+        long result = 0;
+        for (int i = 0; i < activities.size(); i++) {
+            ActivityTo activityStart = activities.get(i);
+            boolean activityStartHasEnd = false;
+            if (!Objects.equals(activityStart.getStatusCode(), targetStatus) || activityStart.getUpdated() == null) {
+                continue;
+            }
+
+            ActivityTo activityEnd = null;
+            for (int j = i + 1; j < activities.size(); j++) {
+                activityEnd = activities.get(j);
+                if (!Objects.equals(activityEnd.getStatusCode(), targetStatus) && activityEnd.getUpdated() != null) {
+                    activityStartHasEnd = true;
+                    i = j;
+                    break;
+                }
+            }
+
+            LocalDateTime start = activityStart.getUpdated();
+            if (activityStartHasEnd) {
+                LocalDateTime end = activityEnd.getUpdated();
+                result += (start.until(end, ChronoUnit.SECONDS));
+            } else {
+                result += (start.until(LocalDateTime.now(), ChronoUnit.SECONDS));
+            }
+        }
+
+        return result;
     }
 }

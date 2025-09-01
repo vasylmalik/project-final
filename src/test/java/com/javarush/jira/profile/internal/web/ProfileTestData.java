@@ -10,15 +10,16 @@ import java.util.Collections;
 import java.util.Set;
 
 public class ProfileTestData {
-    public static MatcherFactory.Matcher<Profile> PROFILE_MATCHER =
-            MatcherFactory.usingIgnoringFieldsComparator(Profile.class, "user");
+    public static MatcherFactory.Matcher<Profile> PROFILE_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Profile.class, "id");
+    public static MatcherFactory.Matcher<ProfileTo> PROFILE_TO_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(ProfileTo.class, "id");
+    public static final Long USER_PROFILE_ID = 1L;
 
-    public static ProfileTo USER_PROFILE_TO = new ProfileTo(null,
+    public static ProfileTo USER_PROFILE_TO = new ProfileTo(1L,
             Set.of("assigned", "overdue", "deadline"),
             Set.of(new ContactTo("skype", "userSkype"),
                     new ContactTo("mobile", "+01234567890"),
                     new ContactTo("website", "user.com")));
-    public static ProfileTo GUEST_PROFILE_EMPTY_TO = new ProfileTo(null,
+    public static ProfileTo GUEST_PROFILE_EMPTY_TO = new ProfileTo(3L,
             Set.of(),
             Set.of());
 
@@ -36,15 +37,14 @@ public class ProfileTestData {
         return profile;
     }
 
-    public static ProfileTo getUpdatedTo() {
-        return new ProfileTo(null,
+    public static ProfileTo getUpdatedTo(long id) {
+        return new ProfileTo(id,
                 Set.of("assigned", "three_days_before_deadline", "two_days_before_deadline", "one_day_before_deadline", "deadline", "overdue"),
                 Set.of(new ContactTo("skype", "newSkype"),
                         new ContactTo("mobile", "+380987654321"),
                         new ContactTo("website", "new.com"),
                         new ContactTo("github", "newGitHub"),
                         new ContactTo("tg", "newTg"),
-                        new ContactTo("vk", "newVk"),
                         new ContactTo("linkedin", "newLinkedin")));
     }
 
@@ -57,7 +57,6 @@ public class ProfileTestData {
                 new Contact(id, "website", "new.com"),
                 new Contact(id, "github", "newGitHub"),
                 new Contact(id, "tg", "newTg"),
-                new Contact(id, "vk", "newVk"),
                 new Contact(id, "linkedin", "newLinkedin")));
         return profile;
     }

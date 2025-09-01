@@ -25,14 +25,16 @@ public class FileUtil {
             throw new IllegalRequestDataException("Select a file to upload.");
         }
 
-        File dir = new File(directoryPath);
-        if (dir.exists() || dir.mkdirs()) {
-            File file = new File(directoryPath + fileName);
-            try (OutputStream outStream = new FileOutputStream(file)) {
-                outStream.write(multipartFile.getBytes());
-            } catch (IOException ex) {
-                throw new IllegalRequestDataException("Failed to upload file" + multipartFile.getOriginalFilename());
+        try {
+            Path dir = Paths.get(directoryPath); // 1. Создание объекта Path
+            Files.createDirectories(dir); // 2. Гарантированное создание директорий
+            Path file = dir.resolve(fileName); // 3. Безопасное формирование пути к файлу
+            if (Files.exists(file)) {
+                throw new IllegalRequestDataException("File with name " + fileName + " already exists.");
             }
+            multipartFile.transferTo(file); // 4. Эффективная передача файла
+        } catch (IOException ex){
+            throw new IllegalRequestDataException("Failed to upload file" + multipartFile.getOriginalFilename());
         }
     }
 
