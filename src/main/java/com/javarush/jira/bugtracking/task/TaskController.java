@@ -3,16 +3,14 @@ package com.javarush.jira.bugtracking.task;
 import com.javarush.jira.bugtracking.Handlers;
 import com.javarush.jira.bugtracking.UserBelong;
 import com.javarush.jira.bugtracking.UserBelongRepository;
-import com.javarush.jira.bugtracking.task.to.ActivityTo;
-import com.javarush.jira.bugtracking.task.to.TaskTo;
-import com.javarush.jira.bugtracking.task.to.TaskToExt;
-import com.javarush.jira.bugtracking.task.to.TaskToFull;
+import com.javarush.jira.bugtracking.task.to.*;
 import com.javarush.jira.bugtracking.tree.ITreeNode;
 import com.javarush.jira.common.util.Util;
 import com.javarush.jira.login.AuthUser;
 import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -156,4 +154,22 @@ public class TaskController {
             this(taskTo, new LinkedList<>());
         }
     }
+
+    @PatchMapping("/{id}/tags")
+    public ResponseEntity<TaskToTags> addTag(
+            @PathVariable long id,
+            @RequestParam @Size(min = 1, max = 30) String tag) {
+        return ResponseEntity.ok(taskService.addTag(id, tag));
+    }
+
+    @PatchMapping("/{id}/tags/{tag}")
+    public ResponseEntity<TaskToTags> removeTag(@PathVariable long id, @PathVariable String tag) {
+        return ResponseEntity.ok(taskService.removeTag(id, tag));
+    }
+
+    @GetMapping("/{id}/tags")
+    public ResponseEntity<TaskToTags> getTaskWithTags(@PathVariable long id) {
+        return ResponseEntity.ok(taskService.getTaskTags(id));
+    }
+
 }

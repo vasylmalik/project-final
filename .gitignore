@@ -5,5 +5,7 @@ target
 logs
 attachments
 *.patch
+secrets.properties
+secrets-test.properties
 
 
