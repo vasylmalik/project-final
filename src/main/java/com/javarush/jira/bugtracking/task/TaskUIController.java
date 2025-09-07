@@ -6,8 +6,10 @@ import com.javarush.jira.bugtracking.attachment.AttachmentRepository;
 import com.javarush.jira.bugtracking.task.to.ActivityTo;
 import com.javarush.jira.bugtracking.task.to.TaskToExt;
 import com.javarush.jira.bugtracking.task.to.TaskToFull;
+import com.javarush.jira.bugtracking.task.to.TaskToTags;
 import com.javarush.jira.ref.RefTo;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -101,6 +103,24 @@ public class TaskUIController {
             log.info("update {} with id={}", taskTo, taskTo.id());
             service.update(taskTo, taskTo.id());
         }
+        return "redirect:/ui/tasks/" + taskId;
+    }
+    
+    @PostMapping("/add-tag")
+    public String addTag(@RequestParam long taskId,
+                         @RequestParam @Size(min = 1, max = 30) String tagName,
+                         Model model) {
+        log.info("add tag {} to task {}", tagName, taskId);
+        TaskToTags taskToTags = service.addTag(taskId, tagName);
+        model.addAttribute("tags", taskToTags.getTags());
+        return "redirect:/ui/tasks/" + taskId;
+    }
+    
+    @PostMapping("/remove-tag")
+    public String removeTag(@RequestParam long taskId, @RequestParam String tagName, Model model) {
+        log.info("remove tag {} from task {}", tagName, taskId);
+        TaskToTags taskToTags = service.removeTag(taskId, tagName);
+        model.addAttribute("tags", taskToTags.getTags());
         return "redirect:/ui/tasks/" + taskId;
     }
 

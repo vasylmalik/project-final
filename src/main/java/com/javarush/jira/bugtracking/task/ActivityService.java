@@ -3,11 +3,14 @@ package com.javarush.jira.bugtracking.task;
 import com.javarush.jira.bugtracking.Handlers;
 import com.javarush.jira.bugtracking.task.to.ActivityTo;
 import com.javarush.jira.common.error.DataConflictException;
+import com.javarush.jira.common.error.NotFoundException;
 import com.javarush.jira.login.AuthUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.javarush.jira.bugtracking.task.TaskUtil.getLatestValue;
@@ -72,5 +75,56 @@ public class ActivityService {
                 task.setTypeCode(latestType);
             }
         }
+    }
+
+    public Duration getTimeInWork(long taskId) {
+        Task task = taskRepository.getExisted(taskId);
+        List<Activity> activities = handler.getRepository().findAllByTaskIdOrderByUpdatedDesc(task.id());
+
+        LocalDateTime timeInProgress = getTimeTaskByStatus("in_progress", activities);
+        if (timeInProgress == null) {
+            throw new NotFoundException(
+                    "Task with id=" + task.id() + " does not have status 'in_progress'"
+            );
+        }
+
+        LocalDateTime timeReadyForReview = getTimeTaskByStatus("ready_for_review", activities);
+        if (timeReadyForReview == null) {
+            throw new NotFoundException(
+                    "Task with id=" + task.id() + " does not have status 'ready_for_review'"
+            );
+        }
+
+        return Duration.between(timeInProgress, timeReadyForReview);
+    }
+
+    public Duration getTimeInTesting(long taskId) {
+        Task task = taskRepository.getExisted(taskId);
+        List<Activity> activities = handler.getRepository().findAllByTaskIdOrderByUpdatedDesc(task.id());
+
+        LocalDateTime timeReadyForReview = getTimeTaskByStatus("ready_for_review", activities);
+        if (timeReadyForReview == null) {
+            throw new NotFoundException(
+                    "Task with id=" + task.id() + " does not have status 'ready_for_review'"
+            );
+        }
+
+        LocalDateTime timeDone = getTimeTaskByStatus("done", activities);
+        if (timeDone == null) {
+            throw new NotFoundException(
+                    "Task with id=" + task.id() + " does not have status 'done'"
+            );
+        }
+
+        return Duration.between(timeReadyForReview, timeDone);
+    }
+
+    private LocalDateTime getTimeTaskByStatus(String status, List<Activity> activities) {
+        for (Activity activity : activities) {
+            if (status.equals(activity.getStatusCode())) {
+                return activity.getUpdated();
+            }
+        }
+        return null;
     }
 }

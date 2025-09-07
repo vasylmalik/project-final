@@ -5,33 +5,33 @@ DROP TABLE IF EXISTS USER_ROLE;
 DROP TABLE IF EXISTS CONTACT;
 DROP TABLE IF EXISTS MAIL_CASE;
 DROP
-SEQUENCE IF EXISTS MAIL_CASE_ID_SEQ;
+    SEQUENCE IF EXISTS MAIL_CASE_ID_SEQ;
 DROP TABLE IF EXISTS PROFILE;
 DROP TABLE IF EXISTS TASK_TAG;
 DROP TABLE IF EXISTS USER_BELONG;
 DROP
-SEQUENCE IF EXISTS USER_BELONG_ID_SEQ;
+    SEQUENCE IF EXISTS USER_BELONG_ID_SEQ;
 DROP TABLE IF EXISTS ACTIVITY;
 DROP
-SEQUENCE IF EXISTS ACTIVITY_ID_SEQ;
+    SEQUENCE IF EXISTS ACTIVITY_ID_SEQ;
 DROP TABLE IF EXISTS TASK;
 DROP
-SEQUENCE IF EXISTS TASK_ID_SEQ;
+    SEQUENCE IF EXISTS TASK_ID_SEQ;
 DROP TABLE IF EXISTS SPRINT;
 DROP
-SEQUENCE IF EXISTS SPRINT_ID_SEQ;
+    SEQUENCE IF EXISTS SPRINT_ID_SEQ;
 DROP TABLE IF EXISTS PROJECT;
 DROP
-SEQUENCE IF EXISTS PROJECT_ID_SEQ;
+    SEQUENCE IF EXISTS PROJECT_ID_SEQ;
 DROP TABLE IF EXISTS REFERENCE;
 DROP
-SEQUENCE IF EXISTS REFERENCE_ID_SEQ;
+    SEQUENCE IF EXISTS REFERENCE_ID_SEQ;
 DROP TABLE IF EXISTS ATTACHMENT;
 DROP
-SEQUENCE IF EXISTS ATTACHMENT_ID_SEQ;
+    SEQUENCE IF EXISTS ATTACHMENT_ID_SEQ;
 DROP TABLE IF EXISTS USERS;
 DROP
-SEQUENCE IF EXISTS USERS_ID_SEQ;
+    SEQUENCE IF EXISTS USERS_ID_SEQ;
 
 create table PROJECT
 (
@@ -250,19 +250,19 @@ values ('assigned', 'Assigned', 6, '1'),
 
 alter table SPRINT rename COLUMN TITLE to CODE;
 alter table SPRINT
-    alter column CODE type varchar (32);
+alter column CODE type varchar (32);
 alter table SPRINT
     alter column CODE set not null;
 create unique index UK_SPRINT_PROJECT_CODE on SPRINT (PROJECT_ID, CODE);
 
 ALTER TABLE TASK
-    DROP COLUMN DESCRIPTION;
+DROP COLUMN DESCRIPTION;
 ALTER TABLE TASK
-    DROP COLUMN PRIORITY_CODE;
+DROP COLUMN PRIORITY_CODE;
 ALTER TABLE TASK
-    DROP COLUMN ESTIMATE;
+DROP COLUMN ESTIMATE;
 ALTER TABLE TASK
-    DROP COLUMN UPDATED;
+DROP COLUMN UPDATED;
 
 --changeset ishlyakhtenkov:change_task_status_reference
 
@@ -282,15 +282,15 @@ values ('todo', 'ToDo', 3, 'in_progress,canceled'),
 --changeset gkislin:users_add_on_delete_cascade
 
 alter table ACTIVITY
-    drop constraint FK_ACTIVITY_USERS,
+drop constraint FK_ACTIVITY_USERS,
     add constraint FK_ACTIVITY_USERS foreign key (AUTHOR_ID) references USERS (ID) on delete cascade;
 
 alter table USER_BELONG
-    drop constraint FK_USER_BELONG,
+drop constraint FK_USER_BELONG,
     add constraint FK_USER_BELONG foreign key (USER_ID) references USERS (ID) on delete cascade;
 
 alter table ATTACHMENT
-    drop constraint FK_ATTACHMENT,
+drop constraint FK_ATTACHMENT,
     add constraint FK_ATTACHMENT foreign key (USER_ID) references USERS (ID) on delete cascade;
 
 --changeset valeriyemelyanov:change_user_type_reference
@@ -329,3 +329,9 @@ values ('todo', 'ToDo', 3, 'in_progress,canceled|'),
 
 drop index UK_USER_BELONG;
 create unique index UK_USER_BELONG on USER_BELONG (OBJECT_ID, OBJECT_TYPE, USER_ID, USER_TYPE_CODE) where ENDPOINT is null;
+
+-- --changeset alex04:insert_activity
+-- INSERT INTO ACTIVITY (AUTHOR_ID, TASK_ID, UPDATED, STATUS_CODE)
+-- VALUES(11, 118, now() - interval '5 hours', 'in_progress'),
+--       (11, 118, now() - interval '2 hours', 'ready_for_review'),
+--       (11, 118, now() - interval '30 minutes', 'done');

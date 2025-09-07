@@ -16,14 +16,8 @@ import com.javarush.jira.bugtracking.task.Activity;
 import com.javarush.jira.bugtracking.task.ActivityRepository;
 import com.javarush.jira.bugtracking.task.Task;
 import com.javarush.jira.bugtracking.task.TaskRepository;
-import com.javarush.jira.bugtracking.task.mapper.ActivityMapper;
-import com.javarush.jira.bugtracking.task.mapper.TaskExtMapper;
-import com.javarush.jira.bugtracking.task.mapper.TaskFullMapper;
-import com.javarush.jira.bugtracking.task.mapper.TaskMapper;
-import com.javarush.jira.bugtracking.task.to.ActivityTo;
-import com.javarush.jira.bugtracking.task.to.TaskTo;
-import com.javarush.jira.bugtracking.task.to.TaskToExt;
-import com.javarush.jira.bugtracking.task.to.TaskToFull;
+import com.javarush.jira.bugtracking.task.mapper.*;
+import com.javarush.jira.bugtracking.task.to.*;
 import com.javarush.jira.common.BaseHandler;
 import com.javarush.jira.common.BaseMapper;
 import com.javarush.jira.common.BaseRepository;
@@ -76,6 +70,13 @@ public class Handlers {
     @Component
     public static class TaskExtHandler extends UserBelongHandler<Task, TaskToExt, TaskRepository, TaskExtMapper> {
         public TaskExtHandler(TaskRepository repository, TaskExtMapper mapper) {
+            super(repository, mapper);
+        }
+    }
+
+    @Component
+    public static class TaskTagsHandler extends UserBelongHandler<Task, TaskToTags, TaskRepository, TaskTagsMapper> {
+        public TaskTagsHandler(TaskRepository repository, TaskTagsMapper mapper) {
             super(repository, mapper);
         }
     }

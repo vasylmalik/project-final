@@ -7,8 +7,10 @@ import com.javarush.jira.bugtracking.sprint.Sprint;
 import com.javarush.jira.bugtracking.sprint.SprintRepository;
 import com.javarush.jira.bugtracking.task.mapper.TaskExtMapper;
 import com.javarush.jira.bugtracking.task.mapper.TaskFullMapper;
+import com.javarush.jira.bugtracking.task.mapper.TaskTagsMapper;
 import com.javarush.jira.bugtracking.task.to.TaskToExt;
 import com.javarush.jira.bugtracking.task.to.TaskToFull;
+import com.javarush.jira.bugtracking.task.to.TaskToTags;
 import com.javarush.jira.common.error.DataConflictException;
 import com.javarush.jira.common.error.NotFoundException;
 import com.javarush.jira.common.util.Util;
@@ -20,7 +22,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static com.javarush.jira.bugtracking.ObjectType.TASK;
 import static com.javarush.jira.bugtracking.task.TaskUtil.fillExtraFields;
@@ -33,17 +38,19 @@ public class TaskService {
     static final String CANNOT_ASSIGN = "Cannot assign as %s to task with status=%s";
     static final String CANNOT_UN_ASSIGN = "Cannot unassign as %s from task with status=%s";
 
-    private final Handlers.TaskExtHandler handler;
+    private final Handlers.TaskExtHandler extHandler;
     private final Handlers.ActivityHandler activityHandler;
+    private final Handlers.TaskTagsHandler tagsHandler;
     private final TaskFullMapper fullMapper;
     private final SprintRepository sprintRepository;
     private final TaskExtMapper extMapper;
     private final UserBelongRepository userBelongRepository;
+    private final TaskTagsMapper tagsMapper;
 
     @Transactional
     public void changeStatus(long taskId, String statusCode) {
         Assert.notNull(statusCode, "statusCode must not be null");
-        Task task = handler.getRepository().getExisted(taskId);
+        Task task = extHandler.getRepository().getExisted(taskId);
         if (!statusCode.equals(task.getStatusCode())) {
             task.checkAndSetStatusCode(statusCode);
             Activity statusChangedActivity = new Activity(null, taskId, AuthUser.authId());
@@ -51,14 +58,14 @@ public class TaskService {
             activityHandler.create(statusChangedActivity);
             String userType = getRefTo(RefType.TASK_STATUS, statusCode).getAux(1);
             if (userType != null) {
-                handler.createUserBelong(taskId, TASK, AuthUser.authId(), userType);
+                extHandler.createUserBelong(taskId, TASK, AuthUser.authId(), userType);
             }
         }
     }
 
     @Transactional
     public void changeSprint(long taskId, Long sprintId) {
-        Task task = handler.getRepository().getExisted(taskId);
+        Task task = extHandler.getRepository().getExisted(taskId);
         if (task.getParentId() != null) {
             throw new DataConflictException("Can't change subtask sprint");
         }
@@ -68,12 +75,12 @@ public class TaskService {
                 throw new DataConflictException("Target sprint must belong to the same project");
             }
         }
-        handler.getRepository().setTaskAndSubTasksSprint(taskId, sprintId);
+        extHandler.getRepository().setTaskAndSubTasksSprint(taskId, sprintId);
     }
 
     @Transactional
     public Task create(TaskToExt taskTo) {
-        Task created = handler.createWithBelong(taskTo, TASK, "task_author");
+        Task created = extHandler.createWithBelong(taskTo, TASK, "task_author");
         activityHandler.create(makeActivity(created.id(), taskTo));
         return created;
     }
@@ -81,13 +88,13 @@ public class TaskService {
     @Transactional
     public void update(TaskToExt taskTo, long id) {
         if (!taskTo.equals(get(taskTo.id()))) {
-            handler.updateFromTo(taskTo, id);
+            extHandler.updateFromTo(taskTo, id);
             activityHandler.create(makeActivity(id, taskTo));
         }
     }
 
     public TaskToFull get(long id) {
-        Task task = Util.checkExist(id, handler.getRepository().findFullById(id));
+        Task task = Util.checkExist(id, extHandler.getRepository().findFullById(id));
         TaskToFull taskToFull = fullMapper.toTo(task);
         List<Activity> activities = activityHandler.getRepository().findAllByTaskIdOrderByUpdatedDesc(id);
         fillExtraFields(taskToFull, activities);
@@ -110,7 +117,7 @@ public class TaskService {
     }
 
     public TaskToExt getNewWithParent(long parentId) {
-        Task parent = handler.getRepository().getExisted(parentId);
+        Task parent = extHandler.getRepository().getExisted(parentId);
         Task newTask = new Task();
         newTask.setParentId(parentId);
         newTask.setSprintId(parent.getSprintId());
@@ -120,7 +127,7 @@ public class TaskService {
 
     public void assign(long id, String userType, long userId) {
         checkAssignmentActionPossible(id, userType, true);
-        handler.createUserBelong(id, TASK, userId, userType);
+        extHandler.createUserBelong(id, TASK, userId, userType);
     }
 
     @Transactional
@@ -134,10 +141,45 @@ public class TaskService {
 
     private void checkAssignmentActionPossible(long id, String userType, boolean assign) {
         Assert.notNull(userType, "userType must not be null");
-        Task task = handler.getRepository().getExisted(id);
+        Task task = extHandler.getRepository().getExisted(id);
         String possibleUserType = getRefTo(RefType.TASK_STATUS, task.getStatusCode()).getAux(1);
         if (!userType.equals(possibleUserType)) {
             throw new DataConflictException(String.format(assign ? CANNOT_ASSIGN : CANNOT_UN_ASSIGN, userType, task.getStatusCode()));
         }
+    }
+
+    public TaskToTags getTaskTags(long taskId) {
+        Task task = tagsHandler.getRepository().getExisted(taskId);
+        return tagsMapper.toTo(task);
+    }
+
+    @Transactional
+    public TaskToTags addTag(long taskId, String tag) {
+        Assert.notNull(tag, "tag must not be null");
+
+        Task task = tagsHandler.getRepository().getExisted(taskId);
+
+        Set<String> newTags = copyTaskTags(task);
+        newTags.add(tag);
+
+        task.setTags(Collections.unmodifiableSet(newTags));
+        return tagsMapper.toTo(task);
+    }
+
+    @Transactional
+    public TaskToTags removeTag(long taskId, String tag) {
+        Assert.notNull(tag, "tag must not be null");
+
+        Task task = tagsHandler.getRepository().getExisted(taskId);
+
+        Set<String> newTags = copyTaskTags(task);
+        newTags.remove(tag);
+
+        task.setTags(Collections.unmodifiableSet(newTags));
+        return tagsMapper.toTo(task);
+    }
+
+    private Set<String> copyTaskTags(Task task) {
+        return new HashSet<>(task.getTags());
     }
 }
