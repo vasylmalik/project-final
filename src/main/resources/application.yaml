@@ -37,7 +37,7 @@ spring:
 
   liquibase:
     changeLog: "classpath:db/changelog.sql"
-    contexts: prod
+#    contexts: prod
 
   # Jackson Fields Serialization
   jackson:
