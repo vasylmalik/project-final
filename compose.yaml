@@ -2,15 +2,14 @@ services:
   postgres:
     image: postgres:17
     environment:
-      POSTGRES_DB: db
-      POSTGRES_PASSWORD: db
-      POSTGRES_USER: db
+      POSTGRES_DB: ${POSTGRES_DB} # Зчитується з .env файлу
+      POSTGRES_USER: ${POSTGRES_USER} # Зчитується з .env файлу
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD} # Зчитується з .env файлу
       TZ: UTC
     ports:
       - '5432:5432'
     volumes:
-      - postgres_data:/var/lib/postgresql/data  # Persists database data
+      - postgres_data:/var/lib/postgresql/data # Persists database data
 
 volumes:
   postgres_data:
-  redis_data:
