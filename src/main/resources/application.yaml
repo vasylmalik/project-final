@@ -15,10 +15,12 @@ spring:
     show-sql: true
     open-in-view: false
 
+    # validate db by model
     hibernate:
       ddl-auto: validate
 
     properties:
+      #  http://docs.jboss.org/hibernate/orm/5.3/userguide/html_single/Hibernate_User_Guide.html#configurations
       hibernate:
         format_sql: true
         default-batch-fetch-size: 20
@@ -32,6 +34,7 @@ spring:
   liquibase:
     changeLog: "classpath:db/changelog.sql"
 
+  # Jackson Fields Serialization
   jackson:
     visibility:
       field: any
@@ -39,6 +42,7 @@ spring:
       setter: none
       is-getter: none
 
+  # https://docs.spring.io/spring-boot/docs/current/reference/html/appendix-application-properties.html#common-application-properties-cache
   cache:
     cache-names: users
     caffeine.spec: maximumSize=10000,expireAfterAccess=5m
