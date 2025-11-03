@@ -1,24 +1,16 @@
 spring.cache.type: none
 spring:
-  # Настройка инициализации SQL для Spring.
-  # Установлено в 'never', чтобы избежать конфликтов с Liquibase,
-  # который управляет схемой и данными.
   sql:
     init:
       mode: never
   datasource:
-    # URL для базы данных H2 в памяти.
-    # DB_CLOSE_DELAY=-1 предотвращает закрытие БД после последнего соединения.
-    # DB_CLOSE_ON_EXIT=FALSE предотвращает закрытие БД при выходе из JVM (полезно для отладки).
     url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    username: sa # Стандартный пользователь для H2
-    password: # Стандартный пустой пароль для H2
-    driver-class-name: org.h2.Driver # Правильный драйвер для H2
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect # Правильный диалект Hibernate для H2
+    database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
-      # Важно: Устанавливаем 'none', чтобы Hibernate не пытался
-      # автоматически управлять схемой базы данных, так как это делает Liquibase.
       ddl-auto: none
   liquibase:
-    change-log: "classpath:db/changelog-test.sql" # Путь к вашему файлу Liquibase changelog
+    change-log: "classpath:db/changelog-test.sql"
