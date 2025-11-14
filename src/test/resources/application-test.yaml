@@ -1,8 +1,4 @@
-spring.cache.type: none
 spring:
-  sql:
-    init:
-      mode: never
   datasource:
     url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     username: sa
@@ -14,3 +10,21 @@ spring:
       ddl-auto: none
   liquibase:
     change-log: "classpath:db/changelog-test.sql"
+  cache:
+    type: none
+  mail:
+    username: test@example.com
+    password: testpassword
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            client-id: test-github-client-id
+            client-secret: test-github-client-secret
+          google:
+            client-id: test-google-client-id
+            client-secret: test-google-client-secret
+          gitlab:
+            client-id: test-gitlab-client-id
+            client-secret: test-gitlab-client-secret
