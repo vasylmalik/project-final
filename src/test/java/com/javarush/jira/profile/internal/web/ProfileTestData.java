@@ -13,6 +13,9 @@ public class ProfileTestData {
     public static MatcherFactory.Matcher<Profile> PROFILE_MATCHER =
             MatcherFactory.usingIgnoringFieldsComparator(Profile.class, "user");
 
+    public static MatcherFactory.Matcher<ProfileTo> TO_MATCHER =
+            MatcherFactory.usingIgnoringFieldsComparator(ProfileTo.class, "user");
+
     public static ProfileTo USER_PROFILE_TO = new ProfileTo(null,
             Set.of("assigned", "overdue", "deadline"),
             Set.of(new ContactTo("skype", "userSkype"),
