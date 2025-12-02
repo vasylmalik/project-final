@@ -27,8 +27,8 @@ spring:
         jdbc.batch_size: 20
   datasource:
     url: jdbc:postgresql://localhost:5432/jira
-    username: jira
-    password: JiraRush
+    username: postgres
+    password: postgres
 
   liquibase:
     changeLog: "classpath:db/changelog.sql"
