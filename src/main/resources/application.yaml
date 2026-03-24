@@ -55,7 +55,22 @@ spring:
           starttls:
             enable: true
           auth: true
-  thymeleaf.check-template-location: false
+
+  messages:
+    basename: messages
+    encoding: UTF-8
+    fallback-to-system-locale: false
+    use-code-as-default-message: true
+    cache-duration: 0
+
+  #  thymeleaf.check-template-location: false
+  thymeleaf:
+    cache: false
+    encoding: UTF-8
+    mode: HTML
+    servlet:
+      content-type: text/html
+    check-template-location: false
 
   mvc.throw-exception-if-no-handler-found: true
   web.resources.add-mappings: false
