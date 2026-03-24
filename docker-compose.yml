@@ -15,6 +15,8 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/jira
       - SPRING_DATASOURCE_USERNAME=jira
       - SPRING_DATASOURCE_PASSWORD=JiraRush
+    networks:
+      - jira-network
 
   db:
     image: postgres:11
@@ -24,6 +26,8 @@ services:
       POSTGRES_DB: jira
       POSTGRES_USER: jira
       POSTGRES_PASSWORD: JiraRush
+    networks:
+      - jira-network
 
   nginx:
     container_name: nginx
@@ -33,3 +37,9 @@ services:
       - "80:80"
     volumes:
       - ./config/nginx.conf:/etc/nginx/conf.d/nginx.conf
+    networks:
+      - jira-network
+
+networks:
+  jira-network:
+    driver: bridge
