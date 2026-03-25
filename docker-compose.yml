@@ -12,20 +12,20 @@ services:
       - db
       - nginx
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/jira
-      - SPRING_DATASOURCE_USERNAME=jira
-      - SPRING_DATASOURCE_PASSWORD=JiraRush
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
     networks:
       - jira-network
 
   db:
-    image: postgres:11
+    image: postgres:17
     volumes:
       - ./data/db:/var/lib/postgresql/data
     environment:
-      POSTGRES_DB: jira
-      POSTGRES_USER: jira
-      POSTGRES_PASSWORD: JiraRush
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     networks:
       - jira-network
 
