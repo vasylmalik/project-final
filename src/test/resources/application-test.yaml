@@ -1,0 +1,14 @@
+spring.cache.type: none
+spring:
+  init:
+    mode: always
+  datasource:
+    # для тестів інший порт та пароль
+    # url: jdbc:postgresql://localhost:5433/jira
+    url: jdbc:postgresql://localhost:5433/jira?options=-c%20timezone=Europe/Kyiv
+    username: jira
+    password: jira-test
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop # Створює та видаляє таблиці автоматично для тестів

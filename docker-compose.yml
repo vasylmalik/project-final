@@ -1,0 +1,124 @@
+#version: '3.8'
+#services:
+#  postgres_db:
+#    image: postgres:latest
+#    container_name: postgres-db-test
+#    environment:
+#      POSTGRES_USER: jira
+#      POSTGRES_PASSWORD: jira-test
+#      POSTGRES_DB: jira
+#      TZ: Europe/Kyiv
+#      PGTZ: Europe/Kyiv
+##    command: postgres -c timezone='Europe/Kyiv'
+#    ports:
+#     - "5433:5432"
+#    volumes:
+#      - pgdata:/var/lib/postgresql/data
+#    networks:
+#      - java_network
+#    restart: always
+#
+#  app:
+#    build: .
+#    container_name: java_app
+#    ports:
+#      - "8080:8080"
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres_db:5433/jira?serverTimezone=Europe/Kyiv
+#      SPRING_DATASOURCE_USERNAME: jira
+#      SPRING_DATASOURCE_PASSWORD: jira-test
+#      TZ: Europe/Kyiv
+#      PGTZ: Europe/Kyiv
+#    volumes:
+#      - pgdata:/var/lib/postgresql/data
+#    depends_on:
+#      - postgres_db
+#    networks:
+#      - java_network
+#
+#networks:
+#  java_network:
+#    driver: bridge
+#
+#volumes:
+#  pgdata:
+#
+#
+#
+##services:
+##  db:
+##    build: .
+##    image: postgres
+##    environment:
+##      TZ: Europe/Kyiv
+##      PGTZ: Europe/Kyiv
+##    volumes:
+##      - pgdata:/var/lib/postgresql/data
+##volumes:
+##  pgdata:
+
+# version: '3.8'
+services:
+  # Основна база даних для розробки (Порт 5432)
+  postgres-db:
+    image: postgres:latest
+    container_name: postgres-db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=jira
+      - POSTGRES_PASSWORD=JiraRush
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    networks:
+      - java_network
+    restart: always
+    # Перевірка готовності бази приймати підключення
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U jira -d jira" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Тестова база даних для Maven тестів (Порт 5433)
+  postgres-db-test:
+    image: postgres:latest
+    container_name: postgres-db-test
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_USER=jira
+      - POSTGRES_PASSWORD=jira-test
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - ./pgdata-test:/var/lib/postgresql/data
+    # Хитрість: створюємо копію файлу зони з новою назвою перед запуском Postgres
+    command: >
+      sh -c "mkdir -p /usr/share/zoneinfo/Europe && 
+             cp /usr/share/zoneinfo/Europe/Kyiv /usr/share/zoneinfo/Europe/Kiev || true && 
+             exec docker-entrypoint.sh postgres"
+  app:
+    build: .
+    container_name: java_app
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres_db:5432/jira
+      SPRING_DATASOURCE_USERNAME: jira
+      SPRING_DATASOURCE_PASSWORD: JiraRush
+      TZ: Europe/Kyiv
+#    depends_on:
+#      - postgres_db
+    depends_on:
+      postgres-db:
+        condition: service_healthy # Запуск додатку ТІЛЬКИ після успішного healthcheck бази
+    networks:
+      - java_network
+
+networks:
+  java_network:
+    driver: bridge
+
+volumes:
+  pgdata:

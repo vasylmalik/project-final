@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+
+<th:block
+        th:replace="~{layout/main::page(title='JiraRush: mini bugtracking system',appMainFluid=~{::appMain}, activeMenuItem='dashboard')}">
+    <appMain>
+        <h1>Dashboard</h1>
+        <div class="card">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-12 col-sm-7 col-xl-4 col-xxl-3">
+                        <div class="input-group">
+                            <span class="input-group-text" title="Project">Project</span>
+                            <select class="form-select" id="project-selector" th:disabled="${projects.isEmpty()}">
+                                <option th:if="${projects.isEmpty()}" value="-1">No projects</option>
+                                <option th:each="project : ${projects}" th:if="${!projects.isEmpty()}"
+                                        th:text="${project.title}" th:value="${project.id}"></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-12 col-xl-7 col-xxl-8 mt-2 mt-xl-0">
+                        <span hidden id="sprint-title-field"></span>
+                        <span class="ms-5" id="sprint-days-left-field"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-xxl-5 mt-3 user-select-none">
+            <div class="col mb-3 pe-xxl-0 d-flex align-items-stretch">
+                <div class="card w-100">
+                    <div class="card-body text-center px-1">
+                        <h5 class="card-title">TO DO</h5>
+                        <div id="todo-task-column"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col mb-3 pe-xxl-0 d-flex align-items-stretch">
+                <div class="card w-100">
+                    <div class="card-body text-center px-1">
+                        <h5 class="card-title">IN PROGRESS</h5>
+                        <div id="in-progress-task-column"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col mb-3 pe-xxl-0 d-flex align-items-stretch">
+                <div class="card w-100">
+                    <div class="card-body text-center px-1">
+                        <h5 class="card-title">REVIEW</h5>
+                        <div id="review-task-column"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col mb-3 pe-xxl-0 d-flex align-items-stretch">
+                <div class="card w-100">
+                    <div class="card-body text-center px-1">
+                        <h5 class="card-title">TEST</h5>
+                        <div id="test-task-column"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col mb-3 d-flex align-items-stretch">
+                <div class="card w-100">
+                    <div class="card-body text-center px-1">
+                        <h5 class="card-title">DONE</h5>
+                        <div id="done-task-column"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--Task info modal-->
+        <div class="modal" id="task-info-modal" tabindex="-1">
+            <div class="modal-dialog" style="max-width: 900px !important;">
+                <div class="modal-content">
+                    <div class="text-end mt-3 me-2 pe-1">
+                        <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+                    </div>
+                    <div class="modal-body" id="task-info"></div>
+                </div>
+            </div>
+        </div>
+
+        <!--Context menu-->
+        <nav class="context-menu" id="context-menu">
+            <ul class="context-menu-items" id="context-menu-items">
+            </ul>
+        </nav>
+    </appMain>
+</th:block>
+<script src="/static/js/common.js"></script>
+<script src="/static/js/contextMenu.js"></script>
+<script src="/static/js/dashboard.js"></script>
+<!--        https://stackoverflow.com/questions/30398698/how-to-access-model-attribute-in-jquery-->
+<script th:inline="javascript">
+    const taskStatusRefs = [[${taskStatusRefs}]];
+</script>

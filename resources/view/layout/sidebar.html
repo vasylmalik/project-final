@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!--/*@thymesVar id="authUser" type="com.javarush.jira.login.AuthUser"*/-->
+
+<div th:fragment="sidebar">
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-left sidebar-nav" id="navbar">
+        <button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
+                class="navbar-toggler ms-3 ms-md-4"
+                data-bs-target="#navbarSupportedContent" data-bs-toggle="collapse" type="button">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <a class="navbar-brand me-auto" href="/">
+            <img alt="JavaRush" class="d-inline-block d-none d-lg-block align-text-top ms-3 ms-lg-4 mt-0 mt-lg-2"
+                 src="/static/images/logo/jr.svg">
+            <img alt="JavaRush" class="d-inline-block d-lg-none align-text-top ms-3 ms-lg-4 mt-0 mt-lg-2"
+                 src="/static/images/logo/jr-text.svg">
+            <hr class="text-white d-none d-lg-block" style="width: 232px">
+        </a>
+        <div th:if="${authUser} == null">
+            <a class="d-lg-none btn btn-orange px-2 px-md-4 me-3 me-md-4 mx-2" href="/view/login" type="button">
+                <span class="d-md-none">Login/Reg</span>
+                <span class="d-none d-md-block">Login/Register</span>
+            </a>
+        </div>
+        <th:block th:if="${authUser} != null">
+            <a class="d-lg-none btn btn-orange" href="/ui/profile" type="button">
+                <i class="fa-solid fa-address-card"></i>
+                Profile
+            </a>
+            <form action="/ui/logout" class="d-lg-none" method="post">
+                <button class="btn btn-yellow btn-orange d-md-none mx-2" type="submit"><i
+                        class="fa-solid fa-sign-out"></i></button>
+                <button class="btn btn-yellow btn-orange d-none d-md-block me-4 mx-2" type="submit"><i
+                        class="fa-solid fa-sign-out"></i> Logout
+                </button>
+            </form>
+        </th:block>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mb-2 mb-lg-0" th:if="${authUser != null}">
+                <li class="nav-item mt-3 mt-lg-0 mb-0 mb-lg-3" id="tree">
+                    <a class="nav-link sidebar-nav-link" href="/view/tree">
+                        <span class="ms-4"><i class="fa-solid fa-folder-tree fa-fw me-2"></i>Tree</span>
+                    </a>
+                </li>
+                <li class="nav-item mt-3 mt-lg-0 mb-0 mb-lg-3" id="dashboard">
+                    <a class="nav-link sidebar-nav-link" href="/ui/dashboard">
+                        <span class="ms-4"><i class="fa-solid fa-rectangle-list fa-fw me-2"></i>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item mt-3 mt-lg-0 mb-0 mb-lg-3" id="reports">
+                    <a class="nav-link sidebar-nav-link" href="/ui/reports">
+                        <span class="ms-4"><i class="fa-solid fa-chart-simple fa-fw me-2"></i>Reports</span>
+                    </a>
+                </li>
+                <th:block th:if="${authUser.isAdmin()}">
+                    <li class="nav-item mt-3 mt-lg-0 mb-0 mb-lg-3" id="users">
+                        <a class="nav-link sidebar-nav-link" href="/view/admin/users">
+                            <span class="ms-4"><i class="fa-solid fa-users fa-fw me-2"></i>Users</span>
+                        </a>
+                    </li>
+                    <li class="nav-item mt-3 mt-lg-0 mb-0 mb-lg-3" id="references">
+                        <a class="nav-link sidebar-nav-link" href="/ui/admin/references">
+                            <span class="ms-4"><i class="fa-solid fa-book-bookmark fa-fw me-2"></i>References</span>
+                        </a>
+                    </li>
+                </th:block>
+            </ul>
+        </div>
+    </nav>
+</div>
+</html>
