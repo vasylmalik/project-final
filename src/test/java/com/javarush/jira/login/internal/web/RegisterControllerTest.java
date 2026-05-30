@@ -2,22 +2,21 @@ package com.javarush.jira.login.internal.web;
 
 import com.javarush.jira.AbstractControllerTest;
 import com.javarush.jira.login.UserTo;
-import com.javarush.jira.login.internal.verification.ConfirmData;
+import com.javarush.jira.login.internal.UserRepository;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.util.Objects;
-
 import static com.javarush.jira.login.internal.web.RegisterController.REGISTER_URL;
-import static com.javarush.jira.login.internal.web.UserTestData.TO_MATCHER;
 import static com.javarush.jira.login.internal.web.UserTestData.USER_MAIL;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 class RegisterControllerTest extends AbstractControllerTest {
+    @Autowired
+    private UserRepository repository;
 
     @Test
     void showRegisterPage() throws Exception {
@@ -37,7 +36,7 @@ class RegisterControllerTest extends AbstractControllerTest {
     void register() throws Exception {
         UserTo newTo = new UserTo(null, "newemail@gmail.com", "newPassword", "newName", "newLastName", "newDisplayName");
 
-        Object sessionToken = Objects.requireNonNull(perform(MockMvcRequestBuilders.post(REGISTER_URL)
+        perform(MockMvcRequestBuilders.post(REGISTER_URL)
                         .param("email", "newemail@gmail.com")
                         .param("password", "newPassword")
                         .param("firstName", "newName")
@@ -45,16 +44,8 @@ class RegisterControllerTest extends AbstractControllerTest {
                         .param("displayName", "newDisplayName")
                         .with(csrf()))
                         .andExpect(status().isFound())
-                        .andExpect(redirectedUrl("/view/login"))
-                        .andReturn()
-                        .getRequest()
-                        .getSession())
-                .getAttribute("token");
-
-        assertNotNull(sessionToken);
-        assertInstanceOf(ConfirmData.class, sessionToken);
-        UserTo sessionTo = ((ConfirmData) sessionToken).getUserTo();
-        TO_MATCHER.assertMatch(sessionTo, newTo);
+                        .andExpect(redirectedUrl("/view/login"));
+        assertTrue(repository.findByEmailIgnoreCase(newTo.getEmail()).isPresent());
     }
 
     @Test

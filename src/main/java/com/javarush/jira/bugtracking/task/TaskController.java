@@ -7,6 +7,7 @@ import com.javarush.jira.bugtracking.task.to.ActivityTo;
 import com.javarush.jira.bugtracking.task.to.TaskTo;
 import com.javarush.jira.bugtracking.task.to.TaskToExt;
 import com.javarush.jira.bugtracking.task.to.TaskToFull;
+import com.javarush.jira.bugtracking.task.to.TagsTo;
 import com.javarush.jira.bugtracking.tree.ITreeNode;
 import com.javarush.jira.common.util.Util;
 import com.javarush.jira.login.AuthUser;
@@ -105,6 +106,13 @@ public class TaskController {
     public void changeTaskSprint(@PathVariable long id, @Nullable @RequestParam Long sprintId) {
         log.info("change task(id={}) sprint to {}", id, sprintId);
         taskService.changeSprint(id, sprintId);
+    }
+
+    @PatchMapping(path = "/{id}/tags", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void addTags(@PathVariable long id, @Valid @RequestBody TagsTo tagsTo) {
+        log.info("add tags {} to task {}", tagsTo.getTags(), id);
+        taskService.addTags(id, tagsTo.getTags());
     }
 
     @GetMapping("/assignments/by-sprint")

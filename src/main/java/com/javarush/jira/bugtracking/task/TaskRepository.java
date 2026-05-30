@@ -19,7 +19,7 @@ public interface TaskRepository extends BaseRepository<Task> {
     @Query("SELECT t FROM Task t WHERE t.projectId =:projectId ORDER BY t.startpoint DESC")
     List<Task> findAllByProjectId(long projectId);
 
-    @Query("SELECT t FROM Task t JOIN FETCH t.project LEFT JOIN FETCH t.sprint LEFT JOIN FETCH t.parent WHERE t.id =:id")
+    @Query("SELECT DISTINCT t FROM Task t JOIN FETCH t.project LEFT JOIN FETCH t.sprint LEFT JOIN FETCH t.parent LEFT JOIN FETCH t.tags WHERE t.id =:id")
     Optional<Task> findFullById(long id);
 
     @Modifying

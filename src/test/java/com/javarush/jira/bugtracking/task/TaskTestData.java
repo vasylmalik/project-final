@@ -9,6 +9,7 @@ import com.javarush.jira.bugtracking.task.to.TaskToFull;
 import com.javarush.jira.common.to.CodeTo;
 
 import java.util.List;
+import java.util.Set;
 
 import static com.javarush.jira.bugtracking.ObjectType.TASK;
 import static com.javarush.jira.login.internal.web.UserTestData.ADMIN_ID;
@@ -64,6 +65,14 @@ public class TaskTestData {
         taskToFull2.setActivityTos(activityTosForTask2);
     }
 
+    public static TaskToFull getTaskToFullWithTags(TaskToFull base, Set<String> tags) {
+        TaskToFull taskToFull = new TaskToFull(base.id(), base.getCode(), base.getTitle(), base.getDescription(), base.getTypeCode(),
+                base.getStatusCode(), base.getPriorityCode(), base.getUpdated(), base.getEstimate(), base.getParent(), base.getProject(),
+                base.getSprint(), base.getActivityTos());
+        taskToFull.setTags(tags);
+        return taskToFull;
+    }
+
     public static TaskToExt getNewTaskTo() {
         return new TaskToExt(null, "epic-1", "Data New", "task NEW", "epic", "in_progress", "low", null, 3, null, PROJECT1_ID, SPRINT1_ID);
     }
@@ -78,5 +87,9 @@ public class TaskTestData {
 
     public static ActivityTo getUpdatedActivityTo() {
         return new ActivityTo(ACTIVITY1_ID, TASK1_ID, USER_ID, null, null, "in_progress", "low", "epic", null, null, 3, null);
+    }
+
+    public static Set<String> getDemoTags() {
+        return Set.of("backend", "urgent");
     }
 }

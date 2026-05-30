@@ -53,6 +53,7 @@ public class SecurityConfig {
         };
     }
 
+
     @Bean
     @Order(1)
     public SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception {
@@ -96,6 +97,7 @@ public class SecurityConfig {
                 .deleteCookies("JSESSIONID")
                 .and().csrf().disable();
         return http.build();
+
     }
 
     @Bean

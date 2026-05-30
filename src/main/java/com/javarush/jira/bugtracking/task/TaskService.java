@@ -20,7 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import static com.javarush.jira.bugtracking.ObjectType.TASK;
 import static com.javarush.jira.bugtracking.task.TaskUtil.fillExtraFields;
@@ -86,6 +88,7 @@ public class TaskService {
         }
     }
 
+    @Transactional(readOnly = true)
     public TaskToFull get(long id) {
         Task task = Util.checkExist(id, handler.getRepository().findFullById(id));
         TaskToFull taskToFull = fullMapper.toTo(task);
@@ -93,6 +96,14 @@ public class TaskService {
         fillExtraFields(taskToFull, activities);
         taskToFull.setActivityTos(activityHandler.getMapper().toToList(activities));
         return taskToFull;
+    }
+
+    @Transactional
+    public void addTags(long id, Set<String> tags) {
+        Task task = handler.getRepository().getExisted(id);
+        Set<String> updatedTags = new LinkedHashSet<>(task.getTags());
+        updatedTags.addAll(tags);
+        task.setTags(updatedTags);
     }
 
     public TaskToExt getNewWithSprint(long sprintId) {

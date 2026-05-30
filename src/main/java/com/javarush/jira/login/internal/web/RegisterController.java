@@ -34,16 +34,30 @@ public class RegisterController extends AbstractUserController {
         return "unauth/register";
     }
 
+    ///TODO разобрать ошибку отправки письма
+//    @PostMapping
+//    public String register(@Validated(View.OnCreate.class) UserTo userTo, BindingResult result, HttpServletRequest request) {
+//        if (result.hasErrors()) {
+//            return "unauth/register";
+//        }
+//        log.info("register {}", userTo);
+//        checkNew(userTo);
+//
+//        ConfirmData confirmData = new ConfirmData(userTo);
+//        request.getSession().setAttribute("token", confirmData);
+//        eventPublisher.publishEvent(new RegistrationConfirmEvent(userTo, confirmData.getToken()));
+//        return "redirect:/view/login";
+//    }
+
     @PostMapping
-    public String register(@Validated(View.OnCreate.class) UserTo userTo, BindingResult result, HttpServletRequest request) {
+    public String register(@Validated(View.OnCreate.class) UserTo userTo, BindingResult result) {
         if (result.hasErrors()) {
             return "unauth/register";
         }
         log.info("register {}", userTo);
         checkNew(userTo);
-        ConfirmData confirmData = new ConfirmData(userTo);
-        request.getSession().setAttribute("token", confirmData);
-        eventPublisher.publishEvent(new RegistrationConfirmEvent(userTo, confirmData.getToken()));
+
+        handler.createFromTo(userTo);
         return "redirect:/view/login";
     }
 
