@@ -66,8 +66,8 @@ services:
     ports:
       - "5432:5432"
     environment:
-      - POSTGRES_USER=jira
-      - POSTGRES_PASSWORD=JiraRush
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
       - ./pgdata:/var/lib/postgresql/data
@@ -104,9 +104,22 @@ services:
     ports:
       - "8080:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres_db:5432/jira
-      SPRING_DATASOURCE_USERNAME: jira
-      SPRING_DATASOURCE_PASSWORD: JiraRush
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/jira
+#      SPRING_DATASOURCE_USERNAME: jira
+#      SPRING_DATASOURCE_PASSWORD: JiraRush
+      SPRING_DATASOURCE_USERNAME: ${DB_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+#      DB_HOST: postgres-db
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      MAIL_USERNAME: ${MAIL_USERNAME}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID}
+      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET}
+      GITLAB_CLIENT_ID: ${GITLAB_CLIENT_ID}
+      GITLAB_CLIENT_SECRET: ${GITLAB_CLIENT_SECRET}
       TZ: Europe/Kyiv
 #    depends_on:
 #      - postgres_db

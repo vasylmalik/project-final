@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Factory for creating test matchers.
  * <p>
  * Comparing actual and expected objects via AssertJ
- * Support converting json MvcResult to objects for comparation.
+ * Support converting JSON MvcResult to objects for comparison.
  */
 public class MatcherFactory {
 

@@ -6,6 +6,6 @@ logs
 attachments
 *.patch
 .env
-pgdata.pgdata
-pgdata-test.pgdata
+pgdata
+pgdata-test
 

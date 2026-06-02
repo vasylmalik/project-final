@@ -1,4 +1,6 @@
 -- populate users
+DELETE FROM CONTACT;
+DELETE FROM PROFILE;
 DELETE
 FROM USERS;
 alter
