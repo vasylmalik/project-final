@@ -54,8 +54,7 @@ values (1, 'skype', 'userSkype'),
        (1, 'mobile', '+01234567890'),
        (1, 'website', 'user.com'),
        (2, 'github', 'adminGitHub'),
-       (2, 'tg', 'adminTg'),
-       (2, 'vk', 'adminVk');
+       (2, 'tg', 'adminTg');
 
 delete
 from ATTACHMENT;
@@ -325,3 +324,7 @@ values (6, 1, '2023-05-15 09:05:10', null, 'Data', null, 3, 'epic', 'in_progress
        (5, 118, '2023-05-16 11:10:10', null, 'UI tab of tasks', null, null, null, null, 'high'),
        (11, 118, '2023-05-16 12:30:10', null, 'UI tab of tasks', null, 2, null, null, null);
 
+insert into ACTIVITY (AUTHOR_ID, TASK_ID, UPDATED, STATUS_CODE)
+values (1, 1, '2023-01-01 10:00:00', 'in_progress'),
+       (1, 1, '2023-01-03 15:00:00', 'ready_for_review'),
+       (1, 1, '2023-01-05 12:00:00', 'done');

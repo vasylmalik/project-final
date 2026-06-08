@@ -4,8 +4,6 @@ import com.javarush.jira.common.error.DataConflictException;
 import com.javarush.jira.common.util.validation.View;
 import com.javarush.jira.login.UserTo;
 import com.javarush.jira.login.internal.verification.ConfirmData;
-import com.javarush.jira.login.internal.verification.RegistrationConfirmEvent;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,15 +33,13 @@ public class RegisterController extends AbstractUserController {
     }
 
     @PostMapping
-    public String register(@Validated(View.OnCreate.class) UserTo userTo, BindingResult result, HttpServletRequest request) {
+    public String register(@Validated(View.OnCreate.class) UserTo userTo, BindingResult result) {
         if (result.hasErrors()) {
             return "unauth/register";
         }
         log.info("register {}", userTo);
         checkNew(userTo);
-        ConfirmData confirmData = new ConfirmData(userTo);
-        request.getSession().setAttribute("token", confirmData);
-        eventPublisher.publishEvent(new RegistrationConfirmEvent(userTo, confirmData.getToken()));
+        handler.createFromTo(userTo);
         return "redirect:/view/login";
     }
 

@@ -52,7 +52,7 @@ public class ReferenceService {
     }
 
     @PostConstruct
-    void initialize() {
+    public void initialize() {
         log.info("init loading");
         List<RefTo> references = mapper.toToList(repository.findAllByOrderByIdAsc());
         refSelect = references.stream()

@@ -3,6 +3,19 @@ spring:
   init:
     mode: always
   datasource:
-    url: jdbc:postgresql://localhost:5433/jira-test
-    username: jira
-    password: JiraRush
+    url: jdbc:h2:mem:jira-test;MODE=PostgreSQL;NON_KEYWORDS=VALUE,COMMENT
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+
+  sql:
+    init:
+      mode: never
+
+  liquibase:
+    enabled: false

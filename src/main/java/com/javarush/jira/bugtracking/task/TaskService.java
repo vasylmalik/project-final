@@ -19,8 +19,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 import static com.javarush.jira.bugtracking.ObjectType.TASK;
 import static com.javarush.jira.bugtracking.task.TaskUtil.fillExtraFields;
@@ -139,5 +141,34 @@ public class TaskService {
         if (!userType.equals(possibleUserType)) {
             throw new DataConflictException(String.format(assign ? CANNOT_ASSIGN : CANNOT_UN_ASSIGN, userType, task.getStatusCode()));
         }
+    }
+
+    public Duration getInProgressDuration(long taskId) {
+        List<Activity> activities = activityHandler.getRepository().findAllByTaskIdOrderByUpdatedDesc(taskId);
+        LocalDateTime inProgress = getStatusTime(activities, "in_progress");
+        LocalDateTime readyForReview = getStatusTime(activities, "ready_for_review");
+        if (inProgress == null || readyForReview == null) {
+            return null;
+        }
+        return Duration.between(inProgress, readyForReview);
+    }
+
+    public Duration getTestingDuration(long taskId) {
+        List<Activity> activities = activityHandler.getRepository().findAllByTaskIdOrderByUpdatedDesc(taskId);
+        LocalDateTime readyForReview = getStatusTime(activities, "ready_for_review");
+        LocalDateTime done = getStatusTime(activities, "done");
+        if (readyForReview == null || done == null) {
+            return null;
+        }
+        return Duration.between(readyForReview, done);
+    }
+
+    private LocalDateTime getStatusTime(List<Activity> activities, String statusCode) {
+        return activities.stream()
+                .filter(a -> statusCode.equals(a.getStatusCode()))
+                .map(Activity::getUpdated)
+                .filter(Objects::nonNull)
+                .findFirst()
+                .orElse(null);
     }
 }

@@ -27,4 +27,11 @@
 - https://habr.com/ru/articles/259055/
 
 Список выполненных задач:
-...
+- Task 2. Remove VK and Yandex social login providers
+- Task 3. Move sensitive config (DB, OAuth, mail) to env variables
+- Task 4. Switch tests to H2 in-memory DB with Spring profile selection
+- Task 5. Add tests for ProfileRestController (success and failure paths)
+- Task 6. Refactor FileUtil#upload to use modern NIO API
+- Task 8. Add task time tracking (in-progress and testing duration)
+- Task 9. Add Dockerfile for the application server
+- Task 10. Add Dockerfile for the application server, DB and nginx
