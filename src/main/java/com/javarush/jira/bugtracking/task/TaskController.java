@@ -3,10 +3,7 @@ package com.javarush.jira.bugtracking.task;
 import com.javarush.jira.bugtracking.Handlers;
 import com.javarush.jira.bugtracking.UserBelong;
 import com.javarush.jira.bugtracking.UserBelongRepository;
-import com.javarush.jira.bugtracking.task.to.ActivityTo;
-import com.javarush.jira.bugtracking.task.to.TaskTo;
-import com.javarush.jira.bugtracking.task.to.TaskToExt;
-import com.javarush.jira.bugtracking.task.to.TaskToFull;
+import com.javarush.jira.bugtracking.task.to.*;
 import com.javarush.jira.bugtracking.tree.ITreeNode;
 import com.javarush.jira.common.util.Util;
 import com.javarush.jira.login.AuthUser;
@@ -20,9 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import static com.javarush.jira.common.BaseHandler.createdResponse;
 
@@ -150,6 +145,61 @@ public class TaskController {
     public void delete(@PathVariable long id) {
         activityService.delete(id);
     }
+
+
+
+    @GetMapping("/{id}/tags")
+    @ResponseStatus(HttpStatus.OK)
+    public Set<String> getTags(@PathVariable long id) {
+        log.info("Getting tags for task {}", id);
+        Set<String> tags = taskService.getTags(id);
+        return tags;
+    }
+
+    /**
+     * POST /api/tasks/{id}/tags - добавить тег к задаче
+     * Body: {"tag": "urgent"}
+     */
+    @PostMapping("/{id}/tags")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void addTag(@PathVariable long id, @Valid @RequestBody TagRequest tagRequest) {
+        log.info("Adding tag '{}' to task {}", tagRequest.getTag(), id);
+        taskService.addTag(id, tagRequest.getTag());
+    }
+
+    /**
+     * DELETE /api/tasks/{id}/tags/{tag} - удалить тег у задачи
+     */
+    @DeleteMapping("/{id}/tags/{tag}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void removeTag(@PathVariable long id, @PathVariable String tag) {
+        log.info("Removing tag '{}' from task {}", tag, id);
+        taskService.removeTag(id, tag);
+    }
+
+    /**
+     * PUT /api/tasks/{id}/tags - заменить все теги задачи
+     * Body: ["feature", "backend", "api"]
+     */
+    @PutMapping("/{id}/tags")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void replaceTags(@PathVariable long id, @RequestBody Set<String> tags) {
+        log.info("Replacing tags for task {} with {}", id, tags);
+        taskService.replaceTags(id, tags);
+    }
+
+    /**
+     * GET /api/tasks/by-tag?tag=urgent - найти все задачи по тегу
+     */
+    @GetMapping("/by-tag")
+    public Set<TaskTo> findTasksByTag(@RequestParam String tag) {
+        log.info("Finding tasks by tag: {}", tag);
+        Set<Task> tasks = taskService.findTasksByTag(tag);
+        List<TaskTo> taskToList = handler.getMapper().toList(new ArrayList<>(tasks));
+        return new HashSet<>(taskToList);
+    }
+
+
 
     private record TaskTreeNode(TaskTo taskTo, List<TaskTreeNode> subNodes) implements ITreeNode<TaskTo, TaskTreeNode> {
         public TaskTreeNode(TaskTo taskTo) {

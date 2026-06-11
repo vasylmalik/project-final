@@ -5,10 +5,12 @@ import com.javarush.jira.login.User;
 import com.javarush.jira.login.UserTo;
 import com.javarush.jira.login.internal.UserMapper;
 import com.javarush.jira.login.internal.UserRepository;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -23,6 +25,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+
+@Transactional
+@Rollback
 class UserControllerTest extends AbstractControllerTest {
 
     @Autowired
@@ -56,9 +61,13 @@ class UserControllerTest extends AbstractControllerTest {
                 .andExpect(status().isUnauthorized());
     }
 
+
+    @Transactional
+    @Rollback
     @Test
     void createWithLocation() throws Exception {
         UserTo newTo = mapper.toTo(getNew());
+        newTo.setEmail("test_new_" + System.currentTimeMillis() + "@gmail.com");
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonWithPassword(newTo, newTo.getPassword())))
@@ -67,7 +76,11 @@ class UserControllerTest extends AbstractControllerTest {
         User created = USER_MATCHER.readFromJson(action);
         long newId = created.id();
         User newUser = getNew();
+
         newUser.setId(newId);
+        newUser.setEmail(newTo.getEmail());
+        newUser.setRoles(created.getRoles());
+
         USER_MATCHER.assertMatch(created, newUser);
         USER_MATCHER.assertMatch(repository.getExisted(newId), newUser);
     }

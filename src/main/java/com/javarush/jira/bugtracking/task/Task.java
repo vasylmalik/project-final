@@ -16,7 +16,7 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.List;
 import java.util.Set;
-
+import java.util.HashSet;
 import static com.javarush.jira.bugtracking.task.TaskUtil.checkStatusChangePossible;
 
 @Entity
@@ -74,13 +74,20 @@ public class Task extends TitleEntity implements HasCode {
     @OneToMany(mappedBy = "taskId", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Activity> activities;
 
-    public Task(Long id, String title, String typeCode, String statusCode, Long parentId, long projectId, Long sprintId) {
+    public Task(Long id, String title, String typeCode, String statusCode, Long parentId, long projectId, Long sprintId, Set<String> tags) {
         super(id, title);
         this.typeCode = typeCode;
         this.statusCode = statusCode;
         this.parentId = parentId;
         this.projectId = projectId;
         this.sprintId = sprintId;
+        this.tags = tags != null ? new HashSet<>(tags) : new HashSet<>();
+    }
+
+    public Task(Long id, String title, String typeCode, String statusCode,
+                Long parentId, Long projectId, Long sprintId) {
+        this(id, title, typeCode, statusCode, parentId,
+                projectId != null ? projectId : 0L, sprintId, new HashSet<>());
     }
 
     public void checkAndSetStatusCode(String statusCode) {

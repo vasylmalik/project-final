@@ -116,6 +116,8 @@ class AdminUserControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = ADMIN_MAIL)
     void createWithLocation() throws Exception {
         User newUser = getNew();
+        String uniqueEmail = "test_new_" + System.currentTimeMillis() + "@gmail.com";
+        newUser.setEmail(uniqueEmail);
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonWithPassword(newUser, "newPass")))

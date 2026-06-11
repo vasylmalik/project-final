@@ -21,6 +21,7 @@ import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import static com.javarush.jira.bugtracking.ObjectType.TASK;
 import static com.javarush.jira.bugtracking.task.TaskUtil.fillExtraFields;
@@ -39,6 +40,7 @@ public class TaskService {
     private final SprintRepository sprintRepository;
     private final TaskExtMapper extMapper;
     private final UserBelongRepository userBelongRepository;
+    private final TaskRepository taskRepository;
 
     @Transactional
     public void changeStatus(long taskId, String statusCode) {
@@ -140,4 +142,74 @@ public class TaskService {
             throw new DataConflictException(String.format(assign ? CANNOT_ASSIGN : CANNOT_UN_ASSIGN, userType, task.getStatusCode()));
         }
     }
+
+
+
+    @Transactional(readOnly = true)
+    public Set<String> getTags(Long taskId) {
+        if (!taskRepository.existsById(taskId)) {
+            throw new NotFoundException("Task with id " + taskId + " not found");
+        }
+        return taskRepository.findTagsByTaskId(taskId);
+    }
+
+    @Transactional
+    public void addTag(Long taskId, String tag) {
+        String normalizedTag = tag.trim().toLowerCase();
+
+        if (normalizedTag.isEmpty()) {
+            throw new IllegalArgumentException("Tag cannot be empty");
+        }
+
+        if (normalizedTag.length() < 2 || normalizedTag.length() > 32) {
+            throw new IllegalArgumentException("Tag must be between 2 and 32 characters");
+        }
+
+        if (!taskRepository.existsById(taskId)) {
+            throw new NotFoundException("Task with id " + taskId + " not found");
+        }
+
+        if (taskRepository.existsByTaskIdAndTag(taskId, normalizedTag)) {
+            throw new DataConflictException("Tag '" + normalizedTag + "' already exists for task " + taskId);
+        }
+
+        taskRepository.addTag(taskId, normalizedTag);
+    }
+
+    @Transactional
+    public void removeTag(Long taskId, String tag) {
+        String normalizedTag = tag.trim().toLowerCase();
+
+        if (!taskRepository.existsById(taskId)) {
+            throw new NotFoundException("Task with id " + taskId + " not found");
+        }
+
+        taskRepository.removeTag(taskId, normalizedTag);
+    }
+
+    @Transactional
+    public void replaceTags(Long taskId, Set<String> newTags) {
+        if (!taskRepository.existsById(taskId)) {
+            throw new NotFoundException("Task with id " + taskId + " not found");
+        }
+
+        taskRepository.deleteAllTags(taskId);
+
+        if (newTags != null && !newTags.isEmpty()) {
+            for (String tag : newTags) {
+                String normalizedTag = tag.trim().toLowerCase();
+                if (normalizedTag.length() >= 2 && normalizedTag.length() <= 32) {
+                    taskRepository.addTag(taskId, normalizedTag);
+                }
+            }
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public Set<Task> findTasksByTag(String tag) {
+        String normalizedTag = tag.trim().toLowerCase();
+        return taskRepository.findTasksByTag(normalizedTag);
+    }
+
+
 }
