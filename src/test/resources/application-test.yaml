@@ -1,8 +1,48 @@
-spring.cache.type: none
 spring:
-  init:
-    mode: always
+  test:
+    database:
+      replace: none  # Забороняє Spring підміняти PostgreSQL на H2 в пам'яті
+  cache:
+    type: none
   datasource:
-    url: jdbc:postgresql://localhost:5433/jira-test
+    # url: jdbc:h2:mem:testdb;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDER=HIGH
+    # Підключаємося до тестової бази у Docker на порт 5433
+    url: jdbc:postgresql://localhost:5433/jira?options=-c%20timezone=Europe/Kyiv
     username: jira
-    password: JiraRush
+    password: jira-test
+    driver-class-name: org.postgresql.Driver
+  sql:
+    init:
+      mode: never # Забороняємо автозапуск на старті, працює @Sql перед тестами
+  jpa:
+    defer-datasource-initialization: false
+    hibernate:
+      ddl-auto: validate # Тільки перевірка структури, створеної Liquibase
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog.sql
+  mail:
+    host: localhost
+    port: 2525
+    username: test
+    password: test
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: test-client-id
+            client-secret: test-client-secret
+
+app:
+  templates-update-cache: 0s
+  host-url: http://localhost:8080
+  mail-sending-props:
+    core-pool-size: 1
+    max-pool-size: 5
+    queue-capacity: 10

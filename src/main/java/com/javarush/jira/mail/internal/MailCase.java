@@ -51,6 +51,7 @@ public class MailCase extends BaseEntity {
         this.name = name;
         this.template = template;
         this.result = result;
+        this.dateTime = LocalDateTime.now();
     }
 
     @Override

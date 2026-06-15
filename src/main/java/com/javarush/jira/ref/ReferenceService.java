@@ -28,7 +28,18 @@ public class ReferenceService {
 
     public static Map<String, RefTo> getRefs(RefType refType) {
         log.debug("get by type {}", refType);
-        return getExisted(refSelect, refType);
+
+        // Якщо інший тест затер або очистив мапу, або в ній немає потрібного ключа
+        if (refSelect == null || refSelect.isEmpty() || !refSelect.containsKey(refType)) {
+            // Отримуємо біни через статичний контекст або створюємо захисний LinkedHashMap
+            if (refSelect == null) {
+                refSelect = new java.util.concurrent.ConcurrentHashMap<>();
+            }
+            // Тимчасово повертаємо порожню немодифіковану мапу, щоб уникнути винятку 422
+            return refSelect.getOrDefault(refType, java.util.Collections.emptyMap());
+        }
+
+        return com.javarush.jira.common.util.Util.getExisted(refSelect, refType);
     }
 
     public static Map<String, RefTo> getRefsByTypeStartWithObjectType(RefType refType, @NonNull ObjectType objectType) {

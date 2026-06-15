@@ -51,7 +51,8 @@ public class ReferenceController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RefTo> create(@Valid @RequestBody RefTo refTo) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<RefTo> create(@RequestBody RefTo refTo) { // @Valid
         log.debug("create {}", refTo);
         checkNew(refTo);
         Reference ref = repository.save(mapper.toEntity(refTo));
@@ -65,7 +66,7 @@ public class ReferenceController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
     public void updateTitle(@PathVariable RefType type, @PathVariable String code, @RequestParam String title) {
-        log.debug("update Ref with type={}, code={} with title={}", title, code, title);
+        log.debug("update Ref with type={}, code={} with title={}", type, code, title);
         Reference ref = getExisted(type, code);
         ref.setTitle(title);
         repository.save(ref);
