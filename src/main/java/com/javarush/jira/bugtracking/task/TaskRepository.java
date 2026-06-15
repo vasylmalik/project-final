@@ -3,6 +3,7 @@ package com.javarush.jira.bugtracking.task;
 import com.javarush.jira.common.BaseRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -37,4 +38,9 @@ public interface TaskRepository extends BaseRepository<Task> {
             WHERE id IN (SELECT child FROM task_with_subtasks)
             """, nativeQuery = true)
     void setTaskAndSubTasksSprint(long taskId, Long sprintId);
+
+    @Modifying
+    @Query(value = "UPDATE task SET status_code = :statusCode, type_code = :typeCode WHERE id = :id", nativeQuery = true)
+    void updateStatusAndTypeNative(@Param("id") long id, @Param("statusCode") String statusCode, @Param("typeCode") String typeCode);
+
 }

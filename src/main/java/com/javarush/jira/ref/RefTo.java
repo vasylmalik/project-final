@@ -4,22 +4,40 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.javarush.jira.common.to.TitleTo;
 import com.javarush.jira.common.util.Util;
 import jakarta.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
-import lombok.Value;
+import lombok.*;
 import org.springframework.lang.Nullable;
 
-@Value
-@EqualsAndHashCode(of = {"refType", "code"})
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+
+@Getter
+@ToString(callSuper = true)
+@EqualsAndHashCode(of = {"refType", "code"}, callSuper = false)
+@com.fasterxml.jackson.annotation.JsonAutoDetect(
+        fieldVisibility = com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.ANY,
+        getterVisibility = com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE,
+        setterVisibility = com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE
+)
 public class RefTo extends TitleTo {
+
     @NotNull
-    RefType refType;
+    private final RefType refType;
+
     @Nullable
-    String aux;
+    private final String aux;
+
     @Nullable
     @JsonIgnore
-    String[] splittedAux;
+    private final String[] splittedAux;
 
-    public RefTo(Long id, RefType refType, String code, String title, @Nullable String aux) {
+    @JsonCreator
+    public RefTo(
+            @JsonProperty("id") Long id,
+            @JsonProperty("refType") RefType refType,
+            @JsonProperty("code") String code,
+            @JsonProperty("title") String title,
+            @JsonProperty("aux") @Nullable String aux) {
         super(id, code, title);
         this.refType = refType;
         this.aux = aux;
