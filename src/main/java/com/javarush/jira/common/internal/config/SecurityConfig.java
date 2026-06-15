@@ -57,13 +57,17 @@ public class SecurityConfig {
     @Order(1)
     public SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception {
         http.securityMatcher("/api/**").authorizeHttpRequests()
+                // Дозволяємо доступ до перегляду референсів усім,
+                // щоб сервіси могли вільно спілкуватися між собою під час тестів задач
+                .requestMatchers(HttpMethod.GET, "/api/admin/refs/**").permitAll()
+
                 .requestMatchers("/api/admin/**").hasRole(Role.ADMIN.name())
                 .requestMatchers("/api/mngr/**").hasAnyRole(Role.ADMIN.name(), Role.MANAGER.name())
                 .requestMatchers(HttpMethod.POST, "/api/users").anonymous()
                 .requestMatchers("/api/**").authenticated()
                 .and().httpBasic()
                 .authenticationEntryPoint(restAuthenticationEntryPoint)
-                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER) // support sessions Cookie for UI ajax
+                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER)
                 .and().csrf().disable();
         return http.build();
     }

@@ -281,17 +281,24 @@ values ('todo', 'ToDo', 3, 'in_progress,canceled'),
 
 --changeset gkislin:users_add_on_delete_cascade
 
-alter table ACTIVITY
-    drop constraint FK_ACTIVITY_USERS,
-    add constraint FK_ACTIVITY_USERS foreign key (AUTHOR_ID) references USERS (ID) on delete cascade;
+-- alter table ACTIVITY
+--     drop constraint FK_ACTIVITY_USERS,
+--     add constraint FK_ACTIVITY_USERS foreign key (AUTHOR_ID) references USERS (ID) on delete cascade;
+alter table ACTIVITY drop constraint FK_ACTIVITY_USERS;
+alter table ACTIVITY add constraint FK_ACTIVITY_USERS foreign key (AUTHOR_ID) references USERS (ID) on delete cascade;
 
-alter table USER_BELONG
-    drop constraint FK_USER_BELONG,
-    add constraint FK_USER_BELONG foreign key (USER_ID) references USERS (ID) on delete cascade;
+-- alter table USER_BELONG
+--     drop constraint FK_USER_BELONG,
+--     add constraint FK_USER_BELONG foreign key (USER_ID) references USERS (ID) on delete cascade;
+--
+-- alter table ATTACHMENT
+--     drop constraint FK_ATTACHMENT,
+--     add constraint FK_ATTACHMENT foreign key (USER_ID) references USERS (ID) on delete cascade;
+alter table USER_BELONG drop constraint FK_USER_BELONG;
+alter table USER_BELONG add constraint FK_USER_BELONG foreign key (USER_ID) references USERS (ID) on delete cascade;
 
-alter table ATTACHMENT
-    drop constraint FK_ATTACHMENT,
-    add constraint FK_ATTACHMENT foreign key (USER_ID) references USERS (ID) on delete cascade;
+alter table ATTACHMENT drop constraint FK_ATTACHMENT;
+alter table ATTACHMENT add constraint FK_ATTACHMENT foreign key (USER_ID) references USERS (ID) on delete cascade;
 
 --changeset valeriyemelyanov:change_user_type_reference
 
@@ -327,5 +334,87 @@ values ('todo', 'ToDo', 3, 'in_progress,canceled|'),
 
 --changeset ishlyakhtenkov:change_UK_USER_BELONG
 
-drop index UK_USER_BELONG;
+-- drop index UK_USER_BELONG;
+drop index if exists UK_USER_BELONG;
 create unique index UK_USER_BELONG on USER_BELONG (OBJECT_ID, OBJECT_TYPE, USER_ID, USER_TYPE_CODE) where ENDPOINT is null;
+
+-- --changeset javarush:test_data
+-- insert into USERS (ID, EMAIL, PASSWORD, FIRST_NAME, LAST_NAME, DISPLAY_NAME)
+-- values (1,'user@gmail.com', '{noop}password', 'userFirstName', 'userLastName', 'userDisplayName'),
+--        (2,'admin@gmail.com', '{noop}admin', 'adminFirstName', 'adminLastName', 'adminDisplayName'),
+--        (3,'guest@gmail.com', '{noop}guest', 'guestFirstName', 'guestLastName', 'guestDisplayName'),
+--        (4,'manager@gmail.com', '{noop}manager', 'managerFirstName', 'managerLastName', 'managerDisplayName');
+--
+-- insert into USER_ROLE (USER_ID, ROLE)
+-- values (1, 0), (2, 0), (2, 1), (4, 2);
+--
+-- -- Видаляємо старі записи, щоб уникнути конфліктів унікальності (UK_REFERENCE_REF_TYPE_CODE)
+-- DELETE FROM REFERENCE WHERE (REF_TYPE = 2 AND CODE = 'task') OR ID = 1;
+--
+-- -- Примусово вставляємо запис з ID = 1, який вимагає ReferenceTestData.java
+-- INSERT INTO REFERENCE (ID, REF_TYPE, CODE, TITLE)
+-- VALUES (1, 2, 'task', 'Task');
+--
+-- -- Скидаємо лічильник автоінкременту Postgres, щоб наступні записи не ламалися
+-- SELECT setval('reference_id_seq', COALESCE((SELECT MAX(id) FROM reference), 1));
+--
+--
+-- insert into PROFILE (ID, LAST_FAILED_LOGIN, LAST_LOGIN, MAIL_NOTIFICATIONS)
+-- values (1, null, null, 49), (2, null, null, 14);
+--
+-- insert into CONTACT (ID, CODE, VALUE)
+-- values (1, 'skype', 'userSkype'),
+--        (1, 'mobile', '+01234567890'),
+--        (1, 'website', 'user.com'),
+--        (2, 'github', 'adminGitHub'),
+--        (2, 'tg', 'adminTg');
+--
+
+--changeset javarush:test_data
+-- 1. Створюємо самих користувачів з чіткими ID
+insert into USERS (ID, DISPLAY_NAME, EMAIL, FIRST_NAME, LAST_NAME, PASSWORD)
+values (1, 'userDisplayName', 'user@gmail.com', 'userFirstName', 'userLastName', '{noop}******'),
+       (2, 'adminDisplayName', 'admin@gmail.com', 'adminFirstName', 'adminLastName', '{noop}******'),
+       (3, 'guestDisplayName', 'guest@gmail.com', 'guestFirstName', 'guestLastName', '{noop}******'),
+       (4, 'managerDisplayName', 'manager@gmail.com', 'managerFirstName', 'managerLastName', '{noop}******');
+
+-- 🌟 2. ОБОВ'ЯЗКОВО СТВОРЮЄМО ПРОФІЛІ ДЛЯ ЦИХ КОРИСТУВАЧІВ (Вирішує 409 та 422)
+insert into PROFILE (ID, MAIL_NOTIFICATIONS)
+values (1, 1),
+       (2, 1),
+       (3, 1),
+       (4, 1);
+
+-- 3. Призначаємо користувачам контакти (колонку VALUE пишемо без лапок)
+insert into CONTACT (ID, CODE, VALUE)
+values (1, 'skype', 'userSkype'),
+       (1, 'mobile', '+01234567890'),
+       (1, 'website', 'user.com'),
+       (2, 'github', 'adminGitHub'),
+       (2, 'tg', 'adminTg');
+
+-- 4. Призначаємо ролі
+insert into USER_ROLE (USER_ID, ROLE)
+values (1, 0),
+       (2, 0),
+       (2, 1),
+       (4, 2);
+
+-- 🌟 5. Перестраховка для тестів довідників (якщо інші міграції змінили ID, примусово фіксуємо ID=1)
+DELETE FROM REFERENCE WHERE (REF_TYPE = 2 AND CODE = 'task') OR ID = 1;
+INSERT INTO REFERENCE (ID, REF_TYPE, CODE, TITLE) VALUES (1, 2, 'task', 'Task');
+SELECT setval('reference_id_seq', COALESCE((SELECT MAX(id) FROM reference), 1));
+
+
+insert into PROJECT (code, title, description, type_code, parent_id)
+values ('PR1', 'PROJECT-1', 'test project 1', 'task_tracker', null),
+       ('PR2', 'PROJECT-2', 'test project 2', 'task_tracker', 1);
+
+insert into SPRINT (status_code, startpoint, endpoint, code, project_id)
+values ('finished', '2023-05-01 08:05:10', '2023-05-07 17:10:01', 'SP-1.001', 1),
+       ('active', '2023-05-01 08:06:00', null, 'SP-1.002', 1),
+       ('active', '2023-05-01 08:07:00', null, 'SP-1.003', 1),
+       ('planning', '2023-05-01 08:08:00', null, 'SP-1.004', 1),
+       ('active', '2023-05-10 08:06:00', null, 'SP-2.001', 2),
+       ('planning', '2023-05-10 08:07:00', null, 'SP-2.002', 2),
+       ('planning', '2023-05-10 08:08:00', null, 'SP-2.003', 2);

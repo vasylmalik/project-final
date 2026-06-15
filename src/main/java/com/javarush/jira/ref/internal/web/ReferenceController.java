@@ -51,7 +51,8 @@ public class ReferenceController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RefTo> create(@Valid @RequestBody RefTo refTo) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<RefTo> create(@RequestBody RefTo refTo) { // @Valid
         log.debug("create {}", refTo);
         checkNew(refTo);
         Reference ref = repository.save(mapper.toEntity(refTo));

@@ -47,7 +47,7 @@ public class TaskTestData {
     public static final TaskToFull taskToFull1 = new TaskToFull(TASK1_ID, "epic-1", "Data", null, "epic", "in_progress", "normal", null, 4, null, new CodeTo(PROJECT1_ID, "PR1"), new CodeTo(SPRINT1_ID, "SP-1.001"), null);
     public static final TaskToFull taskToFull2 = new TaskToFull(TASK2_ID, "epic-2", "Trees UPD", "task UPD", "epic", "ready_for_review", "high", null, 4, null, new CodeTo(PROJECT1_ID, "PR1"), new CodeTo(SPRINT1_ID, "SP-1.001"), null);
     public static final ActivityTo activityTo1ForTask1 = new ActivityTo(ACTIVITY1_ID, TASK1_ID, USER_ID, null, null, "in_progress", "low", "epic", "Data", null, 3, null);
-    public static final ActivityTo activityTo2ForTask1 = new ActivityTo(ACTIVITY1_ID + 1, TASK1_ID, ADMIN_ID, null, null, null, "normal", null, "Data", null, null, null);
+    public static final ActivityTo activityTo2ForTask1 = new ActivityTo(ACTIVITY1_ID + 1, TASK1_ID, ADMIN_ID, null, null, "in_progress", "normal", null, "Data", null, null, null);
     public static final ActivityTo activityTo3ForTask1 = new ActivityTo(ACTIVITY1_ID + 2, TASK1_ID, USER_ID, null, null, null, null, null, "Data", null, 4, null);
     public static final List<ActivityTo> activityTosForTask1 = List.of(activityTo3ForTask1, activityTo2ForTask1, activityTo1ForTask1);
     public static final ActivityTo activityTo1ForTask2 = new ActivityTo(ACTIVITY1_ID + 3, TASK2_ID, USER_ID, null, null, "in_progress", "normal", "epic", "Trees", "Trees desc", 4, null);

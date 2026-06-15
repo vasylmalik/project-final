@@ -35,6 +35,7 @@ public class Reference extends TitleEntity {
         super(id, title);
         this.refType = refType;
         this.code = code;
+        this.startpoint = java.time.LocalDateTime.now();
     }
 
     @Override
