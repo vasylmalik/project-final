@@ -1,13 +1,13 @@
 spring:
   cache:
-    type: none                    # ← Исправлено: внутри spring
+    type: none
   init:
     mode: always
   datasource:
     url: jdbc:postgresql://localhost:5433/jira-test
     username: jira
     password: JiraRush
-  mail:                           # ← Исправлено: на одном уровне с datasource
+  mail:
     host: smtp.gmail.com
     port: 587
     username: test@gmail.ru

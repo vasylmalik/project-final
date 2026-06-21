@@ -19,8 +19,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static com.javarush.jira.bugtracking.ObjectType.TASK;
 import static com.javarush.jira.bugtracking.task.TaskUtil.fillExtraFields;
@@ -33,12 +35,17 @@ public class TaskService {
     static final String CANNOT_ASSIGN = "Cannot assign as %s to task with status=%s";
     static final String CANNOT_UN_ASSIGN = "Cannot unassign as %s from task with status=%s";
 
+    static final String TASK_STATUS_IN_PROGRESS = "in_progress";
+    static final String TASK_STATUS_READY_FOR_REVIEW = "ready_for_review";
+    static final String TASK_STATUS_DONE = "done";
+
     private final Handlers.TaskExtHandler handler;
     private final Handlers.ActivityHandler activityHandler;
     private final TaskFullMapper fullMapper;
     private final SprintRepository sprintRepository;
     private final TaskExtMapper extMapper;
     private final UserBelongRepository userBelongRepository;
+    private final ActivityRepository activityRepository;
 
     @Transactional
     public void changeStatus(long taskId, String statusCode) {
@@ -132,6 +139,16 @@ public class TaskService {
         assignment.setEndpoint(LocalDateTime.now());
     }
 
+    @Transactional(readOnly = true)
+    public Duration getTimeInProgress(long id) {
+        return getTimeBetweenStatuses(id, TASK_STATUS_IN_PROGRESS, TASK_STATUS_READY_FOR_REVIEW);
+    }
+
+    @Transactional(readOnly = true)
+    public Duration getTimeInTesting(long id) {
+        return getTimeBetweenStatuses(id, TASK_STATUS_READY_FOR_REVIEW, TASK_STATUS_DONE);
+    }
+
     private void checkAssignmentActionPossible(long id, String userType, boolean assign) {
         Assert.notNull(userType, "userType must not be null");
         Task task = handler.getRepository().getExisted(id);
@@ -139,5 +156,24 @@ public class TaskService {
         if (!userType.equals(possibleUserType)) {
             throw new DataConflictException(String.format(assign ? CANNOT_ASSIGN : CANNOT_UN_ASSIGN, userType, task.getStatusCode()));
         }
+    }
+
+    private Duration getTimeBetweenStatuses(long id, String statusFrom, String statusTo) {
+        Optional<LocalDateTime> timeFrom = activityRepository.findByTaskIdAndStatusCodeOrderByUpdatedAsc(id, statusFrom).stream()
+                .findFirst()
+                .map(Activity::getUpdated);
+        if (!timeFrom.isPresent()) {
+            return null;
+        }
+
+        Optional<LocalDateTime> timeTo = activityRepository.findByTaskIdAndStatusCodeAndUpdatedAfterOrderByUpdatedAsc(id, statusTo, timeFrom.get()).stream()
+                .findFirst()
+                .map(Activity::getUpdated);
+
+        if (timeTo.isPresent()) {
+            Duration duration = Duration.between(timeFrom.get(), timeTo.get());
+            return duration;
+        }
+        return null;
     }
 }

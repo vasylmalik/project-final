@@ -96,3 +96,8 @@ values (1, 2, 2, 'task_developer', '2023-06-14 08:35:10', '2023-06-14 08:55:00')
        (2, 2, 2, 'task_developer', '2023-06-08 07:10:00', null),
        (2, 2, 1, 'task_developer', '2023-06-09 14:48:00', null),
        (2, 2, 1, 'task_tester', '2023-06-10 16:37:00', null);
+
+insert into ACTIVITY ( AUTHOR_ID, TASK_ID, UPDATED, STATUS_CODE )
+values (2, 6, '2026-06-01 09:00:10', 'in_progress'),
+       (2, 6, '2026-06-10 10:00:10', 'ready_for_review'),
+       (2, 6, '2026-06-15 23:05:10', 'done');

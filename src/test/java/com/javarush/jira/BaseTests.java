@@ -5,5 +5,5 @@ import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
 @ActiveProfiles("test")
-abstract class BaseTests {
+public abstract class BaseTests {
 }
