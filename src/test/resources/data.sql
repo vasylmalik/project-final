@@ -1,32 +1,21 @@
----------  users ----------------------
-delete
-from USER_ROLE;
-delete
-from CONTACT;
-delete
-from PROFILE;
+DELETE FROM REFERENCE;
+DELETE FROM USER_BELONG;
+DELETE FROM ACTIVITY;
+DELETE FROM TASK;
+DELETE FROM SPRINT;
+DELETE FROM PROJECT;
+DELETE FROM CONTACT;
+DELETE FROM PROFILE;
+DELETE FROM USER_ROLE;
+DELETE FROM USERS;
 
-delete
-from ACTIVITY;
-alter
-sequence ACTIVITY_ID_SEQ restart with 1;
-delete
-from TASK;
-alter
-sequence TASK_ID_SEQ restart with 1;
-delete
-from SPRINT;
-alter
-sequence SPRINT_ID_SEQ restart with 1;
-delete
-from PROJECT;
-alter
-sequence PROJECT_ID_SEQ restart with 1;
-
-delete
-from USERS;
-alter
-sequence USERS_ID_SEQ restart with 1;
+ALTER TABLE USERS ALTER COLUMN ID RESTART WITH 1;
+ALTER TABLE PROJECT ALTER COLUMN ID RESTART WITH 1;
+ALTER TABLE SPRINT ALTER COLUMN ID RESTART WITH 1;
+ALTER TABLE TASK ALTER COLUMN ID RESTART WITH 1;
+ALTER TABLE ACTIVITY ALTER COLUMN ID RESTART WITH 1;
+ALTER TABLE USER_BELONG ALTER COLUMN ID RESTART WITH 1;
+ALTER TABLE REFERENCE ALTER COLUMN ID RESTART WITH 1;
 
 insert into USERS (EMAIL, PASSWORD, FIRST_NAME, LAST_NAME, DISPLAY_NAME)
 values ('user@gmail.com', '{noop}password', 'userFirstName', 'userLastName', 'userDisplayName'),
@@ -48,7 +37,7 @@ insert into PROFILE (ID, LAST_FAILED_LOGIN, LAST_LOGIN, MAIL_NOTIFICATIONS)
 values (1, null, null, 49),
        (2, null, null, 14);
 
-insert into CONTACT (ID, CODE, VALUE)
+insert into CONTACT (ID, CODE, "VALUE")
 values (1, 'skype', 'userSkype'),
        (1, 'mobile', '+01234567890'),
        (1, 'website', 'user.com'),
@@ -101,3 +90,84 @@ insert into ACTIVITY ( AUTHOR_ID, TASK_ID, UPDATED, STATUS_CODE )
 values (2, 6, '2026-06-01 09:00:10', 'in_progress'),
        (2, 6, '2026-06-10 10:00:10', 'ready_for_review'),
        (2, 6, '2026-06-15 23:05:10', 'done');
+
+insert into REFERENCE (CODE, TITLE, REF_TYPE)
+-- TASK
+values ('task', 'Task', 2),
+       ('story', 'Story', 2),
+       ('bug', 'Bug', 2),
+       ('epic', 'Epic', 2),
+-- SPRINT_STATUS
+       ('planning', 'Planning', 4),
+       ('active', 'Active', 4),
+       ('finished', 'Finished', 4),
+-- USER_TYPE
+       ('author', 'Author', 5),
+       ('developer', 'Developer', 5),
+       ('reviewer', 'Reviewer', 5),
+       ('tester', 'Tester', 5),
+-- PROJECT
+       ('scrum', 'Scrum', 1),
+       ('task_tracker', 'Task tracker', 1),
+-- CONTACT
+       ('skype', 'Skype', 0),
+       ('tg', 'Telegram', 0),
+       ('mobile', 'Mobile', 0),
+       ('phone', 'Phone', 0),
+       ('website', 'Website', 0),
+       ('vk', 'VK', 0),
+       ('linkedin', 'LinkedIn', 0),
+       ('github', 'GitHub', 0),
+-- PRIORITY
+       ('critical', 'Critical', 7),
+       ('high', 'High', 7),
+       ('normal', 'Normal', 7),
+       ('low', 'Low', 7),
+       ('neutral', 'Neutral', 7);
+
+insert into REFERENCE (CODE, TITLE, REF_TYPE, AUX)
+-- MAIL_NOTIFICATION
+values ('assigned', 'Assigned', 6, '1'),
+       ('three_days_before_deadline', 'Three days before deadline', 6, '2'),
+       ('two_days_before_deadline', 'Two days before deadline', 6, '4'),
+       ('one_day_before_deadline', 'One day before deadline', 6, '8'),
+       ('deadline', 'Deadline', 6, '16'),
+       ('overdue', 'Overdue', 6, '32'),
+-- TASK_STATUS
+       ('todo', 'ToDo', 3, 'in_progress,canceled'),
+       ('in_progress', 'In progress', 3, 'ready_for_review,canceled'),
+       ('ready_for_review', 'Ready for review', 3, 'review,canceled'),
+       ('review', 'Review', 3, 'in_progress,ready_for_test,canceled'),
+       ('ready_for_test', 'Ready for test', 3, 'test,canceled'),
+       ('test', 'Test', 3, 'done,in_progress,canceled'),
+       ('done', 'Done', 3, 'canceled'),
+       ('canceled', 'Canceled', 3, null);
+
+-- TASK_TYPE
+delete
+from REFERENCE
+where REF_TYPE = 3;
+insert into REFERENCE (CODE, TITLE, REF_TYPE, AUX)
+values ('todo', 'ToDo', 3, 'in_progress,canceled|'),
+       ('in_progress', 'In progress', 3, 'ready_for_review,canceled|task_developer'),
+       ('ready_for_review', 'Ready for review', 3, 'in_progress,review,canceled|'),
+       ('review', 'Review', 3, 'in_progress,ready_for_test,canceled|task_reviewer'),
+       ('ready_for_test', 'Ready for test', 3, 'review,test,canceled|'),
+       ('test', 'Test', 3, 'done,in_progress,canceled|task_tester'),
+       ('done', 'Done', 3, 'canceled|'),
+       ('canceled', 'Canceled', 3, null);
+
+delete
+from REFERENCE
+where REF_TYPE = 5;
+insert into REFERENCE (CODE, TITLE, REF_TYPE)
+-- USER_TYPE
+values ('project_author', 'Author', 5),
+       ('project_manager', 'Manager', 5),
+       ('sprint_author', 'Author', 5),
+       ('sprint_manager', 'Manager', 5),
+       ('task_author', 'Author', 5),
+       ('task_developer', 'Developer', 5),
+       ('task_reviewer', 'Reviewer', 5),
+       ('task_tester', 'Tester', 5);
+
