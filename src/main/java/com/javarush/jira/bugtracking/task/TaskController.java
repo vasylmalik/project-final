@@ -13,6 +13,7 @@ import com.javarush.jira.login.AuthUser;
 import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import static com.javarush.jira.common.BaseHandler.createdResponse;
 
@@ -149,6 +151,50 @@ public class TaskController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable long id) {
         activityService.delete(id);
+    }
+
+    @GetMapping("/{id}/tags")
+    public Set<String> getTags(@PathVariable(name = "id") Long taskId) {
+        return taskService.getTaskTags(taskId);
+    }
+
+    @PostMapping("/{id}/tags")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Set<String> addTag(
+            @PathVariable(name = "id") Long taskId,
+            @Valid @RequestParam String tag) {
+        return taskService.addTagToTask(taskId, tag);
+    }
+
+    @PostMapping("/{id}/tags/batch")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Set<String> addTags(
+            @PathVariable(name = "id") Long taskId,
+            @Valid @RequestBody Set<@Size(min = 2, max = 32) String> tags) {
+        return taskService.addTagsToTask(taskId, tags);
+    }
+
+    @DeleteMapping("/{id}/tags")
+    public Set<String> deleteTag(
+            @PathVariable(name = "id") Long taskId,
+            @RequestParam String tag) {
+        return taskService.removeTagFromTask(taskId, tag);
+    }
+
+    @DeleteMapping("/{id}/tags/batch")
+    public Set<String> deleteTags(
+            @PathVariable(name = "id") Long taskId,
+            @RequestBody Set<@Size(min = 2, max = 32) String> tags) {
+        log.info("Remove tags {} from task {}", tags, taskId);
+        return taskService.removeTagsFromTask(taskId, tags);
+    }
+
+    @PutMapping("/{id}/tags/batch")
+    public Set<String> replaceTags(
+            @PathVariable(name = "id") Long taskId,
+            @Valid @RequestBody Set<@Size(min = 2, max = 32) String> tags) {
+        log.info("Replace tags for task {} with {}", taskId, tags);
+        return taskService.replaceTaskTags(taskId, tags);
     }
 
     private record TaskTreeNode(TaskTo taskTo, List<TaskTreeNode> subNodes) implements ITreeNode<TaskTo, TaskTreeNode> {
