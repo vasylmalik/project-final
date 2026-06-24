@@ -22,4 +22,7 @@ public interface UserBelongRepository extends BaseRepository<UserBelong> {
 
     @Query("SELECT u FROM UserBelong u WHERE u.objectId =?1 AND u.objectType=?2 and u.userId=?3 and u.userTypeCode=?4 and u.endpoint IS NULL")
     Optional<UserBelong> findActiveAssignment(long objectId, ObjectType objectType, long userId, String userTypeCode);
+
+    @Query("SELECT u FROM UserBelong u WHERE u.objectId = ?1 AND u.objectType = ?2 AND u.userId = ?3 AND u.userTypeCode = ?4")
+    Optional<UserBelong> findAssignment(long objectId, ObjectType objectType, long userId, String userTypeCode);
 }

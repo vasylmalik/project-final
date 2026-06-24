@@ -14,19 +14,25 @@ import com.javarush.jira.common.error.NotFoundException;
 import com.javarush.jira.common.util.Util;
 import com.javarush.jira.login.AuthUser;
 import com.javarush.jira.ref.RefType;
+import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import static com.javarush.jira.bugtracking.ObjectType.TASK;
 import static com.javarush.jira.bugtracking.task.TaskUtil.fillExtraFields;
 import static com.javarush.jira.bugtracking.task.TaskUtil.makeActivity;
 import static com.javarush.jira.ref.ReferenceService.getRefTo;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class TaskService {
@@ -118,9 +124,20 @@ public class TaskService {
         return extMapper.toTo(newTask);
     }
 
+    @Transactional
     public void assign(long id, String userType, long userId) {
         checkAssignmentActionPossible(id, userType, true);
-        handler.createUserBelong(id, TASK, userId, userType);
+        Optional<UserBelong> existing = userBelongRepository.findAssignment(id, TASK, userId, userType);
+        if (existing.isPresent()) {
+            UserBelong belong = existing.get();
+            belong.setEndpoint(null);
+            belong.setStartpoint(LocalDateTime.now());
+            userBelongRepository.save(belong);
+            log.debug("Reassigned user {} as {} to task {}", userId, userType, id);
+        } else {
+            handler.createUserBelong(id, TASK, userId, userType);
+            log.debug("Assigned user {} as {} to task {}", userId, userType, id);
+        }
     }
 
     @Transactional
@@ -139,5 +156,52 @@ public class TaskService {
         if (!userType.equals(possibleUserType)) {
             throw new DataConflictException(String.format(assign ? CANNOT_ASSIGN : CANNOT_UN_ASSIGN, userType, task.getStatusCode()));
         }
+    }
+
+    @Transactional
+    public void addTags(long id, Set<@Size(min=2, max=32) String> tags) {
+        Task task = handler.getRepository().getExisted(id);
+        task.getTags().addAll(tags);
+    }
+
+    public Duration getWorkDuration(long taskId) {
+        return calcDurationBetweenStatuses(taskId, "in_progress", "ready_for_review");
+    }
+
+    public Duration getTestDuration(long taskId) {
+        return calcDurationBetweenStatuses(taskId, "ready_for_review", "done");
+    }
+
+    private Duration calcDurationBetweenStatuses(long taskId, String startStatus, String endStatus) {
+        Optional<Activity> startOpt = activityHandler.getRepository()
+                .findFirstByTaskIdAndStatusCodeOrderByUpdatedAsc(taskId, startStatus);
+        Optional<Activity> endOpt = activityHandler.getRepository()
+                .findFirstByTaskIdAndStatusCodeOrderByUpdatedAsc(taskId, endStatus);
+
+        if (startOpt.isEmpty() || endOpt.isEmpty()) {
+            log.warn("Missing activity status for task {}: startStatus={}, endStatus={}",
+                    taskId, startStatus, endStatus);
+            return null;
+        }
+
+        Activity startActivity = startOpt.get();
+        Activity endActivity = endOpt.get();
+
+        LocalDateTime startTime = startActivity.getUpdated();
+        LocalDateTime endTime = endActivity.getUpdated();
+
+        if (startTime == null || endTime == null) {
+            log.warn("Activity has null updated date for task {}: startStatus={}, endStatus={}",
+                    taskId, startStatus, endStatus);
+            return null;
+        }
+
+        if (startTime.isAfter(endTime)) {
+            log.warn("Start time is after end time for task {}: start={}, end={}",
+                    taskId, startTime, endTime);
+            return null;
+        }
+
+        return Duration.between(startTime, endTime);
     }
 }

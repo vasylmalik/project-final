@@ -5,6 +5,7 @@ import com.javarush.jira.login.User;
 import com.javarush.jira.login.UserTo;
 import com.javarush.jira.login.internal.UserMapper;
 import com.javarush.jira.login.internal.UserRepository;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -23,6 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Transactional
 class UserControllerTest extends AbstractControllerTest {
 
     @Autowired
@@ -58,7 +60,9 @@ class UserControllerTest extends AbstractControllerTest {
 
     @Test
     void createWithLocation() throws Exception {
-        UserTo newTo = mapper.toTo(getNew());
+        User newUser = getNew();
+        newUser.setEmail("new_" + System.currentTimeMillis() + "@gmail.com"); // <-- уникальный email
+        UserTo newTo = mapper.toTo(newUser);
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonWithPassword(newTo, newTo.getPassword())))
@@ -66,7 +70,6 @@ class UserControllerTest extends AbstractControllerTest {
 
         User created = USER_MATCHER.readFromJson(action);
         long newId = created.id();
-        User newUser = getNew();
         newUser.setId(newId);
         USER_MATCHER.assertMatch(created, newUser);
         USER_MATCHER.assertMatch(repository.getExisted(newId), newUser);

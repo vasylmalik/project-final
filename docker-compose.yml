@@ -1,0 +1,54 @@
+services:
+  # PostgreSQL база данных
+  db:
+    image: postgres:15
+    container_name: jira-db
+    environment:
+      POSTGRES_DB: jira
+      POSTGRES_USER: jira
+      POSTGRES_PASSWORD: JiraRush
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - jira-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U jira"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "5432:5432"
+
+  # Spring Boot приложение
+  app:
+    build: .
+    container_name: jira-app
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/jira
+      DB_USERNAME: jira
+      DB_PASSWORD: JiraRush
+      SPRING_PROFILES_ACTIVE: prod
+    networks:
+      - jira-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: jira-nginx
+    volumes:
+      - ./config/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./resources:/opt/jirarush/resources:ro
+    ports:
+      - "80:80"
+    depends_on:
+      - app
+    networks:
+      - jira-network
+
+networks:
+  jira-network:
+
+volumes:
+  pgdata:

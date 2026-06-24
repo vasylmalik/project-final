@@ -68,7 +68,7 @@ public class User extends TimestampEntry implements HasIdAndEmail, Serializable 
     @CollectionTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),
             uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "role"}, name = "uk_user_role"))
-    @Column(name = "role")
+    @Column(name = "\"role\"")
     @ElementCollection(fetch = FetchType.EAGER)
     @JoinColumn
     @OnDelete(action = OnDeleteAction.CASCADE)
