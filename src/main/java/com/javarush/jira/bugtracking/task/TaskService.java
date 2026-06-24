@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -139,5 +140,63 @@ public class TaskService {
         if (!userType.equals(possibleUserType)) {
             throw new DataConflictException(String.format(assign ? CANNOT_ASSIGN : CANNOT_UN_ASSIGN, userType, task.getStatusCode()));
         }
+    }
+
+    private Long checkTaskTimeInWork(Task task) {
+        if(task == null) {
+            return 0L;
+        }
+        List<Activity> activities = activityHandler.getRepository().findAllByTaskIdOrderByUpdatedDesc(task.getId());
+        if(activities == null || activities.isEmpty()) {
+            return 0L;
+        }
+        LocalDateTime readyForReviewTime = null;
+        LocalDateTime inProgressTime = null;
+        for (Activity activity : activities) {
+            String statusCode = activity.getStatusCode();
+            LocalDateTime updated = activity.getUpdated();
+
+            if ("in_progress".equals(statusCode)) {
+                inProgressTime = updated;
+            } else if ("ready_for_review".equals(statusCode)) {
+                readyForReviewTime = updated;
+                break;
+            }
+        }
+
+        if (inProgressTime != null && readyForReviewTime != null) {
+            return Duration.between(inProgressTime, readyForReviewTime).toSeconds();
+        }
+        return 0L;
+    }
+
+    private Long checkTaskTimeInTesting(Task task) {
+        if(task == null) {
+            return 0L;
+        }
+        List<Activity> activities = activityHandler.getRepository().findAllByTaskIdOrderByUpdatedDesc(task.getId());
+        if(activities == null || activities.isEmpty()) {
+            return 0L;
+        }
+
+        LocalDateTime readyForReviewTime = null;
+        LocalDateTime doneTime = null;
+
+        for (Activity activity : activities) {
+            String statusCode = activity.getStatusCode();
+            LocalDateTime updated = activity.getUpdated();
+
+            if ("ready_for_review".equals(statusCode)) {
+                readyForReviewTime = updated;
+            } else if ("done".equals(statusCode)) {
+                doneTime = updated;
+                break;
+            }
+        }
+
+        if (readyForReviewTime != null && doneTime != null) {
+            return Duration.between(readyForReviewTime, doneTime).toSeconds();
+        }
+        return 0L;
     }
 }

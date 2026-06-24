@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: jira_postgres
+    environment:
+      POSTGRES_DB: jira
+      POSTGRES_USER: ${DB_USER_NAME}
+      POSTGRES_PASSWORD: ${DB_USER_PWD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - jira_network
+    restart: unless-stopped
+
+  app:
+    build: .
+    container_name: jira_app
+    env_file:
+      - .env
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/jira
+    depends_on:
+      - postgres
+    networks:
+      - jira_network
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:alpine
+    container_name: jira_nginx
+    ports:
+      - "80:80"
+    volumes:
+      # Монтируем наш конфиг в sites-available
+      - ./config/nginx.conf:/etc/nginx/sites-available/jirarush.conf:ro
+      # Создаём симлинк в sites-enabled
+      - ./config/nginx.conf:/etc/nginx/sites-enabled/jirarush.conf:ro
+      # Монтируем статику
+      - ./resources:/opt/jirarush/resources:ro
+    depends_on:
+      - app
+    networks:
+      - jira_network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+
+networks:
+  jira_network:
+    driver: bridge
