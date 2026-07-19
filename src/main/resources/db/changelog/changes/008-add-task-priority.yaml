@@ -1,0 +1,19 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 008-add-task-priority
+      author: lazareff
+
+      changes:
+
+        - addColumn:
+            tableName: tasks
+
+            columns:
+
+              - column:
+                  name: priority
+                  type: VARCHAR(50)
+                  defaultValue: MEDIUM
+                  constraints:
+                    nullable: false

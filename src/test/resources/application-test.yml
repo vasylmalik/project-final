@@ -1,0 +1,19 @@
+spring:
+
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+
+jwt:
+  secret: 1234567890123456789012345678901234567890123456789012345678901234
+  access-token-expiration: 900000
+  refresh-token-expiration: 604800000

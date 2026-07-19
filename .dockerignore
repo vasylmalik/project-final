@@ -1,0 +1,9 @@
+target
+.idea
+.git
+*.iml
+
+logs
+*.log
+
+README.md

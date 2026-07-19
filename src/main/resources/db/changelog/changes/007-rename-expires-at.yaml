@@ -1,0 +1,13 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 007-rename-expires-at
+      author: lazareff
+
+      changes:
+
+        - renameColumn:
+            tableName: refresh_tokens
+            oldColumnName: expires_at
+            newColumnName: expiry_date
+            columnDataType: TIMESTAMP

@@ -1,0 +1,67 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 004-create-comments
+      author: lazareff
+
+      changes:
+
+        - createTable:
+            tableName: comments
+
+            columns:
+
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_comments
+                    nullable: false
+
+              - column:
+                  name: content
+                  type: VARCHAR(3000)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: task_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_comments_task
+                    referencedTableName: tasks
+                    referencedColumnNames: id
+
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_comments_user
+                    referencedTableName: users
+                    referencedColumnNames: id
+
+        - createIndex:
+            tableName: comments
+            indexName: idx_comments_task
+
+            columns:
+              - column:
+                  name: task_id
+
+        - createIndex:
+            tableName: comments
+            indexName: idx_comments_user
+
+            columns:
+              - column:
+                  name: user_id

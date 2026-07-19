@@ -1,0 +1,19 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 006-add-audit-columns
+      author: lazareff
+
+      changes:
+
+        - addColumn:
+            tableName: comments
+
+            columns:
+
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false

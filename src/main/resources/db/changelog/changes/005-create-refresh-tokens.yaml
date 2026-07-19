@@ -1,0 +1,58 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 005-create-refresh-tokens
+      author: lazareff
+
+      changes:
+
+        - createTable:
+            tableName: refresh_tokens
+
+            columns:
+
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_refresh_tokens
+                    nullable: false
+
+              - column:
+                  name: token
+                  type: VARCHAR(512)
+                  constraints:
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: uk_refresh_token
+
+              - column:
+                  name: expires_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_refresh_token_user
+                    referencedTableName: users
+                    referencedColumnNames: id
+
+        - createIndex:
+            tableName: refresh_tokens
+            indexName: idx_refresh_token_user
+
+            columns:
+              - column:
+                  name: user_id

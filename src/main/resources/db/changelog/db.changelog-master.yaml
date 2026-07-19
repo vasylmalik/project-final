@@ -1,0 +1,27 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/changes/001-create-roles.yaml
+
+  - include:
+      file: db/changelog/changes/002-create-users.yaml
+
+  - include:
+      file: db/changelog/changes/003-create-tasks.yaml
+
+  - include:
+      file: db/changelog/changes/004-create-comments.yaml
+
+  - include:
+      file: db/changelog/changes/005-create-refresh-tokens.yaml
+
+  - include:
+      file: db/changelog/changes/006-add-audit-columns.yaml
+
+  - include:
+      file: db/changelog/changes/007-rename-expires-at.yaml
+
+  - include:
+      file: db/changelog/changes/008-add-task-priority.yaml
+
+  - include:
+      file: db/changelog/changes/009-add-revoked-to-refresh-token.yaml

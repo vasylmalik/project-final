@@ -1,0 +1,16 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 009-add-revoked-column
+      author: lazareff
+
+      changes:
+        - addColumn:
+            tableName: refresh_tokens
+            columns:
+              - column:
+                  name: revoked
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false

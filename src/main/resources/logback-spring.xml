@@ -1,31 +1,93 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration scan="true" scanPeriod="300 seconds">
+<configuration>
 
-    <!--<include resource="org/springframework/boot/logging/logback/base.xml"/>-->
-    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <!-- ========================= -->
+    <!-- Properties                -->
+    <!-- ========================= -->
 
-    <property name="CONSOLE_LOG_PATTERN"
-              value="%d{HH:mm:ss.SSS} [%8.8thread] %highlight(%-5.5level)| %class{60}.%M:%L %msg%n"/>
-    <springProfile name="!prod">
-        <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
-        <root level="WARN">
-            <appender-ref ref="CONSOLE"/>
-        </root>
-    </springProfile>
+    <property name="LOG_PATH" value="logs"/>
+    <property name="LOG_FILE" value="task-manager"/>
 
-    <springProfile name="prod">
-        <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <file>logs/jirarush.log</file>
-            <encoder>
-                <pattern>%d{MM-dd HH:mm:ss.SSS} [%8.8thread] %-5.5level| %class{60}.%M:%L %msg%n</pattern>
-            </encoder>
-            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-                <fileNamePattern>logs/jirarush.%d{yyyy-MM-dd}.log</fileNamePattern>
-                <maxHistory>30</maxHistory>
-            </rollingPolicy>
-        </appender>
-        <root level="WARN">
-            <appender-ref ref="FILE"/>
-        </root>
-    </springProfile>
+    <property name="LOG_PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{40} - %msg%n"/>
+
+    <!-- ========================= -->
+    <!-- Console Appender          -->
+    <!-- ========================= -->
+
+    <appender name="CONSOLE"
+              class="ch.qos.logback.core.ConsoleAppender">
+
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+
+    </appender>
+
+    <!-- ========================= -->
+    <!-- File Appender             -->
+    <!-- ========================= -->
+
+    <appender name="FILE"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+        <file>${LOG_PATH}/${LOG_FILE}.log</file>
+
+        <rollingPolicy
+                class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+
+            <fileNamePattern>
+                ${LOG_PATH}/${LOG_FILE}.%d{yyyy-MM-dd}.%i.log
+            </fileNamePattern>
+
+            <!-- Максимальный размер одного файла -->
+            <maxFileSize>10MB</maxFileSize>
+
+            <!-- Хранить логи 30 дней -->
+            <maxHistory>30</maxHistory>
+
+            <!-- Максимальный общий объем логов -->
+            <totalSizeCap>500MB</totalSizeCap>
+
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+
+        </rollingPolicy>
+
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+
+    </appender>
+
+    <!-- ========================= -->
+    <!-- Logging Levels            -->
+    <!-- ========================= -->
+
+    <!-- Hibernate -->
+    <logger name="org.hibernate.SQL" level="OFF"/>
+    <logger name="org.hibernate.type.descriptor.sql" level="OFF"/>
+    <logger name="org.hibernate.orm.jdbc.bind" level="OFF"/>
+
+    <!-- Spring Security -->
+    <logger name="org.springframework.security" level="WARN"/>
+    <logger name="org.springframework.security.web" level="WARN"/>
+    <logger name="org.springframework.security.config" level="WARN"/>
+
+    <!-- Liquibase -->
+    <logger name="liquibase" level="INFO"/>
+
+    <!-- Логи приложения -->
+    <logger name="com.lazareff.taskmanager" level="INFO"/>
+
+    <!-- ========================= -->
+    <!-- Root Logger               -->
+    <!-- ========================= -->
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+    </root>
+
 </configuration>
