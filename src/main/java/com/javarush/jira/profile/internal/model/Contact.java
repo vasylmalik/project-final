@@ -26,15 +26,15 @@ import java.io.Serializable;
 @Getter
 @Setter
 public class Contact implements HasId {
+    @Id
     @NotNull
     @Column(name = "id")
     private Long id;
 
-    @Id
+
     @ManyToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "id", insertable = false, updatable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @Transient
     private Profile profile;
 
     // link to Reference.code with RefType.CONTACT
