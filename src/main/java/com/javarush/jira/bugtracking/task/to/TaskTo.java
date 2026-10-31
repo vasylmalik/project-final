@@ -8,6 +8,9 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Getter
 public class TaskTo extends TitleTo implements HasCode, HasIdAndParentId {
     @Code
@@ -19,6 +22,11 @@ public class TaskTo extends TitleTo implements HasCode, HasIdAndParentId {
     @Setter
     @Code
     private String statusCode;
+
+    @Setter
+    private Set<String> tags = new HashSet<>();
+
+
 
     public TaskTo(Long id, String code, String title, String typeCode, String statusCode, Long parentId, Long projectId, Long sprintId) {
         super(id, code, title);

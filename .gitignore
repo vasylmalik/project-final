@@ -5,5 +5,5 @@ target
 logs
 attachments
 *.patch
-
+.env
 

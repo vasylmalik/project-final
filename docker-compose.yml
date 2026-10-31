@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  # 1. СЕРВИС БАЗЫ ДАННЫХ
+  postgres-db:
+    image: postgres:15-alpine
+    container_name: jira-postgres
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: jira
+    volumes:
+      - pgdata_compose:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+  # 2. СЕРВИС JAVA-БЭКЕНДА
+  java-app:
+    build: .
+    container_name: jira-backend
+    depends_on:
+      - postgres-db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/jira
+      SPRING_DATASOURCE_USERNAME: ${DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+      MAIL_LOGIN: ${MAIL_LOGIN}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
+      SERVER_FORWARD_HEADERS_STRATEGY: "framework"
+    volumes:
+      - ./application-secrets.yml:/app/application-secrets.yml:ro
+      - ./resources/view:/app/resources/mails:ro
+    restart: unless-stopped
+
+  # 3. СЕРВИС ВЕБ-СЕРВЕРА NGINX
+  nginx-proxy:
+    image: nginx:1.30.6-alpine
+    container_name: jira-nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - java-app
+    volumes:
+      - ./config/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./resources:/usr/share/nginx/html:ro
+    restart: unless-stopped
+
+volumes:
+  pgdata_compose:

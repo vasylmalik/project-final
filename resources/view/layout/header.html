@@ -9,7 +9,11 @@
                 <div class="collapse navbar-collapse mt-2 mb-2 px-5">
                     <ul class="navbar-nav m-auto">
                         <form class="d-flex" role="search">
-                            <input aria-label="Search" class="form-control" id="header-search" placeholder="Search"
+                            <input th:aria-label="#{layout.search}"
+                                   class="form-control"
+                                   id="header-search"
+                                   th:placeholder="#{layout.search}"
+                                   placeholder="Search"
                                    type="search">
                         </form>
                         <li class="nav-item menu-item me-3 ms-4">
@@ -17,7 +21,7 @@
                         </li>
                     </ul>
                     <div th:if="${authUser} == null">
-                        <a class="btn btn-orange" href="/view/login" type="button">Login/Register</a>
+                        <a class="btn btn-orange" href="/view/login" th:text="#{layout.login}" type="button">Login/Register</a>
                     </div>
                     <th:block th:if="${authUser} != null">
                         <a class="btn btn-orange" href="/ui/profile" type="button"><i

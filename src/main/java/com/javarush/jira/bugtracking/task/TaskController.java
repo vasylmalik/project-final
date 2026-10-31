@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import static com.javarush.jira.common.BaseHandler.createdResponse;
 
@@ -73,6 +74,13 @@ public class TaskController {
     public List<TaskTo> getAllByProject(@RequestParam long projectId) {
         log.info("get all for project {}", projectId);
         return handler.getMapper().toToList(handler.getRepository().findAllByProjectId(projectId));
+    }
+
+    @PostMapping("/{taskId}/tags")
+    @ResponseStatus(HttpStatus.OK)
+    public TaskToExt addTags(@PathVariable long taskId, @RequestBody Set<String> tags) {
+        // Просто вызываем наш метод из сервиса
+        return taskService.addTags(taskId, tags);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)

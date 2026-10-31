@@ -53,8 +53,55 @@ public class TaskUtil {
                 if (taskToFull.getDescription() != null && taskToFull.getPriorityCode() != null && taskToFull.getEstimate() != null)
                     break;
             }
+
+            java.time.LocalDateTime inProgressTime = null;
+            java.time.LocalDateTime readyForReviewTime = null;
+            java.time.LocalDateTime doneTime = null;
+
+            for (Activity activity : activities) {
+                if (inProgressTime == null && "in_progress".equals(activity.getStatusCode())) {
+                    inProgressTime = activity.getUpdated();
+                }
+                if (readyForReviewTime == null && "ready_for_review".equals(activity.getStatusCode())) {
+                    readyForReviewTime = activity.getUpdated();
+                }
+                if (doneTime == null && "done".equals(activity.getStatusCode())) {
+                    doneTime = activity.getUpdated();
+                }
+            }
+
+            // Считаем время в работе: ready_for_review минус in_progress
+            if (inProgressTime != null && readyForReviewTime != null) {
+                taskToFull.setDevelopmentTime(formatDuration(inProgressTime, readyForReviewTime));
+            } else {
+                taskToFull.setDevelopmentTime("00:00:00");
+            }
+
+            // Считаем время на тестировании: done минус ready_for_review
+            if (readyForReviewTime != null && doneTime != null) {
+                taskToFull.setTestingTime(formatDuration(readyForReviewTime, doneTime));
+            } else {
+                taskToFull.setTestingTime("00:00:00");
+            }
+        } else {
+            // Если у задачи вообще нет активностей, просто пишем нули
+            taskToFull.setDevelopmentTime("00:00:00");
+            taskToFull.setTestingTime("00:00:00");
         }
     }
+
+    // Вспомогательный статический метод форматирования
+    private static String formatDuration(java.time.LocalDateTime start, java.time.LocalDateTime end) {
+        java.time.Duration duration = java.time.Duration.between(start, end);
+        if (duration.isNegative()) {
+            return "00:00:00";
+        }
+        long hours = duration.toHours();
+        long minutes = duration.toMinutesPart();
+        long seconds = duration.toSecondsPart();
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+    }
+
 
     static String getLatestValue(List<Activity> activities, Function<Activity, String> valueExtractFunction) {
         for (Activity activity : activities) {

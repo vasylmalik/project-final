@@ -13,11 +13,15 @@ import org.springframework.web.servlet.HandlerExecutionChain;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 @Component
-@AllArgsConstructor
 public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Qualifier("handlerExceptionResolver")
     private final HandlerExceptionResolver resolver;
     private final RequestMappingHandlerMapping mapping;
+
+    public RestAuthenticationEntryPoint(@Qualifier("handlerExceptionResolver") HandlerExceptionResolver resolver, RequestMappingHandlerMapping mapping) {
+        this.resolver = resolver;
+        this.mapping = mapping;
+    }
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws ServletException {

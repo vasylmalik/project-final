@@ -15,12 +15,17 @@ import com.javarush.jira.common.util.Util;
 import com.javarush.jira.login.AuthUser;
 import com.javarush.jira.ref.RefType;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import static com.javarush.jira.bugtracking.ObjectType.TASK;
 import static com.javarush.jira.bugtracking.task.TaskUtil.fillExtraFields;
@@ -39,6 +44,27 @@ public class TaskService {
     private final SprintRepository sprintRepository;
     private final TaskExtMapper extMapper;
     private final UserBelongRepository userBelongRepository;
+    private final TaskRepository taskRepository;
+    private final TaskExtMapper taskExtMapper;
+
+    @Autowired
+    private ActivityRepository activityRepository;
+
+    @Transactional
+    public TaskToExt addTags(long taskId, Set<String> newTags) {
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new NotFoundException(String.format("Task with id %d not found", taskId)));
+
+        if (task.getTags() == null || task.getTags().getClass().getName().contains("Immutable")) {
+            task.setTags(new HashSet<>(task.getTags()));
+        }
+
+        task.getTags().addAll(newTags);
+
+        Task updatedTask = taskRepository.save(task);
+
+        return taskExtMapper.toTo(updatedTask);
+    }
 
     @Transactional
     public void changeStatus(long taskId, String statusCode) {
@@ -86,12 +112,17 @@ public class TaskService {
         }
     }
 
+    @Transactional(readOnly = true)
     public TaskToFull get(long id) {
         Task task = Util.checkExist(id, handler.getRepository().findFullById(id));
         TaskToFull taskToFull = fullMapper.toTo(task);
         List<Activity> activities = activityHandler.getRepository().findAllByTaskIdOrderByUpdatedDesc(id);
         fillExtraFields(taskToFull, activities);
         taskToFull.setActivityTos(activityHandler.getMapper().toToList(activities));
+
+        taskToFull.setDevelopmentTime(getDevelopmentTime(task));
+        taskToFull.setTestingTime(getTestingTime(task));
+
         return taskToFull;
     }
 
@@ -139,5 +170,40 @@ public class TaskService {
         if (!userType.equals(possibleUserType)) {
             throw new DataConflictException(String.format(assign ? CANNOT_ASSIGN : CANNOT_UN_ASSIGN, userType, task.getStatusCode()));
         }
+    }
+
+    // 1. Сколько задача находилась в работе
+    public String getDevelopmentTime(Task task) {
+        return calculateTimeDifference(task.id(), "in_progress", "ready_for_review");
+    }
+
+    // 2. Сколько задача находилась на тестировании
+    public String getTestingTime(Task task) {
+        return calculateTimeDifference(task.id(), "ready_for_review", "done");
+    }
+
+    // Вспомогательный метод расчета
+    private String calculateTimeDifference(long taskId, String startStatus, String endStatus) {
+        Optional<Activity> startActivityOpt = activityRepository.findFirstByTaskIdAndStatusCodeOrderByUpdatedDesc(taskId, startStatus);
+        Optional<Activity> endActivityOpt = activityRepository.findFirstByTaskIdAndStatusCodeOrderByUpdatedDesc(taskId, endStatus);
+
+        if (startActivityOpt.isEmpty() || endActivityOpt.isEmpty()) {
+            return "00:00:00";
+        }
+
+        var startTime = startActivityOpt.get().getUpdated();
+        var endTime = endActivityOpt.get().getUpdated();
+
+        Duration duration = Duration.between(startTime, endTime);
+
+        if (duration.isNegative()) {
+            return "00:00:00";
+        }
+
+        long hours = duration.toHours();
+        long minutes = duration.toMinutesPart();
+        long seconds = duration.toSecondsPart();
+
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
 }

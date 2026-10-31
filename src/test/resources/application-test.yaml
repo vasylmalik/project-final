@@ -1,8 +1,19 @@
-spring.cache.type: none
 spring:
+  cache:
+    type: none
+  liquibase:
+    enabled: false
   init:
     mode: always
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    defer-datasource-initialization: true
+    properties:
+      hibernate:
+        cache:
+          use_second_level_cache: false
+          use_query_cache: false
   datasource:
-    url: jdbc:postgresql://localhost:5433/jira-test
-    username: jira
-    password: JiraRush
+    url: "jdbc:h2:mem:testdb;NON_KEYWORDS=USER;DB_CLOSE_ON_EXIT=FALSE"

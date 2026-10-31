@@ -1,0 +1,19 @@
+# Сборщики и их кэш
+target/
+.mvn/
+
+# IDE и настройки
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+
+# Секреты и логи
+application-secrets.yml
+.env
+*.log
+
+# Docker-файлы
+Dockerfile
+.dockerignore

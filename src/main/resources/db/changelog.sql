@@ -169,7 +169,7 @@ create table USER_BELONG
     ENDPOINT       timestamp,
     constraint FK_USER_BELONG foreign key (USER_ID) references USERS (ID)
 );
-create unique index UK_USER_BELONG on USER_BELONG (OBJECT_ID, OBJECT_TYPE, USER_ID, USER_TYPE_CODE);
+CREATE UNIQUE INDEX UK_USER_BELONG ON USER_BELONG (OBJECT_ID, OBJECT_TYPE, USER_ID, USER_TYPE_CODE);
 create index IX_USER_BELONG_USER_ID on USER_BELONG (USER_ID);
 
 create table ATTACHMENT
@@ -253,7 +253,7 @@ alter table SPRINT
     alter column CODE type varchar (32);
 alter table SPRINT
     alter column CODE set not null;
-create unique index UK_SPRINT_PROJECT_CODE on SPRINT (PROJECT_ID, CODE);
+CREATE UNIQUE INDEX UK_SPRINT_PROJECT_CODE ON SPRINT (PROJECT_ID, CODE);
 
 ALTER TABLE TASK
     DROP COLUMN DESCRIPTION;
@@ -281,17 +281,17 @@ values ('todo', 'ToDo', 3, 'in_progress,canceled'),
 
 --changeset gkislin:users_add_on_delete_cascade
 
-alter table ACTIVITY
-    drop constraint FK_ACTIVITY_USERS,
-    add constraint FK_ACTIVITY_USERS foreign key (AUTHOR_ID) references USERS (ID) on delete cascade;
+-- 1. Блок для ACTIVITY (исправляем опечатку и разбиваем на 2 команды)
+ALTER TABLE ACTIVITY DROP CONSTRAINT FK_ACTIVITY_USERS;
+ALTER TABLE ACTIVITY ADD CONSTRAINT FK_ACTIVITY_USERS FOREIGN KEY (AUTHOR_ID) REFERENCES USERS (ID) ON DELETE CASCADE;
 
-alter table USER_BELONG
-    drop constraint FK_USER_BELONG,
-    add constraint FK_USER_BELONG foreign key (USER_ID) references USERS (ID) on delete cascade;
+-- 2. Блок для USER_BELONG (убираем запятую, разбиваем на 2 команды)
+ALTER TABLE USER_BELONG DROP CONSTRAINT FK_USER_BELONG;
+ALTER TABLE USER_BELONG ADD CONSTRAINT FK_USER_BELONG FOREIGN KEY (USER_ID) REFERENCES USERS (ID) ON DELETE CASCADE;
 
-alter table ATTACHMENT
-    drop constraint FK_ATTACHMENT,
-    add constraint FK_ATTACHMENT foreign key (USER_ID) references USERS (ID) on delete cascade;
+-- 3. Блок для ATTACHMENT (убираем запятую, разбиваем на 2 команды)
+ALTER TABLE ATTACHMENT DROP CONSTRAINT FK_ATTACHMENT;
+ALTER TABLE ATTACHMENT ADD CONSTRAINT FK_ATTACHMENT FOREIGN KEY (USER_ID) REFERENCES USERS (ID) ON DELETE CASCADE;
 
 --changeset valeriyemelyanov:change_user_type_reference
 
@@ -327,5 +327,15 @@ values ('todo', 'ToDo', 3, 'in_progress,canceled|'),
 
 --changeset ishlyakhtenkov:change_UK_USER_BELONG
 
-drop index UK_USER_BELONG;
-create unique index UK_USER_BELONG on USER_BELONG (OBJECT_ID, OBJECT_TYPE, USER_ID, USER_TYPE_CODE) where ENDPOINT is null;
+DROP INDEX IF EXISTS UK_USER_BELONG;
+-- create unique index UK_USER_BELONG on USER_BELONG (OBJECT_ID, OBJECT_TYPE, USER_ID, USER_TYPE_CODE) where ENDPOINT is null;
+
+--changeset final_duration_task:add_three_activities
+INSERT INTO ACTIVITY (ID, AUTHOR_ID, TASK_ID, UPDATED, STATUS_CODE)
+VALUES (100001, 1, 1, '2026-10-27 10:00:00', 'in_progress');
+
+INSERT INTO ACTIVITY (ID, AUTHOR_ID, TASK_ID, UPDATED, STATUS_CODE)
+VALUES (100002, 1, 1, '2026-10-27 14:30:15', 'ready_for_review');
+
+INSERT INTO ACTIVITY (ID, AUTHOR_ID, TASK_ID, UPDATED, STATUS_CODE)
+VALUES (100003, 1, 1, '2026-10-27 17:45:30', 'done');
