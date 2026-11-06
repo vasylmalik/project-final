@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="page"
+          th:with="img=${img}?: 'https://javarush.com/assets/images/site/homepage/og-image-jr.jpg', descr=${descr}?: ${title}">
+    <head>
+        <meta content="text/html;charset=utf-8" http-equiv="Content-Type"/>
+        <meta content="width=device-width, initial-scale=1" name="viewport">
+        <meta name="title" th:content="${title}"/>
+        <meta name="Description" th:content="${descr}"/>
+
+        <title th:text="${title}"></title>
+        <link href="/static/images/icon/apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180">
+        <link href="/static/images/icon/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png">
+        <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+        <link href="/static/fontawesome/css/all.min.css" rel="stylesheet"/>
+        <link href="/static/css/color.css?v=1" rel="stylesheet"/>
+        <link href="/static/css/main.css?v=1" rel="stylesheet"/>
+        <link href="/static/datatables/css/dataTables.bootstrap5.min.css" rel="stylesheet"/>
+        <link href="/static/noty/css/noty.css" rel="stylesheet"/>
+        <link href="/static/bootstrap/css/bootstrap-select.min.css" rel="stylesheet"/>
+        <link href="/static/jquery/css/ui.fancytree.css" rel="stylesheet"/>
+
+        <link rel="image_src" th:href="${img}"/>
+        <meta CONTENT="Java,программист,курсы,обучение,трудоустройво,разработчик,практика,bugtracking,jira"
+              name="keywords">
+        <!-- facebook & Open Graph -->
+        <meta content="website" property="og:type"/>
+        <meta content="Jira Rush" property="og:site_name">
+        <meta property="og:title" th:content="${title}"/>
+        <meta property="og:description" th:content="${descr}"/>
+        <meta property="og:image" th:content="${img}"/>
+
+        <!--twitter-->
+        <meta name="twitter:title" th:content="${descr}"/>
+        <meta content="summary_large_image" name="twitter:card"/>
+        <meta name="twitter:image" th:content="${img}"/>
+
+        <!-- google -->
+        <meta itemprop="name" th:content="${descr}"/>
+        <meta itemprop="description" th:content="${descr}"/>
+        <meta itemprop="image" th:content="${img}"/>
+        <meta itemprop="url" th:content="${img}"/>
+    </head>
+    <body>
+    <div class="app">
+        <th:block th:insert="${ownStyle}?: ~{}"/>
+
+        <div th:replace="~{/layout/header :: header}"></div>
+
+        <div th:replace="~{/layout/sidebar :: sidebar}"></div>
+
+        <main class="app-main py-3 px-md-3 min-vh-100">
+            <div class="container">
+                <th:block th:insert="${appMain}?: ~{}"/>
+            </div>
+            <div class="container-fluid">
+                <th:block th:insert="${appMainFluid}?: ~{}"/>
+            </div>
+        </main>
+
+        <div th:replace="~{/layout/footer :: footer}"></div>
+    </div>
+    </body>
+    <script src="/static/jquery/js/jquery.min.js"></script>
+    <script>
+        $([[${activeMenuItem}]]).addClass('active');
+    </script>
+    <script defer src="/static/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script defer src="/static/datatables/js/jquery.dataTables.min.js"></script>
+    <script defer src="/static/datatables/js/dataTables.bootstrap5.min.js"></script>
+    <script defer src="/static/noty/js/noty.min.js"></script>
+    <script defer src="/static/bootstrap/js/bootstrap-select.min.js"></script>
+</th:block>
+</html>

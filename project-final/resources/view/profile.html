@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<!--/*@thymesVar id="authUser" type="com.javarush.jira.login.AuthUser"*/-->
+<!--/*@thymesVar id="profile" type="com.javarush.jira.profile.ProfileTo"*/-->
+<!--/*@thymesVar id="contactRefs" type="Collection<com.javarush.jira.ref.RefTo>"*/-->
+<!--/*@thymesVar id="mailNotificationRefs" type="Collection<com.javarush.jira.ref.RefTo>"*/-->
+
+<th:block th:replace="~{layout/main::page(title='User Profile',appMain=~{::appMain})}">
+    <appMain>
+        <div class="modal fade" id="changePasswordModal">
+            <div class="modal-dialog modal-dialog-centered">
+                <form action="/ui/user/change-password" method="post">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="text-center">Change password</h5>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3 row">
+                                <div>
+                                    <label for="oldPassword">Old password</label>
+                                </div>
+                                <div>
+                                    <input class="form-control" id="oldPassword" maxlength="128" name="oldPassword"
+                                           type="password">
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <div>
+                                    <label for="newPassword">New password</label>
+                                </div>
+                                <div>
+                                    <input class="form-control" id="newPassword" maxlength="128" name="newPassword"
+                                           type="password">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Cancel</button>
+                            <button class="btn btn-primary" id="changePassword" type="submit">
+                                Save
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="card mb-3">
+            <div class="card-header"><h4>User info</h4></div>
+            <div class="card-body">
+                <button class="btn btn-primary mb-3" data-bs-target="#changePasswordModal" data-bs-toggle="modal"
+                        type="button">Change password
+                </button>
+                <div class="alert alert-danger" role="alert" th:if="${userError != null}" th:text="${userError}"></div>
+                <div class="alert alert-success" role="alert" th:if="${userSuccess != null}"
+                     th:text="${userSuccess}"></div>
+                <form action="/ui/user" id="userForm" method="post">
+                    <div class="mb-3 row">
+                        <div class="col-md-2">
+                            <label class="col-form-label" for="email">Email</label>
+                        </div>
+                        <div class="col-md-5 col-10">
+                            <input class="form-control" id="email" maxlength="128" name="email" th:value="${authUser.user.email}"
+                                   type="email">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <div class="col-md-2">
+                            <label class="col-form-label" for="firstName">First name</label>
+                        </div>
+                        <div class="col-md-5 col-10">
+                            <input class="form-control" id="firstName" maxlength="32" name="firstName" th:value="${authUser.user.firstName}"
+                                   type="text">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <div class="col-md-2">
+                            <label class="col-form-label" for="lastName">Last name</label>
+                        </div>
+                        <div class="col-md-5 col-10">
+                            <input class="form-control" id="lastName" maxlength="32" name="lastName" th:value="${authUser.user.lastName}"
+                                   type="text">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <div class="col-md-2">
+                            <label class="col-form-label" for="displayName">Display name</label>
+                        </div>
+                        <div class="col-md-5 col-10">
+                            <input class="form-control" id="displayName" maxlength="32" name="displayName" th:value="${authUser.user.displayName}"
+                                   type="text">
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <button class="btn btn-primary" id="updateUser" type="submit">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header"><h4>Profile</h4></div>
+            <div class="card-body">
+                <form action="/ui/profile" id="profileForm" method="post">
+                    <div class="alert alert-danger" role="alert" th:if="${profileError != null}"
+                         th:text="${profileError}"></div>
+                    <div class="alert alert-success" role="alert" th:if="${profileSuccess != null}"
+                         th:text="${profileSuccess}"></div>
+                    <div class="mb-3 row">
+                        <h5>Mail notifications</h5>
+                        <div class="col-md-7 col-10">
+                            <select class="form-control selectpicker border" data-selected-text-format="count > 5"
+                                    data-style="btn-white"
+                                    id="mailNotifications" multiple name="mailNotifications">
+                                <option th:each="notification : ${mailNotificationRefs}"
+                                        th:selected="${profile.mailNotifications.contains(notification.code)}"
+                                        th:text="${notification.title}"
+                                        th:value="${notification.code}">
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="my-3 row">
+                        <h5>Contacts</h5>
+                        <div class="col-md-7 col-10">
+                            <table class="table table-striped" id="contactTable" style="text-align: left;">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Contact</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody id="contactsTableBody">
+                                <tr th:each="contact: ${profile.contacts}">
+                                    <td class="col-3"><input class="form-control-plaintext"
+                                                             readonly th:value="${contact.code}"></td>
+                                    <td>
+                                        <input class="col-9" maxlength="32" name="contacts.value" th:value="${contact.value}"
+                                               type="text">
+                                    </td>
+                                    <td>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <div class="dropdown">
+                                <button aria-expanded="false" class="btn btn-secondary dropdown-toggle"
+                                        data-bs-toggle="dropdown" type="button">
+                                    Add contact
+                                </button>
+                                <ul aria-labelledby="addContact" class="dropdown-menu">
+                                    <li th:each="contactType : ${contactRefs}">
+                                        <button class="dropdown-item addContactButton" th:disabled="${profile.isContactTypePresent(contactType.code)}"
+                                                th:id="${'add' + contactType.title}"
+                                                th:text="${contactType.title}"
+                                                th:value="${contactType.code}"
+                                                type="button">
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-auto align-items-end">
+                        <button class="btn btn-primary" id="updateProfile" type="submit">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </appMain>
+</th:block>
+<script src="/static/js/profile.js"></script>

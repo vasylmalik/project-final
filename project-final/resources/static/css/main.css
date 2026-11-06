@@ -1,0 +1,276 @@
+/*SIDEBAR*/
+
+@media (min-width: 200px) {
+    body {
+        margin-top: 59px;
+    }
+}
+
+@media (min-width: 992px) {
+    body {
+        margin-top: 72px;
+    }
+}
+
+@media (min-width: 992px) {
+    body {
+        margin-left: 232px;
+    }
+}
+
+.navbar.fixed-left {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1030;
+}
+
+@media (min-width: 992px) {
+    .navbar.fixed-left {
+        bottom: 0;
+        width: 232px;
+        flex-flow: column nowrap;
+        align-items: flex-start;
+    }
+
+    .navbar.fixed-left .navbar-collapse {
+        flex-grow: 0;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .navbar.fixed-left .navbar-collapse .navbar-nav {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .navbar.fixed-left .navbar-collapse .navbar-nav .nav-item {
+        width: 100%;
+    }
+
+    .navbar.fixed-left .navbar-collapse .navbar-nav .nav-item .dropdown-menu {
+        top: 0;
+    }
+}
+
+@media (min-width: 992px) {
+    .navbar.fixed-left {
+        right: auto;
+    }
+
+    .navbar.fixed-left .navbar-nav .nav-item .dropdown-toggle:after {
+        border-top: 0.3em solid transparent;
+        border-left: 0.3em solid;
+        border-bottom: 0.3em solid transparent;
+        border-right: none;
+        vertical-align: baseline;
+    }
+
+    .navbar.fixed-left .navbar-nav .nav-item .dropdown-menu {
+        left: 100%;
+    }
+}
+
+.sidebar-nav, .accordion-body, .accordion-button, .accordion-button:not(.collapsed) {
+    background-color: var(--nav);
+    color: darkgray;
+}
+
+.sidebar-nav ul li:not(.active):hover, .sidebar-nav ul li:not(.active) a:not(.active):hover,
+.sidebar-nav ul li:not(.active):focus, .sidebar-nav ul li:not(.active) a:not(.active):focus {
+    background-color: var(--nav-item-hover);
+    color: white;
+}
+
+.sidebar-nav ul li.active, .sidebar-nav ul li.active a {
+    background-color: var(--nav-item-active);
+    color: white;
+    font-weight: bold;
+}
+
+.sidebar-nav .nav-link {
+    height: 40px;
+}
+
+.accordion-button:focus {
+    box-shadow: 0 0 0 0 #FFF !important;
+}
+
+.accordion-button:not(.collapsed)::after, .accordion-button.collapsed::after {
+    content: "\f358";
+    font-family: "Font Awesome 6 Free";
+    color: white;
+    font-weight: 400;
+    background-image: none;
+}
+
+
+/*HEADER*/
+.header-nav {
+    background-color: var(--dark-nav);
+    padding-left: 232px;
+    color: darkgray;
+}
+
+.header-nav ul li:not(.active):hover, .header-nav ul li:not(.active) a:not(.active):hover,
+.header-nav ul li:not(.active):focus, .header-nav ul li:not(.active) a:not(.active):focus {
+    color: white;
+}
+
+.header-nav ul li.active, .header-nav ul li.active a {
+    color: white;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.data-enabled[enabled=false] {
+    opacity: 0.3;
+}
+
+#header-search {
+    background-color: var(--nav);
+    border-color: var(--nav);
+    color: white;
+}
+
+#header-search::placeholder {
+    color: darkgray;
+}
+
+#header-search:focus {
+    border-color: darkgray;
+    box-shadow: 0 0 0 0.05rem darkgray;
+}
+
+.btn-orange {
+    background-color: var(--orange);
+    color: white;
+}
+
+.btn-orange:hover {
+    background-color: var(--orange-hover);
+    color: white;
+}
+
+.btn-yellow {
+    background-color: var(--yellow);
+    color: black !important;
+    font-weight: normal !important;
+}
+
+.btn-yellow:hover {
+    background-color: var(--yellow-hover);
+    color: black;
+}
+
+
+/*FOOTER*/
+.footer {
+    background-color: var(--dark-nav);
+}
+
+.footer-href {
+    color: #5974AB;
+    text-decoration: none;
+}
+
+.footer-href:hover {
+    color: white;
+}
+
+/*CONTENT*/
+.app-main {
+    background-color: var(--main-background);
+    /*height: 100vh;*/
+}
+
+/*CONTEXT MENU*/
+.context-menu {
+    display: none;
+    position: absolute;
+    z-index: 10;
+    padding: 12px 0;
+    width: 240px;
+    background-color: #fff;
+    border: solid 1px #dfdfdf;
+    box-shadow: 1px 1px 2px #cfcfcf;
+}
+
+.context-menu--active {
+    display: block;
+}
+
+.context-menu-items {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.context-menu-item {
+    display: block;
+    margin-bottom: 4px;
+}
+
+.context-menu-item:last-child {
+    margin-bottom: 0;
+}
+
+.context-menu-link {
+    display: block;
+    padding: 4px 12px;
+    color: #0066aa;
+    text-decoration: none;
+}
+
+.context-menu-link:hover {
+    color: #fff;
+    background-color: #0066aa;
+}
+
+.context-menu-submenu-expander {
+    display: block;
+    padding: 4px 12px;
+    color: black;
+    text-decoration: none;
+}
+
+.context-menu-expand-icon {
+    float: right;
+    padding-top: 5px;
+}
+
+.context-menu-submenu {
+    position: absolute;
+    left: 235px;
+    top: 0;
+    display: none;
+    padding: 12px 0;
+    min-width: 120px;
+    background-color: #fff;
+    border: solid 1px #dfdfdf;
+    box-shadow: 1px 1px 2px #cfcfcf;
+}
+
+.context-menu-submenu-expander:hover .context-menu-submenu {
+    display: block;
+}
+
+/*DASHBOARD TASK CARD*/
+.ready-for {
+    background-color: #daf2fd;
+    border-radius: 5px;
+    border: 1px solid #43cef6;
+}
+
+.user-belong {
+    background-color: #ffeb3ba8;
+    border-radius: 5px;
+    border: 1px solid #f4bc15;
+}
+
+/*ACTIVITIES*/
+.scroll-area {
+    max-height: clamp(5em, 50vh, 300px);
+    overflow: auto;
+}

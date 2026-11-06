@@ -1,0 +1,17 @@
+spring.cache.type: none
+spring:
+  init:
+    mode: always
+#  datasource:
+#    url: jdbc:postgresql://localhost:5433/jira-test
+#    username: ${TEST_DB_USER:jira}
+#    password: ${TEST_DB_PASSWORD:JiraRush}
+
+  liquibase:
+    enabled: false
+
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:db/changelog-h2.sql
+      data-locations: classpath:data.sql

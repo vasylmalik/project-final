@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!--/*@thymesVar id="task" type="com.javarush.jira.bugtracking.task.to.TaskToFull"*/-->
+<!--/*@thymesVar id="fragment" type="boolean"*/-->
+<!--/*@thymesVar id="comments" type="java.util.List<com.javarush.jira.bugtracking.task.to.ActivityTo>"*/-->
+<!--/*@thymesVar id="activities" type="java.util.List<com.javarush.jira.bugtracking.task.to.ActivityTo>"*/-->
+
+<th:block th:replace="~{layout/bugtrackLayout::view(${task}, '/ui/tasks/edit/', ~{::task}, ${fragment})}">
+    <task>
+        <h5>Description: [[${task.description} ?: '-']]</h5>
+        <h5>Priority: [[${task.priorityCode} ?: '-']]</h5>
+        <h5>Status: [[${task.statusCode}]]</h5>
+        <h5>Type: [[${task.typeCode}]]</h5>
+        <h5>Updated: [[${#temporals.format(task?.updated, 'MM/dd/yyyy, HH:mm:ss')} ?: '-' ]]</h5>
+        <h5>Estimate: [[${task.estimate} ?: '-']]</h5>
+        <hr>
+        <h6 th:if="${task.parentId != null}">Parent: <a th:href="@{'/ui/tasks/' + ${task.parentId}}">[[${task.parent.code}]]</a>
+        </h6>
+        <h6>Project: <a th:href="@{'/ui/projects/' + ${task.projectId}}">[[${task.project.code}]]</a></h6>
+        <h6 th:if="${task.sprintId != null}">Sprint: <a th:href="@{'/ui/sprints/' + ${task.sprintId}}">[[${task.sprint.code}]]</a>
+        </h6>
+
+        <!--Comments-->
+        <div th:if="${!comments.isEmpty()}">
+            <hr>
+            <h5 class="fw-bold text-secondary ms-1" th:if="${!comments.isEmpty()}">Comments</h5>
+            <div class="scroll-area">
+                <div th:each="comment : ${comments}">
+                    <div class="card bg-light mb-2 me-2">
+                        <div class="card-body py-2">
+                            <div class="fw-bold" th:text="${comment.author.displayName}"></div>
+                            <small th:text="${#temporals.format(comment.updated, 'dd.MM.yyyy, HH:mm:ss')}"></small>
+                            <div class="mt-1" style="white-space: pre-wrap" th:text="${comment.comment}">Comment</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--History log-->
+        <div th:fragment="history-log" th:if="${!activities.isEmpty()}">
+            <hr>
+            <h5 class="fw-bold text-secondary ms-1" th:if="${!activities.isEmpty()}">History log</h5>
+            <div class="scroll-area table-responsive text-nowrap text-center" th:if="${!activities.isEmpty()}">
+                <table class="table table-striped">
+                    <thead class="sticky-top bg-white">
+                    <tr>
+                        <th>Author</th>
+                        <th>Time</th>
+                        <th>Status</th>
+                        <th>Priority</th>
+                        <th>Type</th>
+                        <th>Title</th>
+                        <th>Estimate</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="activity : ${activities}">
+                        <td th:text="${activity.author.displayName}"></td>
+                        <td th:text="${#temporals.format(activity.updated, 'dd.MM.yyyy HH:mm')}"></td>
+                        <td th:text="${activity.statusCode}"></td>
+                        <td th:text="${activity.priorityCode}"></td>
+                        <td th:text="${activity.typeCode}"></td>
+                        <td th:text="${activity.title}"></td>
+                        <td th:text="${activity.estimate}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </task>
+</th:block>

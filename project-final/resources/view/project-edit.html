@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block
+        th:replace="~{layout/bugtrackLayout::edit(${project}, '/ui/mngr/projects', '/api/mngr/projects/' + ${project.id}, ~{::appEdit}, 'project')}">
+    <appEdit>
+        <input hidden id="parentId" th:field="*{parentId}">
+        <div class="form-group">
+            <label class="col-form-label" for="typeCode">Type</label>
+            <select class="form-select w-25" id="typeCode" th:field="*{typeCode}">
+                <option th:each="type : ${types}"
+                        th:selected="${!project.isNew() && project.typeCode.equals(type.key)}"
+                        th:text="${type.value.title}"
+                        th:value="${type.key}">
+                </option>
+            </select>
+        </div>
+        <div th:replace="~{::inputField('Description', 'description')}"></div>
+    </appEdit>
+</th:block>
+<script>
+    const objectId = [[${project.id}]];
+    const objectType = "PROJECT";
+</script>
+<script src="/static/js/attachments.js"></script>
+<script src="/static/js/common.js"></script>

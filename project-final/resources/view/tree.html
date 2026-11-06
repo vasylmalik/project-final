@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:replace="~{layout/main::page(title='Tree',appMainFluid=~{::appMain}, activeMenuItem='tree')}">
+    <appMain>
+        <div class="row">
+            <div class="card col-auto tree tree-color min-vh-100" id="treeElement">
+                <a class="btn btn-secondary mt-1 btn-sm tree-button" href="/ui/mngr/projects/new" role="button">Create
+                    new Project</a>
+            </div>
+
+            <div class="col w-50" style="padding-right: 0">
+                <div class="card sticky-top" hidden id="infoCard" style="z-index: 1">
+                    <div style="max-height: 95vh; overflow: auto">
+                        <div class="card-body" id="entityInfo"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Context menu-->
+        <nav class="context-menu" id="context-menu">
+            <ul class="context-menu-items" id="context-menu-items">
+            </ul>
+        </nav>
+    </appMain>
+</th:block>
+<script src="/static/jquery/js/jquery.fancytree-all-deps.min.js"></script>
+<script src="/static/jquery/js/jquery.fancytree.glyph.js"></script>
+<script src="/static/js/contextMenu.js"></script>
+<script src="/static/js/common.js"></script>
+<!--        https://stackoverflow.com/questions/30398698/how-to-access-model-attribute-in-jquery-->
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const isManager = [[${authUser.isManager()}]];
+    /*]]>*/
+</script>
+<script src="/static/js/tree.js"></script>
