@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:replace="~{layout/main::page(title='Login',appMain=~{::appMain})}">
+    <appMain>
+        <div class="row d-flex justify-content-center align-items-center">
+            <div class="col-12 col-md-8 col-xl-5">
+                <div class="card shadow-2-strong" style="border-radius: 1rem;">
+                    <div class="card-body p-3 p-md-5 text-center">
+                        <h3 class="mb-3">Sign in</h3>
+                        <div th:if="${param.error}">
+                            <p class="alert alert-danger col-12 p-2 text-center">
+                                Bad credentials
+                            </p>
+                        </div>
+                        <form action="/view/login" method="post">
+                            <div class="form-outline mb-4">
+                                <input class="form-control" name="username" placeholder="E-mail" required type="text"/>
+                            </div>
+                            <div class="form-outline mb-4">
+                                <input class="form-control" name="password" placeholder="Password" required
+                                       type="password"/>
+                            </div>
+                            <div class="row">
+                                <div class="col-7 col-md-6 my-auto">
+                                    <a href="/view/unauth/forgot-password">Forgot your password?</a>
+                                </div>
+                                <div class="col-5 col-md-6 d-grid gap-2">
+                                    <button class="btn btn-success btn-lg" type="submit">Sign in</button>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="row mt-4">
+                            <div class="col-5">
+                                <hr>
+                            </div>
+                            <div class="col-2">
+                                OR
+                            </div>
+                            <div class="col-5">
+                                <hr>
+                            </div>
+                        </div>
+                        <p class="mt-3 mb-4">
+                            Sign in with social networks
+                        </p>
+                        <a class="btn btn-secondary btn-lg me-2" href="/oauth2/authorization/google"
+                           type="button">
+                            <i class="fa-brands fa-google"></i>
+                        </a>
+                        <a class="btn btn-dark btn-lg me-2" href="/oauth2/authorization/github" type="button">
+                            <i class="fa-brands fa-github"></i>
+                        </a>
+                        <a class="btn btn-warning btn-lg" href="/oauth2/authorization/gitlab" type="button">
+                            <i class="fa-brands fa-gitlab"></i>
+                        </a>
+                        <p class="mt-3 mb-2 mb-md-0" style="font-size:0.8em">
+                            New here? <a href="/ui/register">Create account</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </appMain>
+</th:block>
+
