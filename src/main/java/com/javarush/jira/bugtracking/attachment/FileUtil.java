@@ -31,9 +31,7 @@ public class FileUtil {
 
             Path destinationPath = path.resolve(fileName).normalize();
 
-            try (InputStream inputStream = multipartFile.getInputStream()) {
-                Files.copy(inputStream, destinationPath, StandardCopyOption.REPLACE_EXISTING);
-            }
+			Files.write(destinationPath, multipartFile.getBytes());
         } catch (IOException ex) {
             throw new IllegalRequestDataException("Failed to upload file" + multipartFile.getOriginalFilename());
         }
