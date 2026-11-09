@@ -1,8 +1,12 @@
-package com.javarush.jira.bugtracking.task;
+package com.javarush.jira.bugtracking.task.conroller;
 
 import com.javarush.jira.bugtracking.Handlers;
 import com.javarush.jira.bugtracking.UserBelong;
 import com.javarush.jira.bugtracking.UserBelongRepository;
+import com.javarush.jira.bugtracking.task.Activity;
+import com.javarush.jira.bugtracking.task.ActivityService;
+import com.javarush.jira.bugtracking.task.Task;
+import com.javarush.jira.bugtracking.task.TaskService;
 import com.javarush.jira.bugtracking.task.to.ActivityTo;
 import com.javarush.jira.bugtracking.task.to.TaskTo;
 import com.javarush.jira.bugtracking.task.to.TaskToExt;

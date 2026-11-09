@@ -13,7 +13,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static com.javarush.jira.bugtracking.ObjectType.TASK;
-import static com.javarush.jira.bugtracking.task.TaskController.REST_URL;
+import static com.javarush.jira.bugtracking.task.conroller.TaskController.REST_URL;
 import static com.javarush.jira.bugtracking.task.TaskService.CANNOT_ASSIGN;
 import static com.javarush.jira.bugtracking.task.TaskService.CANNOT_UN_ASSIGN;
 import static com.javarush.jira.bugtracking.task.TaskTestData.NOT_FOUND;
