@@ -19,6 +19,7 @@
         <java.version>17</java.version>
         <springdoc.version>2.0.2</springdoc.version>
         <mapstruct.version>1.5.3.Final</mapstruct.version>
+        <lombok.version>1.18.34</lombok.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
