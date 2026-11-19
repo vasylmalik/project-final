@@ -1,5 +1,7 @@
 ---------  users ----------------------
 delete
+from USER_BELONG;
+delete
 from USER_ROLE;
 delete
 from CONTACT;
@@ -9,24 +11,23 @@ from PROFILE;
 delete
 from ACTIVITY;
 alter
-sequence ACTIVITY_ID_SEQ restart with 1;
+table ACTIVITY alter column ID restart with 1;
 delete
 from TASK;
 alter
-sequence TASK_ID_SEQ restart with 1;
+table TASK alter column ID restart with 1;
 delete
 from SPRINT;
 alter
-sequence SPRINT_ID_SEQ restart with 1;
+table SPRINT alter column ID restart with 1;
 delete
 from PROJECT;
 alter
-sequence PROJECT_ID_SEQ restart with 1;
-
+table PROJECT alter column ID restart with 1;
 delete
 from USERS;
 alter
-sequence USERS_ID_SEQ restart with 1;
+table USERS alter column ID restart with 1;
 
 insert into USERS (EMAIL, PASSWORD, FIRST_NAME, LAST_NAME, DISPLAY_NAME)
 values ('user@gmail.com', '{noop}password', 'userFirstName', 'userLastName', 'userDisplayName'),
